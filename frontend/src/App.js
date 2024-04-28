@@ -126,9 +126,7 @@ function App() {
 
   return (
     <div >
-      {/* <TransitionsModal /> */}
-
-      <LoginPage />
+      <TransitionsModal />
     </div>
   );
 }
