@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './logincard.css';
-
+import axios from 'axios';
 export default function LoginCard() {
   const [loginData, setLoginData] = useState({
     username: '',
@@ -19,6 +19,14 @@ export default function LoginCard() {
     e.preventDefault();
     // Do something with loginData, like sending it to an API
     console.log(loginData);
+    const res = axios.post('http://localhost:8080/jwt/login', {
+      username: loginData.username,
+      password: loginData.password
+    }).then((response) => {
+      console.log(response.data);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('email', loginData.username);
+    })
   };
 
   return (

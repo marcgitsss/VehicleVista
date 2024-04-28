@@ -1,11 +1,17 @@
   import * as React from "react";
+  import { useEffect } from "react";
   function Homepage() {
     const [activeStatus, setActiveStatus] = React.useState("Active")
     const [disclaimer, setDisclaimer] = React.useState("Release of stickers on Monday!")
     const [Profile, setProfile] = React.useState("Profile")
     const clickSample = () => {
-        alert("bitchOten");
+        alert("test");
     }
+    useEffect(() => {
+      setTimeout(() => {
+        console.log(localStorage.getItem('token'))
+      }, 500);
+    });
     return (
       <>
         <div className="div">
