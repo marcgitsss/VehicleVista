@@ -1,0 +1,15 @@
+.choose-user-header{
+    text-align: center;
+    font-size: 1.3em;
+}
+
+.choose-user-buttons{
+    margin-top: 2em;
+    display: flex;
+    justify-content: space-around;
+}
+
+.choose-user-buttons button {
+    width: 45%;
+    height: 150px;
+}
