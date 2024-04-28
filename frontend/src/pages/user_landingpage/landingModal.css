@@ -42,6 +42,9 @@
 .big-icon-button:active {
   background-color: #57171B;
 }
+/* .big-icon-button:active {
+  background-color: #57171B;
+} */
 
 .icon {
   font-size: 2rem; /* Set the size of the icon */

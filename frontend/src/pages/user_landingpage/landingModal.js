@@ -9,7 +9,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import "./landingModal.css";
 import PostAddIcon from '@mui/icons-material/PostAdd';
-
+// import
 const style = {
   position: 'absolute',
   top: '50%',
