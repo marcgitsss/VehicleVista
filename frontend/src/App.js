@@ -7,9 +7,7 @@ import LoginPage from "./pages/user_login/LoginPage";
 function App() {
   return (
     <div >
-      {/* <TransitionsModal /> */}
-
-      <LoginPage />
+      <TransitionsModal />
     </div>
   );
 }
