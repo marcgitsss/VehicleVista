@@ -10,6 +10,8 @@ import Registration from "./pages/user/vehicle_registration/vehicle_registration
 import ChangePassword from "./pages/user/user_login/components/ChangePass/ChangePassword";
 import UserStatus from "./pages/user/UserStatus";
 import Invoice from "./pages/user/user_login/components/Invoice";
+import LoginCard from "./pages/user_login/LoginCard";
+import Registration from "./pages/vehicle_registration/vehicle_registration"
 function App() {
   return (
     <Router>
