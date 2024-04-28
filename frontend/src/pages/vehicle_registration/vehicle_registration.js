@@ -8,11 +8,34 @@ import "./registration.css"; // Import the CSS file
 export default function Registration() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [orcrFile, setORCRFile] = useState(null); // State to store OR/CR file
-  const [licenseFile, setLicenseFile] = useState(null); // State to store License file
-  const [modalOpen, setModalOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
-  const [modalRegistrationData, setModalRegistrationData] = useState(null); // State to store registration data for modal
+  const [orcrFile, setORCRFile] = useState(null);
+  const [licenseFile, setLicenseFile] = useState(null);
+  const [registrationData, setRegistrationData] = useState({
+    surname: "",
+    givenname: "",
+    mi:"",
+    sname:"",
+    idno:"",
+    yearlevel:"",
+    contactno:"",
+    vmake:"",
+    plateno:"",
+    color:"",
+    vehicleType: "",
+  });
+  const [inputErrors, setInputErrors] = useState({
+    surname: "",
+    givenname: "",
+    mi: "",
+    sname: "",
+    idno: "",
+    yearlevel: "",
+    contactno: "",
+    vmake: "",
+    plateno: "",
+    color: "",
+    vehicleType: "",
+  });
 
   const handleORCRUpload = (e) => {
     const file = e.target.files[0];
@@ -24,116 +47,59 @@ export default function Registration() {
     setLicenseFile(file);
   };
 
-  // State variable to store form data
-  const [registrationData, setRegistrationData] = useState({
-    surname: "",
-    givenname: "",
-    mi:"",
-    sname:"",
-    idno:"",
-    yearlevel:"",
-    contactno:"",
-    vmake:"",
-    
-  });
-
-  const validateForm = () => {
-    let invalidFields = [];
-    
-    // Check for empty required fields
-    if (!registrationData.surname) {
-      invalidFields.push('Surname');
-    }
-    if (!registrationData.givenname) {
-      invalidFields.push('Given name');
-    }
-    if (!registrationData.sname) {
-      invalidFields.push('Name of student');
-    }
-    if (!registrationData.idno) {
-      invalidFields.push('ID number');
-    }
-    if (!registrationData.yearlevel) {
-      invalidFields.push('Grade/Year level');
-    }
-    if (!registrationData.contactno) {
-      invalidFields.push('Contact number');
+  const handleSubmit = () => {
+    const invalidFields = validateForm();
+    if (invalidFields.length === 0) {
+      // If validation passes, handle form submission
+      // Your submission logic here
+      setSnackbarMessage("Successfully submitted.");
+      setSnackbarOpen(true);
     } else {
-      // Validate contact number format
-      const contactNoRegex = /^\+639\d{9}$/; // Regex for "+639" followed by 9 digits
-      if (!contactNoRegex.test(registrationData.contactno)) {
-        invalidFields.push('Contact number format');
-      }
-    }
-    if (!registrationData.vmake) {
-      invalidFields.push('Vehicle make');
-    }
-    
-    // Convert invalidFields to an array if it's not already
-    invalidFields = Array.isArray(invalidFields) ? invalidFields : [invalidFields];
-  
-    if (invalidFields.length > 0) {
-      const errorMessage = `Please fill in all required fields and correct the following: ${invalidFields.join(', ')}.`;
+      // If validation fails, display error messages
+      const errorMessage = `Please fill in all required fields and correct the following: ${invalidFields.join(', ')}`;
       setSnackbarMessage(errorMessage);
       setSnackbarOpen(true);
-      return true; // Validation fails
     }
-  
-    return false; // Validation passes
   };
-  
-  
-  
-  
-  
-  // Function to handle form submission
-  
-const handleSubmit = () => {
-  // Validate form
-  const invalidFields = validateForm();
-  if (!invalidFields) {
-    // If validation passes, set modal state and registration data
-    setShowModal(true);
-    setModalRegistrationData(registrationData);
-  } else {
-    // If validation fails, display error message
-    const errorMessage = `Please fill in all required fields and correct the following: ${Array.isArray(invalidFields) ? invalidFields.join(', ') : invalidFields}`;
-    setSnackbarMessage(errorMessage);
-    setSnackbarOpen(true);
-  }
-};
 
+  const validateForm = () => {
+    const errors = {};
+    Object.keys(registrationData).forEach((key) => {
+      if (registrationData[key] === "") {
+        errors[key] = `${key} is required`;
+      }
+    });
+    setInputErrors(errors);
+    return Object.keys(errors);
+  };
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
-  // Function to handle input changes and update state
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // If the input is MI, limit the input to one character
-    if (name === "mi" && value.length > 1) {
-      return;
-    }
-
     setRegistrationData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
   };
 
-  // Function to handle radio button changes and update state
   const handleRadioChange = (e) => {
     const { value } = e.target;
     setRegistrationData((prevData) => ({
       ...prevData,
       vehicleType: value,
     }));
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      vehicleType: "",
+    }));
   };
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-  
 
 
   console.log(registrationData);
@@ -304,19 +270,10 @@ const handleSubmit = () => {
               backgroundColor: '#8A252C',
               color: '#F4C522' // Use color property to change font color
             }}
-            onClick={handleSubmit}
+            onClick={handleSubmit} // Call handleSubmit function when the button is clicked
           >
             SUBMIT
           </Button>
-
-          {/* Modal for displaying registration data */}
-          
-            {/* Render PayMod component here with registration data */}
-            {modalRegistrationData && (
-              <PayMod modalRegistrationData={modalRegistrationData} />
-            )}
-         
- 
 
         </div>
       </Box>
