@@ -15,20 +15,20 @@ import com.SanJuanPunchMan.SystemInteg.service.OTPService;
 import jakarta.mail.MessagingException;
 
 @RestController
-@RequestMapping("/Register")
+@RequestMapping("/register")
 public class OTPController {
 	
 	@Autowired
 	OTPService otpService;
 	
 	@PostMapping
-	@RequestMapping("/CreateOTP")
+	@RequestMapping("/generateOtp/")
 	public OTPCreateResponse createOTP(@RequestBody OTPEntity otp) throws InterruptedException, ExecutionException, MessagingException {
 		return otpService.createOTP(otp);
 	}
 	
 	@PostMapping
-	@RequestMapping("/VerifyOTP")
+	@RequestMapping("/verifyOtp/")
 	public String verifyOTP(@RequestBody OTPEntity otp) throws InterruptedException, ExecutionException, MessagingException {
 	    return otpService.verifyOTP(otp);
 	}

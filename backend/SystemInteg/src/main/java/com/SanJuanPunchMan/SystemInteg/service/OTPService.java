@@ -6,13 +6,16 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.el.stream.Optional;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.SanJuanPunchMan.SystemInteg.beans.OTPCreateResponse;
 import com.SanJuanPunchMan.SystemInteg.entity.OTPEntity;
+import com.SanJuanPunchMan.SystemInteg.entity.UserEntity;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -42,109 +45,120 @@ public class OTPService {
 
         if (existingDocSnapshot.exists()) {
             System.out.println("Document with email " + otp.getEmail() + " already exists");
-        } else {
-            System.out.println("Document with email " + otp.getEmail() + " does not exist");
-        }
-        
-        if (existingDocSnapshot.exists()) {
+
             // Document with the same email already exists
             // Update the existing document instead of creating a new one
             String otpgenString = OTPGenerator.generateOTP();
             otp.setOtp(otpgenString);
             otp.setExpirationDate(getDate5MinutesAfterCreation());
-            otp.setId(otp.getEmail());
+            otp.setId(otpgenString);
+            otp.setIsUsed(false);
             existingDoc.set(otp); // Update the existing document with the new OTP entity
-            
-            
-            //SENDS EMAIL To Entered Email
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-    		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-    		mimeMessageHelper.setTo(otp.getEmail());
-    		mimeMessageHelper.setSubject("Email Verification OTP");
-    		
-    		//@TODO We can Edit the Text Later On 
-    		mimeMessageHelper.setText("Your Verification Code is "+ otp.getOtp()+"");
-    		javaMailSender.send(mimeMessage);
-            
+
+            // Send email to the entered email
+            sendEmail(otp.getEmail(), otp.getOtp());
+
             // Populate OTPCreateResponse
-            otpCreateResponse.setId(otp.getId());
+            OTPCreateResponse otpCreateResponse = new OTPCreateResponse();
+            otpCreateResponse.setId(otp.getOtp());
             otpCreateResponse.setUpdatedTime(new Date()); // Use the current time as the updated time
 
             return otpCreateResponse;
         } else {
+            System.out.println("Document with email " + otp.getEmail() + " does not exist");
+
             // Generate OTP
             String otpgenString = OTPGenerator.generateOTP();
 
             // Set the generated OTP string
-            otp.setId(otp.getEmail());
+            otp.setId(otpgenString);
             otp.setOtp(otpgenString);
+            otp.setIsUsed(false);
 
             // Set the expiration date before inserting the document
             otp.setExpirationDate(getDate5MinutesAfterCreation());
 
-            // Insert the OTP into the table
-            ApiFuture<WriteResult> apiFuture = existingDoc.set(otp);
+            // Create a new document with the OTP as the document ID
+            DocumentReference newDocRef = firestore.collection("OTPEntity").document(otp.getEmail());
+            ApiFuture<WriteResult> apiFuture = newDocRef.set(otp);
+
+            // Send email to the entered email
+            sendEmail(otp.getEmail(), otp.getOtp());
 
             // Populate OTPCreateResponse
-            otpCreateResponse.setId(otp.getId());
+            OTPCreateResponse otpCreateResponse = new OTPCreateResponse();
+            otpCreateResponse.setId(otp.getOtp());
             otpCreateResponse.setUpdatedTime(apiFuture.get().getUpdateTime().toDate());
 
             return otpCreateResponse;
         }
-
     }
+
     
     
   //Verify OTP
     public String verifyOTP(OTPEntity otp) throws InterruptedException, ExecutionException, MessagingException {
         Firestore firestore = FirestoreClient.getFirestore();
-
-        // Get the document with the given email
+        
+        // Get the document with the given OTP
         DocumentReference docRef = firestore.collection("OTPEntity").document(otp.getEmail());
         ApiFuture<DocumentSnapshot> future = docRef.get();
         DocumentSnapshot document = future.get();
-
+        
+        
         if (document.exists()) {
-            // Document with the given email exists
+            // Document with the given OTP exists
             OTPEntity storedOTP = document.toObject(OTPEntity.class);
 
             if (storedOTP != null && storedOTP.getOtp().equals(otp.getOtp())) {
                 // OTPs match
-            	if(storedOTP.getExpirationDate().after(new Date())) {
-            		String username = modifyEmail(otp.getEmail());
-                    String password = generatePassword();
-                    otp.setUsername(username);
-                    otp.setPassword(password);
-                    otp.setExpirationDate(storedOTP.getExpirationDate());
-                    otp.setId(storedOTP.getEmail());
-                    // Update the document with the new username and password
-                    ApiFuture<WriteResult> updateFuture = docRef.set(otp);
-                    
-                    MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-    				MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-    				mimeMessageHelper.setTo(otp.getEmail());
-    				mimeMessageHelper.setSubject("Confirmation Email of Verification");
-    				//We can Edit the Text Later On
-    				mimeMessageHelper.setText("Email is Verified and here are your login credentials: \n"
-    						+ "Username: "+otp.getUsername()+"\n"
-    						+ "Password: "+password+"");
-    				
-    				javaMailSender.send(mimeMessage);
+                if (storedOTP.getExpirationDate().after(new Date())) {
+                	if(storedOTP.getIsUsed()==false) {
+                		String username = otp.getEmail();
+                        String password = generatePassword();
 
-                    return "Matched";
-            	}
-            	else {
-            		return "OTP Expired";
-            	}
-                
+                        // Mark the OTP as used
+                        storedOTP.setIsUsed(true);
+                        ApiFuture<WriteResult> updateOTPFuture = docRef.set(storedOTP);
+
+                        // Create a new user in Firebase
+                        Firestore dbFirestore = FirestoreClient.getFirestore();
+                        DocumentReference userRef = dbFirestore.collection("tbluser").document(username);
+                        UserEntity newUser = new UserEntity();
+                        newUser.setUsername(username);
+                        newUser.setPassword(hash(password));
+                        ApiFuture<WriteResult> newUserFuture = userRef.set(newUser);
+
+                        // Send email
+                        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+                        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+                        mimeMessageHelper.setTo(otp.getEmail());
+                        mimeMessageHelper.setSubject("Confirmation Email of Verification");
+                        // Edit the text as needed
+                        mimeMessageHelper.setText("Email is Verified and here are your login credentials: \n"
+                                + "Username: " + username + "\n"
+                                + "Password: " + password + "");
+
+                        javaMailSender.send(mimeMessage);
+
+                        return "Matched";
+                	}
+                	else {
+                		return "OTP Already Used";
+                	}
+                } else {
+                    return "OTP Expired";
+                }
             }
+            return "OTP Mismatch";
         }
-        return "Mismatch";
+        return "OTP Does not Exist";
     }
 
 
 
-    // OTP generator
+
+	// OTP generator
     public static class OTPGenerator {
 
         private static final String CHARACTERS = "0123456789";
@@ -167,14 +181,14 @@ public class OTPService {
         return calendar.getTime();
     }
     
-    //	method used to remove the address in the email for username purposes
-	private String modifyEmail(String email) {
-	    int atIndex = email.indexOf('@');
-	    if (atIndex != -1) {
-	        return email.substring(0, atIndex);
-	    }
-	    return email; // Return the original email if no @ symbol is found
-	}
+    private void sendEmail(String email, String otp) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Email Verification OTP");
+        mimeMessageHelper.setText("Your Verification Code is " + otp);
+        javaMailSender.send(mimeMessage);
+    }
 	
 	// Character Password Generator
 		private static String generatePassword() {
@@ -188,5 +202,11 @@ public class OTPService {
 		    }
 		    return sb.toString();
 		}
+		
+		private String hash(String plainText){
+			return BCrypt.hashpw(plainText, BCrypt.gensalt());
+		}
+		
+		
 }
 
