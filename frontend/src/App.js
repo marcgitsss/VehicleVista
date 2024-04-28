@@ -1,10 +1,11 @@
 import "./App.css";
-import ApplicationList_Admin from "./ApplicationList_Admin/ApplicationList_Admin";
+import LoginCard from "./pages/user_login/LoginCard";
+import Registration from "./pages/vehicle_registration/vehicle_registration"
 
 function App() {
   return (
-    <div className="App">
-      <ApplicationList_Admin />
+    <div >
+      <Registration />
     </div>
   );
 }
