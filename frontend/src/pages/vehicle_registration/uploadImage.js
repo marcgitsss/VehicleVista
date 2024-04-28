@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
 import { Button, Typography, Snackbar } from "@mui/material";
 
 export default function FileUpload({ label, onChange }) {
@@ -16,6 +17,17 @@ export default function FileUpload({ label, onChange }) {
       setFileName(file.name);
       onChange(file);
     }
+=======
+import { Button, Typography } from "@mui/material";
+
+export default function FileUpload({ label, onChange }) {
+  const [fileName, setFileName] = useState(null);
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    setFileName(file.name);
+    onChange(file);
+>>>>>>> 8ac5782 (Initial Login User)
   };
 
   const handleRemoveFile = () => {
@@ -23,10 +35,13 @@ export default function FileUpload({ label, onChange }) {
     onChange(null);
   };
 
+<<<<<<< HEAD
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
+=======
+>>>>>>> 8ac5782 (Initial Login User)
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', ml: "1rem" }}>
       <Typography style={{ fontSize: "1.125rem", fontWeight: 'bold', ml: '2' }}>
@@ -73,6 +88,7 @@ export default function FileUpload({ label, onChange }) {
           </label>
         </>
       )}
+<<<<<<< HEAD
       {/* Snackbar for displaying validation errors */}
       <Snackbar
         open={snackbarOpen}
@@ -81,6 +97,8 @@ export default function FileUpload({ label, onChange }) {
         message={snackbarMessage}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
+=======
+>>>>>>> 8ac5782 (Initial Login User)
     </div>
   );
 }

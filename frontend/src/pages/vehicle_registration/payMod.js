@@ -4,7 +4,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Checkbox, Snackbar } from '@mui/material';
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
+=======
+>>>>>>> 8ac5782 (Initial Login User)
 
 const style = {
     position: 'absolute',
@@ -49,7 +52,11 @@ export default function PayMod(props) {
 
     return (
         <div>
+<<<<<<< HEAD
             <Button onClick={handleOpen}>Submit</Button> 
+=======
+            <Button onClick={handleOpen}>Open modal</Button> 
+>>>>>>> 8ac5782 (Initial Login User)
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -95,14 +102,20 @@ export default function PayMod(props) {
                                 </Typography>
                             </div>
                             <div>
+<<<<<<< HEAD
                                 <Link to="/registration">
+=======
+>>>>>>> 8ac5782 (Initial Login User)
                                 <Button
                                     onClick={handleSubmit}
                                     sx={{ backgroundColor: '#8A252C', borderRadius: '2rem', color: 'white', fontWeight: 'bold', width: 'clamp(8rem, 20vw, 10rem)', height: 'clamp(2.5rem, 10vw, 3rem)', fontSize: 'clamp(1rem, 3vw, 1.5rem)', textTransform: 'none' }}
                                 >
                                     Submit
                                 </Button>
+<<<<<<< HEAD
                                 </Link>
+=======
+>>>>>>> 8ac5782 (Initial Login User)
                             </div>
                         </div>
                     </Typography>

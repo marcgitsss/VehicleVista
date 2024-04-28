@@ -16,6 +16,8 @@ import RegistrationForm1 from "./pages/user/vehicle_registration/vehicle_registr
 import RegistrationForm from "./pages/user/vehicle_registration/vehicle_registrationform1";
 import UserProfilePage from "./pages/user/user_profile/user_profile/user_profilepage";
 import PrivateRoutes from "./Utils/PrivateRoutes";
+import LoginCard from "./pages/user_login/LoginCard";
+import Registration from "./pages/vehicle_registration/vehicle_registration"
 
 function App() {
   return (
