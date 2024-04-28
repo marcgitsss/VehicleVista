@@ -6,7 +6,6 @@ import {
     TableCell,
     Paper,
     TableRow,
-    Box,
     FormControl,
     InputLabel,
     Select,
@@ -18,7 +17,6 @@ import {
   import Button from "@mui/material/Button";
   
   import { useState } from "react";
-  import "./ApprovedTable.css";
   
   function ApprovedTable() {
     const [userFilter, setUserFilter] = useState();
@@ -150,7 +148,7 @@ import {
     return (
       <>
         {/* Menu */}
-        <div className="filterOptions">
+        <div className="applist-options">
           {/* Users Filter */}
           <div>
             <h2>Select User</h2>
@@ -212,7 +210,7 @@ import {
           </div>
   
           {/* Button */}
-          <div className="apply-button">
+          <div className="applist-apply-button">
             <Button variant="contained">Apply</Button>
           </div>
         </div>

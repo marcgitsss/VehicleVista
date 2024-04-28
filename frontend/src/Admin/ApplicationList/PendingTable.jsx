@@ -18,7 +18,6 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Button from "@mui/material/Button";
 
 import { useState } from "react";
-import "./PendingTable.css";
 
 function PendingTable() {
   const [userFilter, setUserFilter] = useState();
@@ -150,7 +149,7 @@ function PendingTable() {
   return (
     <>
       {/* Menu */}
-      <div className="filterOptions">
+      <div className="applist-options">
         {/* Users Filter */}
         <div>
           <h2>Select User</h2>
@@ -212,7 +211,7 @@ function PendingTable() {
         </div>
 
         {/* Button */}
-        <div className="apply-button">
+        <div className="applist-apply-button">
           <Button variant="contained">Apply</Button>
         </div>
       </div>

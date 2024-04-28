@@ -1,16 +1,12 @@
-import { Container } from "@mui/material";
-
 import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-
 import { useState } from "react";
-import AdminHeader from "../components/AdminHeader/AdminHeader";
-import AdminSidebar from "../components/AdminSidebar/AdminSidebar";
-import "./ApplicationList_Admin.css";
-import PendingTable from "./PendingTable/PendingTable";
-import ApprovedTable from "./ApprovedTable/ApprovedTable";
+import AdminHeader from "../../components/AdminHeader/AdminHeader";
+import AdminSidebar from "../../components/AdminSidebar/AdminSidebar";
+import PendingTable from "./PendingTable";
+import ApprovedTable from "./ApprovedTable";
 
-function ApplicationList_Admin() {
+function ApplicationList() {
   const [tabValue, setTabValue] = useState('1')
 
   const handleTabChange = (event, newValue) => {
@@ -21,9 +17,9 @@ function ApplicationList_Admin() {
     <>
       <AdminHeader />
       <AdminSidebar />
-      <main className="container">
-        {/* Header */}
-        <div className="header">
+      <main className="admin-container">
+  
+        <div className="admin-title">
           <h1>Application List</h1>
         </div>
 
@@ -46,12 +42,10 @@ function ApplicationList_Admin() {
             <TabPanel value="3">Panel Three</TabPanel>
           </TabContext>
         </div>
-
-        {/* Table */}
-        <div></div>
       </main>
+      
     </>
   );
 }
 
-export default ApplicationList_Admin;
+export default ApplicationList;
