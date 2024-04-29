@@ -38,7 +38,7 @@ export default function LoginPage() {
           }}>
             <LoginCard />
           </Grid>
-          <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+          <div style={{ position: 'absolute', bottom: 0, width: '100%',mt:'20rem' }}>
             <Footer />
           </div>
         </Grid>

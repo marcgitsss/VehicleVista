@@ -1,14 +1,24 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import "./App.css";
-import LoginCard from "./pages/user_login/LoginCard";
-import Registration from "./pages/vehicle_registration/vehicle_registration"
-import ChooseUserTypeModal from "./pages/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal"; // Import the PayMod component
+import Registration from "./pages/vehicle_registration/vehicle_registration";
+import ChooseUserTypeModal from "./pages/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal";
+import LoginPage from "./pages/user_login/LoginPage";
+import LandingPage from "./pages/user_landingpage/user_landingpage";
 
 function App() {
   return (
-    <div >
-      <Registration />
-      <ChooseUserTypeModal />
-    </div>
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/choose-user-type" element={<ChooseUserTypeModal />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" exact element={<LandingPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
