@@ -72,7 +72,7 @@ export default function TransitionsModal() {
   return (
     <div>
       <button className="big-icon-button" onClick={handleOpen}>
-        <PostAddIcon className="icon" style={{ fontSize: "10rem" }} />
+        <PostAddIcon className="icon" style={{ fontSize: "5rem" }} />
         <span style={{ fontSize: "1.5rem" }}>New Registration</span>
       </button>
       <Modal
