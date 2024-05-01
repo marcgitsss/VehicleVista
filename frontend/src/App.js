@@ -12,14 +12,17 @@ import UserStatus from "./pages/user/UserStatus";
 import Invoice from "./pages/user/user_login/components/Invoice";
 import LoginCard from "./pages/user_login/LoginCard";
 import Registration from "./pages/vehicle_registration/vehicle_registration"
-import ChooseUserTypeModal from "./pages/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal"; // Import the PayMod component
+import Registration from "./pages/vehicle_registration/vehicle_registrationform";
+import ChooseUserTypeModal from "./pages/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal"; // 
+import RegistrationForm from './pages/vehicle_registration/vehicle_registrationform';
+import VehicleRegistration from './pages/vehicle_registration/vehicle_registration';
 
 function App() {
   return (
     <Router>
       <div>
         <Routes>
-          <Route path="/registration" element={<VehicleRegistration />} />
+          <Route path="/registration" element={<RegistrationForm />} />
           <Route path="/choose-user-type" element={<ChooseUserTypeModal />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgotpass" element={<ChangePass />} />
