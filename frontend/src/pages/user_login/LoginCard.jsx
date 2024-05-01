@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './logincard.css';
 import axios from 'axios';
+import { Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import VerifyEmailModal from './components/VerifyEmail/VerifyEmailModal';
 
 export default function LoginCard() {
   const [loginData, setLoginData] = useState({
@@ -9,7 +12,15 @@ export default function LoginCard() {
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false); // State for controlling modal
+  const [shouldCloseModal, setShouldCloseModal] = useState(false);
 
+
+
+  const handleCloseModal = () => {
+    setForgotPasswordModalOpen(false);
+    setShouldCloseModal(false); // Reset shouldCloseModal state when modal is closed
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setLoginData(prevData => ({
@@ -71,6 +82,18 @@ export default function LoginCard() {
     return regex.test(email);
   };
 
+  const handleForgotPasswordClick = () => {
+    setShouldCloseModal(false); // Reset shouldCloseModal state
+    setForgotPasswordModalOpen(true); // Open the forgot password modal
+  };
+  
+  useEffect(() => {
+    // Reset the modal state when it's closed
+    if (!forgotPasswordModalOpen) {
+      setLoginData({ username: '', password: '' });
+    }
+  }, [forgotPasswordModalOpen]);
+
   return (
     <div className="login-container">
       <div className="form-container">
@@ -97,6 +120,15 @@ export default function LoginCard() {
               onChange={handleInputChange}
             />
           </div>
+           {/* Snackbar for successful or unsuccessful login */}
+      {snackbarOpen && (
+        <div className="snackbar">{snackbarMessage}</div>
+      )}
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {/* <Link to="/verify-email" style={{ textDecoration: 'none' }}><Typography sx={{ cursor: 'pointer', fontSize: '1rem' }}>Forgot Password?</Typography> </Link> */}
+            <Typography sx={{ cursor: 'pointer', fontSize: '1rem' }} onClick={handleForgotPasswordClick}>Forgot Password?</Typography>
+          </div>
+
           <button type="submit" className="submit">
             Sign in
           </button>
@@ -105,10 +137,11 @@ export default function LoginCard() {
           </p>
         </form>
       </div>
-      {/* Snackbar for successful or unsuccessful login */}
-      {snackbarOpen && (
-        <div className="snackbar">{snackbarMessage}</div>
-      )}
+     
+      {/* Render the modal conditionally */}
+      {forgotPasswordModalOpen && (
+  <VerifyEmailModal onClose={handleCloseModal} />
+)}
     </div>
   );
 };
