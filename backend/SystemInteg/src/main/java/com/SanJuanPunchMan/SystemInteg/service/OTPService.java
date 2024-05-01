@@ -94,11 +94,15 @@ public class OTPService {
         }
     }
 
-    
-    
+
   //Verify OTP
     public String verifyOTP(OTPEntity otp) throws InterruptedException, ExecutionException, MessagingException {
         Firestore firestore = FirestoreClient.getFirestore();
+        
+     // Validate email format
+        if (!isValidEmail(otp.getEmail())) {
+            throw new IllegalArgumentException("Invalid email format: " + otp.getEmail());
+        }
         
         // Get the document with the given OTP
         DocumentReference docRef = firestore.collection("OTPEntity").document(otp.getEmail());
@@ -155,9 +159,6 @@ public class OTPService {
         return "OTP Does not Exist";
     }
 
-
-
-
 	// OTP generator
     public static class OTPGenerator {
 
@@ -207,6 +208,12 @@ public class OTPService {
 			return BCrypt.hashpw(plainText, BCrypt.gensalt());
 		}
 		
+		//check if email is valid
+		private boolean isValidEmail(String email) {
+		    // Regular expression for basic email validation
+		    String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+		    return email.matches(emailRegex);
+		}
 		
 }
 

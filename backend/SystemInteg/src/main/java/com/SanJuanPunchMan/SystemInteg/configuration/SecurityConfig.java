@@ -41,8 +41,8 @@ public class SecurityConfig {
                         		"/jwt/admin-register**", "/jwt/admin-login**",
                         		"/jwt/employee-register**", "/jwt/employee-login**",
 //                        		TO Delete
-                        		"registration/create-registration**",
-                        		"/photo/gdrive-upload**", "/photo/gdrive-view**" 
+                        		"registration/create-registration**"
+//                        		"/photo/gdrive-upload**", "/photo/gdrive-view**" 
                         		)
                                 .permitAll()
                                 .anyRequest()
