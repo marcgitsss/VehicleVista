@@ -1,0 +1,6 @@
+.backgroundImageAU {
+    background-size:contain;/* Ensures the background image covers the entire container */
+    background-repeat:no-repeat; /* Prevents the background image from repeating */
+    width: 100%; /* Prevents the background image from repeating */
+    /* You can add other background properties as needed */
+  }
