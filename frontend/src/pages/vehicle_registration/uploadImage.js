@@ -22,6 +22,8 @@ import { Button, Typography } from "@mui/material";
 
 export default function FileUpload({ label, onChange }) {
   const [fileName, setFileName] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];

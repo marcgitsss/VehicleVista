@@ -10,6 +10,7 @@ import MuiAlert from '@mui/material/Alert';
 import "./landingModal.css";
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import axios from "axios";
+import ChooseUserTypeModal from '../vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal';
 
 const style = {
   position: 'absolute',
@@ -29,13 +30,14 @@ export default function TransitionsModal() {
   const [code, setCode] = React.useState('');
   const [emailError, setEmailError] = React.useState('');
   const [codeError, setCodeError] = React.useState('');
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false); // Add Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
+  const [verificationSuccess, setVerificationSuccess] = React.useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleSend = () => {
-    // Validate email format
+  const handleSend = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim() || !emailRegex.test(email.trim())) {
       setEmailError("Please enter a valid email");
@@ -43,29 +45,35 @@ export default function TransitionsModal() {
     }
     setEmailError("");
 
-    // Send email logic here
-    const res = axios.post("http://localhost:8080/register/generateOtp/", {
-      email: email,
-    });
-    // Show Snackbar
-    setSnackbarOpen(true);
+    try {
+      await axios.post("http://localhost:8080/register/generateOtp/", { email });
+      setSnackbarMessage("Email sent successfully");
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarMessage("Failed to send email");
+      setSnackbarOpen(true);
+    }
   };
 
-  const handleSubmit = () => {
-    // Validate code
+  const handleSubmit = async () => {
     if (!code.trim()) {
       setCodeError('Please enter the verification code');
       return;
     }
     setCodeError('');
 
-    // Submit code logic here
-    const res = axios.post("http://localhost:8080/register/verifyOtp/", {
-      email: email,
-      otp: code,
-    });
-    // Show Snackbar
-    setSnackbarOpen(true);
+    try {
+      const res = await axios.post("http://localhost:8080/register/verifyOtp/", { email, otp: code });
+      if (res.data === "Matched") {
+        setVerificationSuccess(true);
+      } else {
+        setSnackbarMessage(res.data); // Display server response message in Snackbar
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      setSnackbarMessage("An error occurred. Please try again later.");
+      setSnackbarOpen(true);
+    }
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -88,11 +96,7 @@ export default function TransitionsModal() {
         onClose={handleClose}
         closeAfterTransition
         slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
+        slotProps={{ backdrop: { timeout: 500 } }}
       >
         <Fade in={open}>
           <Box sx={style}>
@@ -122,7 +126,7 @@ export default function TransitionsModal() {
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
               />
-              <span className={codeError ? "error" : ""}>{codeError}</span>
+              <span className={`error ${codeError ? 'visible' : ''}`}>{codeError}</span>
               <button className="button-maroon" onClick={handleSubmit}>Submit</button>
             </Typography>
           </Box>
@@ -133,16 +137,41 @@ export default function TransitionsModal() {
         open={snackbarOpen} 
         autoHideDuration={6000} 
         onClose={handleSnackbarClose}
-        sx={{ zIndex: 1500 }} // Set a higher z-index directly on the Snackbar component
+        sx={{ zIndex: 100000 }} // Set a higher z-index directly on the Snackbar component
       >
         <MuiAlert 
           onClose={handleSnackbarClose} 
-          severity="success" 
+          severity="error" 
           sx={{ width: '100%' }}
         >
-          Email sent successfully!
+          {snackbarMessage}
         </MuiAlert>
       </Snackbar>
+
+      {/* Modal after successful verification */}
+      {verificationSuccess && (
+        <Modal
+          aria-labelledby="verification-modal-title"
+          aria-describedby="verification-modal-description"
+          open={verificationSuccess}
+          onClose={() => setVerificationSuccess(false)}
+          closeAfterTransition
+          slots={{ backdrop: Backdrop }}
+          slotProps={{ backdrop: { timeout: 500 } }}
+        >
+          <Fade in={verificationSuccess}>
+            <Box sx={style}>
+              <Typography id="verification-modal-title" variant="h4" component="h2">
+                Verification Successful
+              </Typography>
+              <Typography id="verification-modal-description" sx={{ mt: 2 }}>
+                Your verification was successful. Proceed to choose your user type.
+              </Typography>
+              <Button onClick={() => setVerificationSuccess(false)}>Close</Button>
+            </Box>
+          </Fade>
+        </Modal>
+      )}
     </div>
   );
 }
