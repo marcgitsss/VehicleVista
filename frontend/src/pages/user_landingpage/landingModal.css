@@ -47,3 +47,15 @@
   font-size: 2rem; /* Set the size of the icon */
   margin-bottom: 0.5rem; /* Adjust spacing between icon and text */
 }
+.error {
+  color: red;
+  font-size: 0.875rem; /* Adjust font size as needed */
+}
+
+/* landingModal.css */
+
+/* Increase z-index of snackbar */
+.MuiSnackbar-root {
+  z-index: 2000; /* Adjust z-index value as needed */
+}
+

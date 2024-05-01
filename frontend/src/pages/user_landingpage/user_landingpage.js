@@ -14,15 +14,19 @@ const LandingPage = () => {
       </div>
       
       <div className="landingPage">
-        <div className="landingPageIntroduction">
-          <div className="landingPageText">
-            <h2>Registration<br/>made easy</h2>
-            <h3>Get your campus vehicle sticker hassle-free.<br /> Easily register or renew with us.</h3>
-            {/* Use Link instead of button for navigation */}
-            <Link to="/login" className="loginButton">Login</Link>
-          </div>
-          <div className="modalContainer">
-            <TransitionsModal />
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="landingPageIntroduction">
+            {/*Login*/}
+            <div className="landingPageText">
+              <h2>Registration<br/>made easy</h2>
+              <h3>Get your campus vehicle sticker hassle-free.<br /> Easily register or renew with us.</h3>
+              {/* Use Link instead of button for navigation */}
+              <Link to="/login" className="loginButton">Login</Link>
+            </div>
+            {/*Registration*/}
+            <div className="modalContainer">
+              <TransitionsModal />
+            </div>
           </div>
         </div>
       </div>

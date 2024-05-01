@@ -9,6 +9,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import "./landingModal.css";
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import axios from "axios";
 
 const style = {
   position: 'absolute',
@@ -37,13 +38,15 @@ export default function TransitionsModal() {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim() || !emailRegex.test(email.trim())) {
-      setEmailError('Please enter a valid email');
+      setEmailError("Please enter a valid email");
       return;
     }
-    setEmailError('');
+    setEmailError("");
 
     // Send email logic here
-
+    const res = axios.post("http://localhost:8080/register/generateOtp/", {
+      email: email,
+    });
     // Show Snackbar
     setSnackbarOpen(true);
   };
@@ -57,7 +60,10 @@ export default function TransitionsModal() {
     setCodeError('');
 
     // Submit code logic here
-
+    const res = axios.post("http://localhost:8080/register/verifyOtp/", {
+      email: email,
+      otp: code,
+    });
     // Show Snackbar
     setSnackbarOpen(true);
   };
@@ -103,7 +109,7 @@ export default function TransitionsModal() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <span className={emailError ? "error" : ""}>{emailError}</span>
+              <span className={`error ${emailError ? 'visible' : ''}`}>{emailError}</span>
               <button className="button-maroon" onClick={handleSend}>Send</button>
             </Typography>
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
@@ -127,6 +133,7 @@ export default function TransitionsModal() {
         open={snackbarOpen} 
         autoHideDuration={6000} 
         onClose={handleSnackbarClose}
+        sx={{ zIndex: 1500 }} // Set a higher z-index directly on the Snackbar component
       >
         <MuiAlert 
           onClose={handleSnackbarClose} 
