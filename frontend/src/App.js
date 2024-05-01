@@ -6,6 +6,7 @@ import Registration from "./pages/vehicle_registration/vehicle_registration";
 import ChooseUserTypeModal from "./pages/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal";
 import LoginPage from "./pages/user_login/LoginPage";
 import LandingPage from "./pages/user_landingpage/user_landingpage";
+import ChangePass from './pages/user_login/ChangePass';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="/choose-user-type" element={<ChooseUserTypeModal />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="forgotpass" element={<ChangePass />} />
           <Route path="/" exact element={<LandingPage />} />
         </Routes>
       </div>
