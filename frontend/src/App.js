@@ -1,24 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import "./App.css";
+import Registration from "./pages/vehicle_registration/vehicle_registration";
+import ChooseUserTypeModal from "./pages/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal";
+import LoginPage from "./pages/user_login/LoginPage";
+import LandingPage from "./pages/user_landingpage/user_landingpage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/choose-user-type" element={<ChooseUserTypeModal />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" exact element={<LandingPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

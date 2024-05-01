@@ -1,0 +1,15 @@
+:root {
+    --admin-container-width: calc(100% - 260px);
+}
+
+.container {
+    width: 80%;
+    height: 100vh;
+    float: right;
+    width: var(--admin-container-width);
+    padding: 1em;
+}
+
+.header {
+    text-align: left;
+}

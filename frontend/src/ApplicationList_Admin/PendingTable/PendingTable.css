@@ -1,0 +1,20 @@
+.filterOptions {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.filterOptions h2 {
+    font-weight: 500;
+    font-size: .8em;
+}
+
+.filterOptions div h2 {
+    text-align: left;
+}
+
+.apply-button {
+    align-self: flex-end;
+}
