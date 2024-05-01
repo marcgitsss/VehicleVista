@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import PayMod from './pages/vehicle_registration/payMod';
+import ChooseUserTypeModal from './pages/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

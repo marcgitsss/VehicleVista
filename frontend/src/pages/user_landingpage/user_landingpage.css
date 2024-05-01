@@ -1,23 +1,29 @@
-/* landingpage.css */
+/* user_landingpage.css */
+
+/* Ensure no horizontal scrolling */
+body {
+  overflow-x: hidden;
+}
 
 /* LandingPage container */
 .landingPage {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Ensure the landingPage container covers the entire viewport height */
+  min-height: 95vh; /* Ensure the landingPage container covers the entire viewport height */
+  min-width: 100vw;
   background-image: url('../../assets/LandPageBG.png');
   background-size: cover;
   background-repeat: no-repeat;
 }
 
+.landingPageIntroduction {
+  display: flex; /* Use flexbox to arrange the elements side by side */
+  align-items: center; /* Center the content vertically */
+  margin-left: 20%;
+}
+
 .landingPageText {
-  position: absolute;
-  top: 50%; /* Position the landingPageText container in the middle of the landingPage container */
-  left: 10%; /* Align the text to the left side of the page */
-  transform: translate(-50%, -50%);
-  width: 34vw;
-  max-width: 700px;
-  margin-left: 10%; /* Add left margin */
+  width: 50%; /* Set width for the text container */
+  padding: 0 2rem; /* Add padding to the text container */
 }
 
 /* Adjusting h2 style */
@@ -51,12 +57,17 @@
 .loginButton:hover {
   background-color: #8A252C;
 }
-/* user_landingpage.css */
 
 .modalContainer {
-  position: absolute;
-  top: 50%;
-  left: 40%;
-  margin-top: 10%; /* Additional margin-top */
+  position: absolute; /* Set the position of the modal container to absolute */
+  top: 50%; /* Align the top of the modal container to the middle of the viewport */
+  right: -20%; /* Align the right side of the modal container with a 2% offset */
+  transform: translateY(-50%); /* Adjust vertical positioning to center the modal container */
+  width: 50%; /* Set width for the modal container */
+  padding: 0 2rem; /* Add padding to the modal container */
+  text-align: right; /* Align content to the right */
 }
 
+.MuiSnackbar-root {
+  z-index: 1500; /* Adjust z-index value as needed */
+}

@@ -19,7 +19,7 @@ function App() {
     <Router>
       <div>
         <Routes>
-          <Route path="/registration" element={<Registration />} />
+          <Route path="/registration" element={<VehicleRegistration />} />
           <Route path="/choose-user-type" element={<ChooseUserTypeModal />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgotpass" element={<ChangePass />} />
