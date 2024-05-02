@@ -2,17 +2,15 @@ import React, { useState, useEffect } from "react";
 import {
   Typography,
   Box,
-  FormControlLabel,
   Radio,
   RadioGroup,
   Button,
   Container,
-  Modal,
+  Snackbar,
+  TextField,
+  FormControlLabel,
 } from "@mui/material";
-import Snackbar from "@mui/material/Snackbar";
 import FileUpload from "./uploadImage";
-import PayMod from "./payMod"; // Import the PayMod component
-import "./registration.css"; // Import the CSS file
 import axios from "axios";
 
 export default function RegistrationForm() {
@@ -46,6 +44,7 @@ export default function RegistrationForm() {
     color: "",
     vehicleType: "",
   });
+
   useEffect(() => {
     console.log(localStorage.getItem("token"));
   }, []);
@@ -61,63 +60,18 @@ export default function RegistrationForm() {
   };
 
   const handleSubmit = () => {
+    // Check if both orcrFile and licenseFile are not null
+    if (!orcrFile || !licenseFile) {
+      // If any of the files is missing, display an error message and prevent form submission
+      setSnackbarMessage("Please upload both OR/CR and License");
+      setSnackbarOpen(true);
+      return; // Exit the function early
+    }
+  
     const invalidFields = validateForm();
     if (invalidFields.length === 0) {
       // If validation passes, handle form submission
       // Your submission logic here
-      const config = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      };
-      const lastName = registrationData.surname;
-      const firstName = registrationData.givenname;
-      const middleInitial = registrationData.mi;
-      const studentName = registrationData.sname;
-      const idNumber = registrationData.idno;
-      const gradeLevel = registrationData.yearlevel;
-      const contactNumber = registrationData.contactno;
-      const vehicleMake = registrationData.vmake;
-      const address = registrationData.address;
-      const plateNo = registrationData.plateno;
-      const color = registrationData.color;
-      const vehicleType = registrationData.vehicleType;
-      const email = localStorage.getItem("email");
-      const res = axios.post(
-        "http://localhost:8080/applicants/register",
-        {
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          middleInitial: middleInitial,
-          studentName: studentName,
-          address: address,
-          idNumber: idNumber,
-          gradeLevel: gradeLevel,
-          contactNumber: contactNumber,
-          vehicleMake: vehicleMake,
-          plateNo: plateNo,
-          color: color,
-          vehicleType: vehicleType,
-        },
-        config
-      );
-
-      const formData = new FormData();
-      formData.append("orcrimg", orcrFile);
-      formData.append("licenseimg", licenseFile);
-      formData.append("email", email);
-      const config2 = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      };
-      const res2 = axios.post(
-        "http://localhost:8080/applicants/uploadReq",
-        formData,
-        config2
-      );
       setSnackbarMessage("Registration successful");
       setSnackbarOpen(true);
     } else {
@@ -129,17 +83,32 @@ export default function RegistrationForm() {
       setSnackbarOpen(true);
     }
   };
+  
 
   const validateForm = () => {
     const errors = {};
-    Object.keys(registrationData).forEach((key) => {
-      if (registrationData[key] === "") {
-        errors[key] = `${key} is required`;
-      }
-    });
+    if (!/^[a-zA-Z]+$/.test(registrationData.surname)) {
+      errors.surname = "Surname must contain only letters";
+    }
+    if (!/^[a-zA-Z]+$/.test(registrationData.givenname)) {
+      errors.givenname = "Given Name must contain only letters";
+    }
+    if (!/^[a-zA-Z]+$/.test(registrationData.mi)) {
+      errors.mi = "M.I. must contain only letters";
+    }
+    if (!/^[\sa-zA-Z.]+$/.test(registrationData.sname)) {
+      errors.sname = "Name of Student must contain only letters, spaces, and periods";
+    }
+    if (!/^\d{8}$/.test(registrationData.idno)) {
+      errors.idno = "ID Number must be 8 digits long";
+    }
+    if (!/^(09|\+639)\d{9}$/.test(registrationData.contactno)) {
+      errors.contactno = "Contact number must be in the format 09123456789";
+    }
     setInputErrors(errors);
     return Object.keys(errors);
   };
+  
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
@@ -169,7 +138,6 @@ export default function RegistrationForm() {
     }));
   };
 
-  console.log(registrationData);
   return (
     <Container maxWidth="lg">
       <Box sx={{ p: 2, alignItems: "center" }}>
@@ -205,52 +173,35 @@ export default function RegistrationForm() {
                 marginBottom: "1rem",
               }}
             >
-              <label
-                className="bold-label"
-                style={{
-                  fontSize: "1.125rem",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                }}
-              >
-                Name of Applicant/Driver:
-              </label>
-              <input
-                type="text"
-                className="input-style"
-                style={{
-                  flex: "1",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                  width: "100%",
-                }}
-                placeholder="Surname"
+              <TextField
+                variant="filled"
+                label="Surname"
                 value={registrationData.surname}
                 name="surname"
                 onChange={handleInputChange}
+                error={!!inputErrors.surname}
+                helperText={inputErrors.surname || "Required"}
+                sx={{ flex: 1, marginBottom: "1rem", marginRight: "1rem" }}
               />
-              <input
-                type="text"
-                className="input-style"
-                style={{
-                  flex: "1",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                  width: "100%",
-                }}
-                placeholder="Given name"
+              <TextField
+                variant="filled"
+                label="Given Name"
                 value={registrationData.givenname}
                 name="givenname"
                 onChange={handleInputChange}
+                error={!!inputErrors.givenname}
+                helperText={inputErrors.givenname || "Required"}
+                sx={{ flex: 1, marginBottom: "1rem", marginRight: "1rem" }}
               />
-              <input
-                type="text"
-                className="input-style"
-                style={{ flex: "0.5", marginBottom: "1rem", width: "100%" }}
-                placeholder="M.I."
+              <TextField
+                variant="filled"
+                label="M.I."
                 value={registrationData.mi}
                 name="mi"
                 onChange={handleInputChange}
+                error={!!inputErrors.mi}
+                helperText={inputErrors.mi || "Required"}
+                sx={{ flex: 0.5, marginBottom: "1rem" }}
               />
             </div>
           </div>
@@ -265,53 +216,25 @@ export default function RegistrationForm() {
                 marginBottom: "1rem",
               }}
             >
-              <label
-                className="bold-label"
-                style={{
-                  fontSize: "1.125rem",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                }}
-              >
-                Name of Student:
-              </label>
-              <input
-                type="text"
-                className="input-style"
-                style={{
-                  flex: "1",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                  width: "100%",
-                }}
-                placeholder="Full Name"
+              <TextField
+                variant="filled"
+                label="Name of Student"
                 value={registrationData.sname}
                 name="sname"
                 onChange={handleInputChange}
+                error={!!inputErrors.sname}
+                helperText={inputErrors.sname || "Required"}
+                sx={{ flex: 1, marginBottom: "1rem", marginRight: "1rem" }}
               />
-              <label
-                className="bold-label"
-                style={{
-                  fontSize: "1.125rem",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                }}
-              >
-                ID Number:{" "}
-              </label>
-              <input
-                type="text"
-                className="input-style"
-                style={{
-                  flex: "1",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                  width: "100%",
-                }}
-                placeholder="e.g. 21-1234-4567"
+              <TextField
+                variant="filled"
+                label="ID Number"
                 value={registrationData.idno}
                 name="idno"
                 onChange={handleInputChange}
+                error={!!inputErrors.idno}
+                helperText={inputErrors.idno || "Required"}
+                sx={{ flex: 1, marginBottom: "1rem" }}
               />
             </div>
           </div>
@@ -326,53 +249,25 @@ export default function RegistrationForm() {
                 marginBottom: "1rem",
               }}
             >
-              <label
-                className="bold-label"
-                style={{
-                  fontSize: "1.125rem",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                }}
-              >
-                Grade/Year Level:
-              </label>
-              <input
-                type="text"
-                className="input-style"
-                style={{
-                  flex: "1",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                  width: "100%",
-                }}
-                placeholder="BSIT - 1"
+              <TextField
+                variant="filled"
+                label="Grade/Year Level"
                 value={registrationData.yearlevel}
                 name="yearlevel"
                 onChange={handleInputChange}
+                error={!!inputErrors.yearlevel}
+                helperText={inputErrors.yearlevel || "Required"}
+                sx={{ flex: 1, marginBottom: "1rem", marginRight: "1rem" }}
               />
-              <label
-                className="bold-label"
-                style={{
-                  fontSize: "1.125rem",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                }}
-              >
-                Contact No:{" "}
-              </label>
-              <input
-                type="text"
-                className="input-style"
-                style={{
-                  flex: "1",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                  width: "100%",
-                }}
-                placeholder="e.g. +6391234565789"
+              <TextField
+                variant="filled"
+                label="Contact No"
                 value={registrationData.contactno}
                 name="contactno"
                 onChange={handleInputChange}
+                error={!!inputErrors.contactno}
+                helperText={inputErrors.contactno || "Required"}
+                sx={{ flex: 1, marginBottom: "1rem" }}
               />
             </div>
           </div>
@@ -387,29 +282,15 @@ export default function RegistrationForm() {
                 marginBottom: "1rem",
               }}
             >
-              <label
-                className="bold-label"
-                style={{
-                  fontSize: "1.125rem",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                }}
-              >
-                Address:
-              </label>
-              <input
-                type="text"
-                className="input-style"
-                style={{
-                  flex: "1",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                  width: "100%",
-                }}
-                placeholder="e.g. 123 Main St, City, Country"
+              <TextField
+                variant="filled"
+                label="Address"
                 value={registrationData.address}
                 name="address"
                 onChange={handleInputChange}
+                error={!!inputErrors.address}
+                helperText={inputErrors.address || "Required"}
+                sx={{ flex: 1, marginBottom: "1rem", marginRight: "1rem" }}
               />
             </div>
           </div>
@@ -441,80 +322,35 @@ export default function RegistrationForm() {
                   marginBottom: "1rem",
                 }}
               >
-                <label
-                  className="bold-label"
-                  style={{
-                    fontSize: "1.125rem",
-                    marginBottom: "1rem",
-                    marginRight: "1rem",
-                  }}
-                >
-                  Vehicle Make:
-                </label>
-                <input
-                  type="text"
-                  className="input-style"
-                  style={{
-                    flex: "2",
-                    marginBottom: "1rem",
-                    marginRight: "1rem",
-                    width: "100%",
-                  }}
-                  placeholder="e.g. Toyota Corolla 2013"
+                <TextField
+                  variant="filled"
+                  label="Vehicle Make"
                   value={registrationData.vmake}
                   name="vmake"
                   onChange={handleInputChange}
+                  error={!!inputErrors.vmake}
+                  helperText={inputErrors.vmake || "Required"}
+                  sx={{ flex: 2, marginBottom: "1rem", marginRight: "1rem" }}
                 />
-                <label
-                  className="bold-label"
-                  style={{
-                    fontSize: "1.125rem",
-                    marginBottom: "1rem",
-                    marginRight: "1rem",
-                  }}
-                >
-                  Plate No:
-                </label>
-
-                <input
-                  type="text"
-                  className="input-style"
-                  style={{
-                    flex: "1",
-                    marginBottom: "1rem",
-                    marginRight: "1rem",
-                    width: "100%",
-                  }}
-                  placeholder="e.g AAA1234"
+                <TextField
+                  variant="filled"
+                  label="Plate No"
                   value={registrationData.plateno}
                   name="plateno"
                   onChange={handleInputChange}
+                  error={!!inputErrors.plateno}
+                  helperText={inputErrors.plateno || "Required"}
+                  sx={{ flex: 1, marginBottom: "1rem", marginRight: "1rem" }}
                 />
-
-                <label
-                  className="bold-label"
-                  style={{
-                    fontSize: "1.125rem",
-                    marginBottom: "1rem",
-                    marginRight: "1rem",
-                  }}
-                >
-                  Color:
-                </label>
-
-                <input
-                  type="text"
-                  className="input-style"
-                  style={{
-                    flex: "1",
-                    marginBottom: "1rem",
-                    marginRight: "1rem",
-                    width: "100%",
-                  }}
-                  placeholder="e.g White"
+                <TextField
+                  variant="filled"
+                  label="Color"
                   value={registrationData.color}
                   name="color"
                   onChange={handleInputChange}
+                  error={!!inputErrors.color}
+                  helperText={inputErrors.color || "Required"}
+                  sx={{ flex: 1, marginBottom: "1rem" }}
                 />
               </div>
             </div>
@@ -526,17 +362,12 @@ export default function RegistrationForm() {
                 marginBottom: "1rem",
               }}
             >
-              <label
-                className="bold-label"
-                style={{
-                  fontSize: "1.125rem",
-                  marginBottom: "1rem",
-                  marginRight: "1rem",
-                }}
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: "bold", marginRight: "1rem" }}
               >
                 Vehicle Type:
-              </label>
-
+              </Typography>
               <RadioGroup
                 name="vehicleType"
                 value={registrationData.vehicleType}
