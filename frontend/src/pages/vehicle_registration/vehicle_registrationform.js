@@ -59,31 +59,113 @@ export default function RegistrationForm() {
     setLicenseFile(file);
   };
 
-  const handleSubmit = () => {
-    // Check if both orcrFile and licenseFile are not null
-    if (!orcrFile || !licenseFile) {
-      // If any of the files is missing, display an error message and prevent form submission
-      setSnackbarMessage("Please upload both OR/CR and License");
-      setSnackbarOpen(true);
-      return; // Exit the function early
-    }
-  
+  const handleSubmit = async () => {
+    // Validate the form
     const invalidFields = validateForm();
-    if (invalidFields.length === 0) {
-      // If validation passes, handle form submission
-      // Your submission logic here
-      setSnackbarMessage("Registration successful");
-      setSnackbarOpen(true);
-    } else {
-      // If validation fails, display error messages
-      const errorMessage = `Please fill in all required fields and correct the following: ${invalidFields.join(
-        ", "
-      )}`;
+
+    // Check if there are any validation errors
+    if (invalidFields.length > 0 || !orcrFile || !licenseFile) {
+      // If there are validation errors or if OR/CR or License files are missing
+      let errorMessage = '';
+
+      // Check if OR/CR file is missing
+      if (!orcrFile) {
+        errorMessage = "Please upload OR/CR file.";
+      }
+
+      // Check if License file is missing
+      if (!licenseFile) {
+        errorMessage += " Please upload License file.";
+      }
+
+      // Display validation error message if any
+      if (invalidFields.length > 0) {
+        errorMessage += ` Please fill in all required fields and correct the following: ${invalidFields.join(", ")}`;
+      }
+
+      // Display error message in Snackbar
       setSnackbarMessage(errorMessage);
+      setSnackbarOpen(true);
+      
+      // Exit the function early
+      return;
+    }
+
+    try {
+      // Submit data to the server
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      };
+      const lastName = registrationData.surname;
+      const firstName = registrationData.givenname;
+      const middleInitial = registrationData.mi;
+      const studentName = registrationData.sname;
+      const idNumber = registrationData.idno;
+      const gradeLevel = registrationData.yearlevel;
+      const contactNumber = registrationData.contactno;
+      const vehicleMake = registrationData.vmake;
+      const address = registrationData.address;
+      const plateNo = registrationData.plateno;
+      const color = registrationData.color;
+      const vehicleType = registrationData.vehicleType;
+      const email = localStorage.getItem("email");
+      
+      // Submit applicant registration data
+      const res1 = await axios.post(
+        "http://localhost:8080/applicants/register",
+        {
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          middleInitial: middleInitial,
+          studentName: studentName,
+          address: address,
+          idNumber: idNumber,
+          gradeLevel: gradeLevel,
+          contactNumber: contactNumber,
+          vehicleMake: vehicleMake,
+          plateNo: plateNo,
+          color: color,
+          vehicleType: vehicleType,
+        },
+        config
+      );
+
+      // Upload OR/CR and License files
+      const formData = new FormData();
+      formData.append("orcrimg", orcrFile);
+      formData.append("licenseimg", licenseFile);
+      formData.append("email", email);
+
+      const config2 = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      };
+      const res2 = await axios.post(
+        "http://localhost:8080/applicants/uploadReq",
+        formData,
+        config2
+      );
+
+      // If both requests are successful, show success message
+      if (res1.status === 200 && res2.status === 200) {
+        setSnackbarMessage("Registration successful");
+        setSnackbarOpen(true);
+      } else {
+        // If any request fails, show error message
+        setSnackbarMessage("An error occurred during registration. Please try again later.");
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      // Handle any errors that occur during submission
+      setSnackbarMessage("An error occurred during registration. Please try again later.");
       setSnackbarOpen(true);
     }
   };
-  
 
   const validateForm = () => {
     const errors = {};
@@ -96,7 +178,7 @@ export default function RegistrationForm() {
     if (!/^[a-zA-Z]+$/.test(registrationData.mi)) {
       errors.mi = "M.I. must contain only letters";
     }
-    if (!/^[\sa-zA-Z.]+$/.test(registrationData.sname)) {
+    if (!/^[a-zA-Z\s.]+$/.test(registrationData.sname)) {
       errors.sname = "Name of Student must contain only letters, spaces, and periods";
     }
     if (!/^\d{8}$/.test(registrationData.idno)) {
@@ -108,7 +190,6 @@ export default function RegistrationForm() {
     setInputErrors(errors);
     return Object.keys(errors);
   };
-  
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
