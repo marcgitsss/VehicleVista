@@ -30,7 +30,9 @@ export default function RegistrationForm() {
     plateno: "",
     color: "",
     vehicleType: "",
+    address: "", // Add address field here
   });
+  
   const [inputErrors, setInputErrors] = useState({
     surname: "",
     givenname: "",
@@ -147,8 +149,9 @@ export default function RegistrationForm() {
       };
       const res2 = await axios.post(
         "http://localhost:8080/applicants/uploadReq",
-        formData,
-        config2
+        email,
+        orcrFile,
+        licenseFile
       );
 
       // If both requests are successful, show success message
@@ -169,27 +172,79 @@ export default function RegistrationForm() {
 
   const validateForm = () => {
     const errors = {};
-    if (!/^[a-zA-Z]+$/.test(registrationData.surname)) {
+  
+    // Validate Surname
+    if (!registrationData.surname.trim()) {
+      errors.surname = "Surname is required";
+    } else if (!/^[a-zA-Z]+$/.test(registrationData.surname)) {
       errors.surname = "Surname must contain only letters";
     }
-    if (!/^[a-zA-Z]+$/.test(registrationData.givenname)) {
+  
+    // Validate Given Name
+    if (!registrationData.givenname.trim()) {
+      errors.givenname = "Given Name is required";
+    } else if (!/^[a-zA-Z]+$/.test(registrationData.givenname)) {
       errors.givenname = "Given Name must contain only letters";
     }
-    if (!/^[a-zA-Z]+$/.test(registrationData.mi)) {
+  
+    // Validate M.I.
+    if (!registrationData.mi.trim()) {
+      errors.mi = "M.I. is required";
+    } else if (!/^[a-zA-Z]+$/.test(registrationData.mi)) {
       errors.mi = "M.I. must contain only letters";
     }
-    if (!/^[a-zA-Z\s.]+$/.test(registrationData.sname)) {
+  
+    // Validate Name of Student
+    if (!registrationData.sname.trim()) {
+      errors.sname = "Name of Student is required";
+    } else if (!/^[a-zA-Z\s.]+$/.test(registrationData.sname)) {
       errors.sname = "Name of Student must contain only letters, spaces, and periods";
     }
-    if (!/^\d{8}$/.test(registrationData.idno)) {
-      errors.idno = "ID Number must be 8 digits long";
+  
+    // Validate ID Number
+    if (!registrationData.idno.trim() || !/^\d*(-\d*)*$/.test(registrationData.idno)) {
+      errors.idno = "ID Number must only contain digits and dashes";
     }
-    if (!/^(09|\+639)\d{9}$/.test(registrationData.contactno)) {
+  
+    // Validate Grade/Year Level
+    if (!registrationData.yearlevel.trim()) {
+      errors.yearlevel = "Grade/Year Level is required";
+    }
+  
+    // Validate Contact Number
+    if (!registrationData.contactno.trim() || !/^(09|\+639)\d{9}$/.test(registrationData.contactno)) {
       errors.contactno = "Contact number must be in the format 09123456789";
     }
+  
+    // Validate Vehicle Make
+    if (!registrationData.vmake.trim()) {
+      errors.vmake = "Vehicle Make is required";
+    }
+  
+    // Validate Plate No
+    if (!registrationData.plateno.trim()) {
+      errors.plateno = "Plate No is required";
+    }
+  
+    // Validate Color
+    if (!registrationData.color.trim()) {
+      errors.color = "Color is required";
+    }
+  
+    // Validate Address
+    if (!registrationData.address.trim()) {
+      errors.address = "Address is required";
+    }
+  
+    // Validate Vehicle Type
+    if (!registrationData.vehicleType) {
+      errors.vehicleType = "Vehicle Type is required";
+    }
+  
     setInputErrors(errors);
     return Object.keys(errors);
   };
+  
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
@@ -371,7 +426,7 @@ export default function RegistrationForm() {
                 onChange={handleInputChange}
                 error={!!inputErrors.address}
                 helperText={inputErrors.address || "Required"}
-                sx={{ flex: 1, marginBottom: "1rem", marginRight: "1rem" }}
+                sx={{ flex: 1, marginBottom: "1rem" }}
               />
             </div>
           </div>
