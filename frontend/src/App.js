@@ -5,6 +5,7 @@ import ProofPayment from "./Application/ProofPayment";
 import SelectOrCr from "./Application/SelectOrCr";
 import VerifyPayment from "./Application/VerifyPayment";
 import ApproveApplication from "./Application/ApproveApplication";
+import RegisterApp from "./Application/RegisterApp";
 
 function App() {
   return (
@@ -13,9 +14,10 @@ function App() {
 
       {/* <ProofPayment /> */}
       {/* <VerifyPayment /> */}
+      <RegisterApp />
       {/* <OrCr /> */}
       {/* <SelectOrCr /> */}
-      <ApproveApplication />
+      {/* <ApproveApplication /> */}
     </div>
   );
 }
