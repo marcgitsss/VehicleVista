@@ -21,7 +21,7 @@ function ApplicationList_Admin() {
     <>
       <AdminHeader />
       <AdminSidebar />
-      <main className="container">
+      <main className="applicationlistcontainer">
         {/* Header */}
         <div className="header">
           <h1>Application List</h1>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Header from './components/Navbar/UserHeader'; // Corrected import path for Header
-import Footer from './components/Navbar/UserFooter'; // Corrected import path for Footer
-import backgroundImage from './assets/SIABackground.png'; // Corrected import path for backgroundImage
-import './components/Navbar/UserFooter.css'; // Corrected import path for Footer CSS
+import Header from '../../components/Navbar/UserHeader'; // Corrected import path for Header
+import Footer from '../../components/Navbar/UserFooter';
+import backgroundImage from '../../assets/SIABackground.png'; // Corrected import path for backgroundImage
+import '../../components/Navbar/UserFooter.css'; // Corrected import path for Footer CSS
 import './employee_featurespage.css';
 
 
@@ -20,7 +20,7 @@ const EmployeeFeaturesPage = () => {
       </div>
       
       <img src={backgroundImage} alt="backgroundImage" className='backgroundImage' />
-      <div className="container">
+      <div className="employeeContainer">
         <div className="buttonContainer">
           <button className="approvedapplicationsButton" onClick={clickSample}>{approvedapplications}</button>
           <button className="verifydocumentsButton" onClick={clickSample}>VerifyOR/CR and License</button>

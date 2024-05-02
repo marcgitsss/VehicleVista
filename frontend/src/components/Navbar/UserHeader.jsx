@@ -41,7 +41,7 @@ const Header = () => {
   return (
     <div className={`header ${isMobile ? 'mobile' : ''}`}>
       <div className="logo-container">
-        <img src={VVLogo} alt="HeaderLogo" className="headerImage" />
+        <img src={VVLogo} alt="HeaderLogo" className="headerImage" style={{width: '12.5rem'}}/>
       </div>
       <nav className="nav">
         {isMobile ? (

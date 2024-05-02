@@ -2,7 +2,7 @@
     --admin-container-width: calc(100% - 260px);
 }
 
-.container {
+.applicationlistcontainer {
     width: 80%;
     height: 100vh;
     float: right;

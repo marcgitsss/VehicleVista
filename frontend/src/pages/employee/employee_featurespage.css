@@ -5,12 +5,12 @@
   }
   
   /* Background Image */
-  .LandingBG {
+  .backgroundImage {
     background-size: contain;
     background-repeat: no-repeat;
-    width: 110%;
+    width: 104%;
   }
-  .container {
+  .employeeContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -28,7 +28,7 @@
   }
   
 
-  .profileButton {
+  .approvedapplicationsButton{
     background-color: #8A252C;
     padding: 50px;
     margin-right: 20px;
@@ -38,7 +38,7 @@
     font-size: 20px;
   }
   
-  .dashboardButton {
+  .verifydocumentsButton {
     background-color: #5F191E; /* Corrected background color */
     color: white;
     padding: 50px;
@@ -55,7 +55,7 @@
 }
 
   /* Disclaimer */
-  .employeefeatures {
+  .verifyproofofpayment {
     background-color: #F4C522;
     padding: 50px;
     flex-grow: 1;
