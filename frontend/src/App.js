@@ -16,6 +16,7 @@ import Registration from "./pages/vehicle_registration/vehicle_registrationform"
 import ChooseUserTypeModal from "./pages/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal"; // 
 import RegistrationForm from './pages/vehicle_registration/vehicle_registrationform';
 import VehicleRegistration from './pages/vehicle_registration/vehicle_registration';
+import PayMod from './pages/vehicle_registration/payMod';
 
 function App() {
   return (

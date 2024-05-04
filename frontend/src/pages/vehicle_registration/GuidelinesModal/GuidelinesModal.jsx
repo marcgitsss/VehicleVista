@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Checkbox, FormControlLabel, FormGroup, Snackbar } from "@mui/material";
 import "./GuidelinesModal.css";
+import { Link } from "react-router-dom";
+
 
 const style = {
   position: "absolute",
@@ -148,9 +150,11 @@ export default function GuidelinesModal(props) {
                   }
                   label="I have read and understood the Guidelines"
                 />
-                <Button variant="contained" onClick={handleSubmit}>
-                  Submit
-                </Button>
+                <Link to="/assumptions-liability">
+                  <Button variant="contained" onClick={handleSubmit}>
+                      Submit
+                  </Button>
+                </Link>
               </FormGroup>
             </div>
           </div>

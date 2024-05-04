@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Checkbox, Snackbar } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const style = {
     position: 'absolute',
@@ -94,12 +95,14 @@ export default function PayMod(props) {
                                 </Typography>
                             </div>
                             <div>
+                                <Link to="/registration">
                                 <Button
                                     onClick={handleSubmit}
                                     sx={{ backgroundColor: '#8A252C', borderRadius: '2rem', color: 'white', fontWeight: 'bold', width: 'clamp(8rem, 20vw, 10rem)', height: 'clamp(2.5rem, 10vw, 3rem)', fontSize: 'clamp(1rem, 3vw, 1.5rem)', textTransform: 'none' }}
                                 >
                                     Submit
                                 </Button>
+                                </Link>
                             </div>
                         </div>
                     </Typography>
