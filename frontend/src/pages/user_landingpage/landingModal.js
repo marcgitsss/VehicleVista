@@ -195,9 +195,10 @@ export default function TransitionsModal() {
                 Your verification was successful. Proceed to choose your user
                 type.
               </Typography>
-              <Button onClick={() => setVerificationSuccess(false)}>
+              {/* <Button >
                 Close
-              </Button>
+              </Button> */}
+              <ChooseUserTypeModal />
             </Box>
           </Fade>
         </Modal>
