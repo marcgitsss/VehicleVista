@@ -27,6 +27,12 @@ public class SecurityConfig {
 	@Autowired
 	private UserService userService;
 	
+
+    @Autowired
+    public SecurityConfig(UserService userService) {
+        this.userService = userService;
+    }
+	
 	@Autowired
 	private JwtAuthenticationFilter jwtAuthenticationFilter;
 	
@@ -39,10 +45,13 @@ public class SecurityConfig {
                         req->req.requestMatchers("/jwt/login**","/jwt/register**",
                         		"/register/generateOtp/**","/register/verifyOtp/**",
                         		"/jwt/admin-register**", "/jwt/admin-login**",
-                        		"/jwt/employee-register**", "/jwt/employee-login**",
+                        		"/jwt/employee-register**", "/jwt/employee-login**", "/jwt/change-password**",
 //                        		TO Delete
                         		"registration/create-registration**"
 //                        		"/photo/gdrive-upload**", "/photo/gdrive-view**" 
+                        		,"/otp**"
+                        		,"/change-password/**", "/applicants/**"
+                        		,"/user/**"
                         		)
                                 .permitAll()
                                 .anyRequest()

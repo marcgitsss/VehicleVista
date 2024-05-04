@@ -27,6 +27,14 @@ public class UserEntity implements UserDetails {
 		private Date dateApplied;
 		private Date datePaid;
 		private Boolean isEnabled;
+		
+		//
+		private Boolean isPaid;
+		private Boolean isVerified;
+		private Boolean isApproved;
+		
+		private Date expirationDate;
+		
 		private Role role;
 		
 		public UserEntity() {
@@ -195,6 +203,38 @@ public class UserEntity implements UserDetails {
 		public boolean isEnabled() {
 			// TODO Auto-generated method stub
 			return true;
+		}
+
+		public Boolean getIsPaid() {
+			return isPaid;
+		}
+
+		public void setIsPaid(Boolean isPaid) {
+			this.isPaid = isPaid;
+		}
+
+		public Boolean getIsVerified() {
+			return isVerified;
+		}
+
+		public void setIsVerified(Boolean isVerified) {
+			this.isVerified = isVerified;
+		}
+
+		public Boolean getIsApproved() {
+			return isApproved;
+		}
+
+		public void setIsApproved(Boolean isApproved) {
+			this.isApproved = isApproved;
+		}
+
+		public Date getExpirationDate() {
+			return expirationDate;
+		}
+
+		public void setExpirationDate(Date expirationDate) {
+			this.expirationDate = expirationDate;
 		}
 		
 

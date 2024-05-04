@@ -1,6 +1,7 @@
 package com.SanJuanPunchMan.SystemInteg.service;
 
 import com.SanJuanPunchMan.SystemInteg.entity.PhotoResponse;
+import com.SanJuanPunchMan.SystemInteg.entity.UserEntity;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
@@ -35,51 +36,59 @@ public class PhotoService {
         return filePath.toString();
     }
 
-   public PhotoResponse uploadImageToDrive(File file, String name) {
-    PhotoResponse res = new PhotoResponse();
+    public String uploadImageToDrive(File file, String email) {
+    	String res = "";
+    	String name = email+":"+"proof_of_payment";
+    	
+    	//ADD USER HERE
+	    
+    	try {
+	        String folderId = "1EJTAWTorsFqdnUKTcsTQYWbQCPit3GbC";
+	        Drive drive = createDriveService();
+	
+	        // Check if a file with the same name already exists
+	        String query = "name='" + name + "' and '" + folderId + "' in parents and trashed=false";
+	        FileList fileList = drive.files().list().setQ(query).execute();
+	        if (fileList.getFiles().size() > 0) {
+	            // Update the existing file
+	            com.google.api.services.drive.model.File existingFile = fileList.getFiles().get(0);
+	            com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
+	            fileMetadata.setName(name);
+	            FileContent mediaContent = new FileContent("image/jpeg", file);
+	            drive.files().update(existingFile.getId(), fileMetadata, mediaContent).execute();
+	            String imgUrl = "https://drive.google.com/uc?export=view&id=" + existingFile.getId();
+	            System.out.println("IMAGE ID: " + existingFile.getId());
+	            res = imgUrl;
+	            
+	            //SAVE URL TO user.setProofOfPayment
+	            //then update User
+	        } else {
+	            // Upload a new file
+	            com.google.api.services.drive.model.File fileMetaData = new com.google.api.services.drive.model.File();
+	            fileMetaData.setName(name);
+	            fileMetaData.setParents(Collections.singletonList(folderId));
+	            FileContent mediaContent = new FileContent("image/jpeg", file);
+	            com.google.api.services.drive.model.File uploadFile = drive.files().create(fileMetaData, mediaContent).setFields("id").execute();
+	            String imgUrl = "https://drive.google.com/uc?export=view&id=" + uploadFile.getId();
+	            System.out.println("IMAGE ID: " + uploadFile.getId());
+	            res = imgUrl; 
+	            
+	          //SAVE URL TO user.setProofOfPayment
+	           //then update User
+	        }
+	
+	        if (!file.delete()) {
+	            System.err.println("Failed to delete the file after upload");
+	        }
+	
+	    } catch (Exception e) {
+	        // Log the exception instead of printing it directly
+	        System.err.println("Error uploading image to Google Drive: " + e.getMessage());
+	        res = e.getMessage();
+	    }
+	    return res;
+	}
 
-    try {
-        String folderId = "1EJTAWTorsFqdnUKTcsTQYWbQCPit3GbC";
-        Drive drive = createDriveService();
-
-        // Check if a file with the same name already exists
-        String query = "name='" + name + "' and '" + folderId + "' in parents and trashed=false";
-        FileList fileList = drive.files().list().setQ(query).execute();
-        if (fileList.getFiles().size() > 0) {
-            // Update the existing file
-            com.google.api.services.drive.model.File existingFile = fileList.getFiles().get(0);
-            FileContent mediaContent = new FileContent("image/jpeg", file);
-            drive.files().update(existingFile.getId(), existingFile, mediaContent).execute();
-            String imgUrl = "https://drive.google.com/uc?export=view&id=" + existingFile.getId();
-            System.out.println("IMAGE ID: " + existingFile.getId());
-            res.setStatus(200);
-            res.setMessage("Image Successfully Updated on Drive");
-            res.setUrl(imgUrl);
-        } else {
-            // Upload a new file
-            com.google.api.services.drive.model.File fileMetaData = new com.google.api.services.drive.model.File();
-            fileMetaData.setName(name);
-            fileMetaData.setParents(Collections.singletonList(folderId));
-            FileContent mediaContent = new FileContent("image/jpeg", file);
-            com.google.api.services.drive.model.File uploadFile = drive.files().create(fileMetaData, mediaContent).setFields("id").execute();
-            String imgUrl = "https://drive.google.com/uc?export=view&id=" + uploadFile.getId();
-            System.out.println("IMAGE ID: " + uploadFile.getId());
-            res.setStatus(200);
-            res.setMessage("Image Successfully Uploaded To Drive");
-            res.setUrl(imgUrl);
-        }
-
-        file.delete(); // Delete the file only after successful upload or update
-
-    } catch (Exception e) {
-        // Log the exception instead of printing it directly
-        System.err.println("Error uploading image to Google Drive: " + e.getMessage());
-        res.setStatus(500);
-        res.setMessage("Error uploading image to Google Drive");
-    }
-    return res;
-}
-   
    public String getViewOnlyLink(String fileName) {
        try {
            String folderId = "1EJTAWTorsFqdnUKTcsTQYWbQCPit3GbC";
