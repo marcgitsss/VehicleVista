@@ -25,14 +25,14 @@ public class PhotoController {
 	private PhotoService service;
 	
 	@PostMapping("/gdrive-upload")
-	public Object handleFileUpload(@RequestParam("image") MultipartFile file, @RequestParam("name") String name) throws IOException, GeneralSecurityException, IllegalStateException, java.io.IOException{
+	public Object handleFileUpload(@RequestParam("image") MultipartFile file, @RequestParam("email") String email) throws IOException, GeneralSecurityException, IllegalStateException, java.io.IOException{
 		 if (file.isEmpty()) {
 	            return "FIle is empty";
 	        }
 	        File tempFile = File.createTempFile("temp", null);
 	        file.transferTo(tempFile);
-	        PhotoResponse res = service.uploadImageToDrive(tempFile, name);
-	        System.out.println(res);
+	        String res = service.uploadImageToDrive(tempFile, email);
+	        System.out.println("Image URL: "+res);
 	        return res;
 	}
 	

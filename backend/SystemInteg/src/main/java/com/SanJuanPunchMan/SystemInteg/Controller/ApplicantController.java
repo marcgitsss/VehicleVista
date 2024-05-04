@@ -40,9 +40,36 @@ public class ApplicantController {
     	return applicantService.uploadRequirements(email, tmpor, tmpli);
     }
     
+    @PostMapping("/uploadPay")
+	public Object handleFileUpload(@RequestParam String email, @RequestParam("image") MultipartFile file) throws IOException, GeneralSecurityException, IllegalStateException, java.io.IOException{
+		 if (file.isEmpty()) {
+	            return "FIle is empty";
+	        }
+	        File tempFile = File.createTempFile("temp", null);
+	        file.transferTo(tempFile);
+	        String res = applicantService.uploadPaymentImageToDrive(tempFile, email);
+	        System.out.println(res);
+	        return res;
+	}
+    
     @GetMapping("/all")
     public List<ApplicantEntity> getAllApplicants() {
         return applicantService.getAllApplicants();
+    }
+    
+    @GetMapping("/unverified")
+    public List<ApplicantEntity> getUnverifiedApplicants() {
+        return applicantService.getUnverifiedApplicants();
+    }
+    
+    @GetMapping("/proofpayments")
+    public List<ApplicantEntity> getPendingProofPayment() {
+        return applicantService.getPendingProofPayment();
+    }
+    
+    @GetMapping("/approval")
+    public List<ApplicantEntity> getPendingApproval() {
+        return applicantService.getPendingApproval();
     }
     
     @GetMapping("/{applicantid}")

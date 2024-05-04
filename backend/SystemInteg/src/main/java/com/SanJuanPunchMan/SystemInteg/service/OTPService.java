@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.el.stream.Optional;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.SanJuanPunchMan.SystemInteg.beans.OTPCreateResponse;
 import com.SanJuanPunchMan.SystemInteg.entity.OTPEntity;
+import com.SanJuanPunchMan.SystemInteg.entity.Role;
 import com.SanJuanPunchMan.SystemInteg.entity.UserEntity;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
@@ -131,6 +133,7 @@ public class OTPService {
                         UserEntity newUser = new UserEntity();
                         newUser.setUsername(username);
                         newUser.setPassword(hash(password));
+                        newUser.setRole(Role.USER);
                         ApiFuture<WriteResult> newUserFuture = userRef.set(newUser);
 
                         // Send email
@@ -158,6 +161,106 @@ public class OTPService {
         }
         return "OTP Does not Exist";
     }
+    
+    
+    
+//    RESET PASSWORD OTP
+    
+    public OTPCreateResponse createPasswordResetOTP(String email) throws InterruptedException, ExecutionException, MessagingException {
+        Firestore firestore = FirestoreClient.getFirestore();
+
+        // Check if document with the same email exists
+        DocumentReference existingDoc = firestore.collection("OTPEntity").document(email);
+        ApiFuture<DocumentSnapshot> existingDocFuture = existingDoc.get();
+        DocumentSnapshot existingDocSnapshot = existingDocFuture.get();
+
+        if (existingDocSnapshot.exists()) {
+            System.out.println("Document with email " + email + " already exists");
+
+            // Document with the same email already exists
+            // Update the existing document instead of creating a new one
+            String otpGenString = OTPGenerator.generateOTP();
+            OTPEntity otp = new OTPEntity();
+            otp.setEmail(email);
+            otp.setOtp(otpGenString);
+            otp.setExpirationDate(getDate5MinutesAfterCreation());
+            otp.setId(otpGenString);
+            otp.setIsUsed(false);
+            existingDoc.set(otp); // Update the existing document with the new OTP entity
+
+            // Send email to the entered email
+            sendChangePassEmail(email, otpGenString);
+
+            // Populate OTPCreateResponse
+            OTPCreateResponse otpCreateResponse = new OTPCreateResponse();
+            otpCreateResponse.setId(otpGenString);
+            otpCreateResponse.setUpdatedTime(new Date()); // Use the current time as the updated time
+
+            return otpCreateResponse;
+        } else {
+            System.out.println("Document with email " + email + " does not exist");
+
+            // Generate OTP
+            String otpGenString = OTPGenerator.generateOTP();
+
+            // Create a new OTP entity
+            OTPEntity otp = new OTPEntity();
+            otp.setEmail(email);
+            otp.setOtp(otpGenString);
+            otp.setIsUsed(false);
+
+            // Set the expiration date before inserting the document
+            otp.setExpirationDate(getDate5MinutesAfterCreation());
+
+            // Create a new document with the OTP as the document ID
+            DocumentReference newDocRef = firestore.collection("OTPEntity").document(email);
+            ApiFuture<WriteResult> apiFuture = newDocRef.set(otp);
+
+            // Send email to the entered email
+            sendChangePassEmail(email, otpGenString);
+
+            // Populate OTPCreateResponse
+            OTPCreateResponse otpCreateResponse = new OTPCreateResponse();
+            otpCreateResponse.setId(otpGenString);
+            otpCreateResponse.setUpdatedTime(apiFuture.get().getUpdateTime().toDate());
+
+            return otpCreateResponse;
+        }
+    }
+    
+    public boolean verifyPasswordResetOTP(String email, String otp) throws InterruptedException, ExecutionException {
+        Firestore firestore = FirestoreClient.getFirestore();
+
+        // Get the document for the provided email
+        DocumentReference docRef = firestore.collection("OTPEntity").document(email);
+        ApiFuture<DocumentSnapshot> docFuture = docRef.get();
+        DocumentSnapshot docSnapshot = docFuture.get();
+
+        if (docSnapshot.exists()) {
+            OTPEntity otpEntity = docSnapshot.toObject(OTPEntity.class);
+
+            // Check if the OTP matches and is not expired
+            if (otpEntity.getOtp().equals(otp) && otpEntity.getExpirationDate().after(new Date())) {
+                return true; // OTP is valid
+            }
+        }
+
+        return false; // OTP is invalid
+    }
+    
+    
+//    SUPPORTING CODE
+    
+    private void sendChangePassEmail(String email, String otp) throws MessagingException {
+        // Create the email message
+    	MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Change Password Verification OTP");
+        mimeMessageHelper.setText("Your Verification Code is " + otp);
+        javaMailSender.send(mimeMessage);
+    }
+    
 
 	// OTP generator
     public static class OTPGenerator {

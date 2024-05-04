@@ -16,13 +16,16 @@ public class ApplicantEntity {
     private String gradeLevel;
     private String contactNumber;
     private String address;
+    private Boolean isStaff;
     
     private String vehicleMake;
 	private String plateNo;
 	private String color;
-	private String vehicleType;
+	private Boolean isFourWheel;
+	
 	private String orcrimg;	//file path sa orcr img
 	private String licenseimg;
+	private String proofofpayment;
     
     private Date datesubmitted;
     private String dateDay;
@@ -36,37 +39,11 @@ public class ApplicantEntity {
     	this.verified = false;
     	this.isPaid = false;
     	this.approved = false;
+    	this.proofofpayment = null;
+    	this.orcrimg = null;
+    	this.licenseimg = null;
     }
     
-    public ApplicantEntity(String email, String applicantid, String firstName, String lastName, String middleInitial,
-			String studentName, String idNumber, String gradeLevel, String contactNumber, String address,
-			String vehicleMake, String plateNo, String color, String vehicleType, String orcrimg, String licenseimg,
-			Date datesubmitted, boolean verified, boolean approved, boolean isPaid) {
-		super();
-		this.email = email;
-		this.applicantid = applicantid;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.middleInitial = middleInitial;
-		this.studentName = studentName;
-		this.idNumber = idNumber;
-		this.gradeLevel = gradeLevel;
-		this.contactNumber = contactNumber;
-		this.address = address;
-		this.vehicleMake = vehicleMake;
-		this.plateNo = plateNo;
-		this.color = color;
-		this.vehicleType = vehicleType;
-		this.orcrimg = orcrimg;
-		this.licenseimg = licenseimg;
-		this.datesubmitted = datesubmitted;
-		this.verified = verified;
-		this.approved = approved;
-		this.isPaid = isPaid;
-	}
-
-
-
 	// Add getters and setters
     public String getFirstName() {
 		return firstName;
@@ -170,11 +147,11 @@ public class ApplicantEntity {
 	public void setColor(String color) {
 		this.color = color;
 	}
-	public String getVehicleType() {
-		return vehicleType;
+	public Boolean getVehicleType() {
+		return isFourWheel;
 	}
-	public void setVehicleType(String vehicleType) {
-		this.vehicleType = vehicleType;
+	public void setVehicleType(Boolean isFourWheel) {
+		this.isFourWheel = isFourWheel;
 	}
 	public String getOrcrimg() {
 		return orcrimg;
@@ -195,5 +172,37 @@ public class ApplicantEntity {
 
 	public void setDateDay(String dateDay) {
 		this.dateDay = dateDay;
+	}
+
+	public String getProofofpayment() {
+		return proofofpayment;
+	}
+
+	public void setProofofpayment(String proofofpayment) {
+		this.proofofpayment = proofofpayment;
+	}
+
+	public Boolean getIsFourWheel() {
+		return isFourWheel;
+	}
+
+	public void setIsFourWheel(Boolean isFourWheel) {
+		this.isFourWheel = isFourWheel;
+	}
+
+
+
+
+
+	public Boolean getIsStaff() {
+		return isStaff;
+	}
+
+
+
+
+
+	public void setIsStaff(Boolean isStaff) {
+		this.isStaff = isStaff;
 	}
 }

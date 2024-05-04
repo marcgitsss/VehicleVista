@@ -5,6 +5,7 @@ import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode;
 import com.google.api.services.drive.Drive;
@@ -22,6 +23,7 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
 import com.google.firebase.cloud.FirestoreClient;
 
 import jakarta.annotation.PostConstruct;
@@ -34,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.SanJuanPunchMan.SystemInteg.entity.ApplicantEntity;
+import com.SanJuanPunchMan.SystemInteg.entity.PhotoResponse;
 
 //new imports
 import java.io.File;
@@ -97,6 +100,64 @@ public class ApplicantService {
     	return setUrl;
     }
     
+    //for uploading proof of payment
+    public String uploadPaymentImageToDrive(File file, String email) {
+    	String res = "";
+    	String name = email+":"+"proof_of_payment";
+    	
+    	//ADD USER HERE
+	    
+    	try {
+	        String folderId = "1EJTAWTorsFqdnUKTcsTQYWbQCPit3GbC";
+	        Drive drive = createDriveService();
+	
+	        // Check if a file with the same name already exists
+	        String query = "name='" + name + "' and '" + folderId + "' in parents and trashed=false";
+	        FileList fileList = drive.files().list().setQ(query).execute();
+	        if (fileList.getFiles().size() > 0) {
+	            // Update the existing file
+	            com.google.api.services.drive.model.File existingFile = fileList.getFiles().get(0);
+	            com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
+	            fileMetadata.setName(name);
+	            FileContent mediaContent = new FileContent("image/jpeg", file);
+	            drive.files().update(existingFile.getId(), fileMetadata, mediaContent).execute();
+	            String imgUrl = "https://drive.google.com/uc?export=view&id=" + existingFile.getId();
+	            System.out.println("IMAGE ID: " + existingFile.getId());
+	            res = imgUrl;
+	            
+	            //SAVE URL TO user.setProofOfPayment
+	            //then update User
+	            DocumentReference applicantRef = db.collection("applicants").document(email);
+	            applicantRef.update("proofofpayment", res).get();
+	        } else {
+	            // Upload a new file
+	            com.google.api.services.drive.model.File fileMetaData = new com.google.api.services.drive.model.File();
+	            fileMetaData.setName(name);
+	            fileMetaData.setParents(Collections.singletonList(folderId));
+	            FileContent mediaContent = new FileContent("image/jpeg", file);
+	            com.google.api.services.drive.model.File uploadFile = drive.files().create(fileMetaData, mediaContent).setFields("id").execute();
+	            String imgUrl = "https://drive.google.com/uc?export=view&id=" + uploadFile.getId();
+	            System.out.println("IMAGE ID: " + uploadFile.getId());
+	            res = imgUrl; 
+	            
+	          //SAVE URL TO user.setProofOfPayment
+	           //then update User
+	            DocumentReference applicantRef = db.collection("applicants").document(email);
+	            applicantRef.update("proofofpayment", res).get();
+	        }
+	
+	        if (!file.delete()) {
+	            System.err.println("Failed to delete the file after upload");
+	        }
+	
+	    } catch (Exception e) {
+	        // Log the exception instead of printing it directly
+	        System.err.println("Error uploading image to Google Drive: " + e.getMessage());
+	        res = e.getMessage();
+	    }
+	    return res;
+	}
+    
     public ApplicantService() {
         // Initialize Firestore instance
         db = FirestoreClient.getFirestore();
@@ -133,6 +194,9 @@ public class ApplicantService {
             applicant.setApplicantid(applicantId);
             applicant.setDatesubmitted(currentDate);
             applicant.setDateDay(dayOfWeek);
+            applicant.setDatesubmitted(new Date());
+            applicant.setEmail(applicant.getEmail());
+            
             db.collection("applicants").document(applicantId).set(applicant);
             return "Applicant registered successfully!";
         } catch (Exception e) {
@@ -141,7 +205,7 @@ public class ApplicantService {
         }
     }
     
-    //for vehicle data
+    //for uploading vehicle data document
     public String uploadRequirements(String email, File orcrimg, File licenseimg) {
         try {
         	String orname = email + ":orcr";
@@ -170,11 +234,61 @@ public class ApplicantService {
         }
         return applicants;
     }
+    // get all applicants with pending ORCR and License approval
+    public List<ApplicantEntity> getUnverifiedApplicants() {
+        List<ApplicantEntity> unverifiedApplicants = new ArrayList<>();
+        try {
+            CollectionReference applicantsCollection = db.collection("applicants");
+            // Constructing a query to filter applicants where the verified field is false
+            Query query = applicantsCollection.whereEqualTo("verified", false);
+            // Executing the query
+            query.get().get().forEach(document -> {
+                unverifiedApplicants.add(document.toObject(ApplicantEntity.class));
+            });
+        } catch (ApiException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return unverifiedApplicants;
+    }
     
-    public ApplicantEntity getApplicantById(String applicantid) {
+ // get all applicants with pending proof of payment approval
+    public List<ApplicantEntity> getPendingProofPayment() {
+        List<ApplicantEntity> unverifiedApplicants = new ArrayList<>();
+        try {
+            CollectionReference applicantsCollection = db.collection("applicants");
+            // Constructing a query to filter applicants where the verified field is false
+            Query query = applicantsCollection.whereEqualTo("paid", false);
+            // Executing the query
+            query.get().get().forEach(document -> {
+                unverifiedApplicants.add(document.toObject(ApplicantEntity.class));
+            });
+        } catch (ApiException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return unverifiedApplicants;
+    }
+    
+ // get all applicants with pending proof of payment approval
+    public List<ApplicantEntity> getPendingApproval() {
+        List<ApplicantEntity> unverifiedApplicants = new ArrayList<>();
+        try {
+            CollectionReference applicantsCollection = db.collection("applicants");
+            // Constructing a query to filter applicants where the verified field is false
+            Query query = applicantsCollection.whereEqualTo("approved", false);
+            // Executing the query
+            query.get().get().forEach(document -> {
+                unverifiedApplicants.add(document.toObject(ApplicantEntity.class));
+            });
+        } catch (ApiException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return unverifiedApplicants;
+    }
+    
+    public ApplicantEntity getApplicantById(String email) {
         ApplicantEntity applicant = null;
         try {
-            DocumentSnapshot document = db.collection("applicants").document(applicantid).get().get();
+            DocumentSnapshot document = db.collection("applicants").document(email).get().get();
             if (document.exists()) {
                 applicant = document.toObject(ApplicantEntity.class);
             }
@@ -184,35 +298,70 @@ public class ApplicantService {
         return applicant;
     }
     
-    public String updateApplicant(String applicantid) {
+    //for verifying application license and orcr image
+    public String updateApplicant(String email) {
         try {
-            DocumentReference applicantRef = db.collection("applicants").document(applicantid);
+            DocumentReference applicantRef = db.collection("applicants").document(email);
+            DocumentReference userRef = db.collection("tbluser").document(email);
             // Update the preApproved field to true
             applicantRef.update("verified", true).get();
-            return "Applicant verified status updated successfully!";
+            userRef.update("isVerified", true).get();
+            return "Applicant orcr and license validated!";
+            
         } catch (ApiException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return "Failed to update applicant verified status: " + e.getMessage();
         }
     }
     
-    public String updatePaidApplicant(String applicantid) {
+    //for approving payment of applicant 
+    public String updatePaidApplicant(String email) {
     	try {
-    		DocumentReference applicantRef = db.collection("applicants").document(applicantid);
+    		DocumentReference applicantRef = db.collection("applicants").document(email);
+    		DocumentReference userRef = db.collection("tbluser").document(email);
             // Update the preApproved field to true
             applicantRef.update("paid", true).get();
-            return "Applicant payment status updated successfully!";
+            userRef.update("isPaid", true).get();
+            userRef.update("datePaid", new Date()).get();
+            return "Applicant payment status validated!";
+            
     	}catch(ApiException | InterruptedException | ExecutionException e) {
     		e.printStackTrace();
             return "Failed to update applicant payment status: " + e.getMessage();
     	}
     }
     
-    public String approveApplicant(String applicantid) {
+    //for complete approving of applicant
+    public String approveApplicant(String email) {
     	try {
-    		DocumentReference applicantRef = db.collection("applicants").document(applicantid);
+    		DocumentReference applicantRef = db.collection("applicants").document(email);
+    		DocumentReference userRef = db.collection("tbluser").document(email);
+    		
+    		// Retrieve applicant data from Firestore and map it to ApplicantEntity
+            ApiFuture<DocumentSnapshot> applicantSnapshot = applicantRef.get();
+            ApplicantEntity applicant = applicantSnapshot.get().toObject(ApplicantEntity.class);
+    		
             // Update the preApproved field to true
             applicantRef.update("approved", true).get();
+            
+            userRef.update("isApproved", true).get();
+            userRef.update("fname",applicant.getFirstName()).get();
+            userRef.update("mname",applicant.getMiddleInitial()).get();
+            userRef.update("lname",applicant.getLastName()).get();
+            userRef.update("address",applicant.getAddress()).get();
+            userRef.update("contactNumber",applicant.getContactNumber()).get();
+            userRef.update("email",applicant.getEmail());
+            userRef.update("id",applicant.getIdNumber()).get();
+            userRef.update("fname",applicant.getFirstName()).get();
+            userRef.update("schoolId",applicant.getIdNumber()).get();
+            userRef.update("schoolIdOwner",applicant.getStudentName()).get();
+            userRef.update("isStaff", applicant.getIsStaff()).get();
+            userRef.update("dateApplied", applicant.getDatesubmitted()).get();
+            userRef.update("isEnabled", true).get();
+            
+            //New Vehicle/ if vehicle under username exists, rewrite
+            //then update the vehicle and done
+            
             return "Application approved successfully!";
     	}catch(ApiException | InterruptedException | ExecutionException e) {
     		e.printStackTrace();
