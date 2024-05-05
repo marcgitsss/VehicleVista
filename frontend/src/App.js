@@ -7,6 +7,8 @@ import EmployeeHomepage from "./pages/employee/employee_homepage";
 import EmployeeFeaturesPage from "./pages/employee/employee_featurespage";
 import StudentSidebar from "./components/StudentSidebar/StudentSidebar";
 import UserAnnouncement from "./pages/user/user_homepage/announcement";
+import PaymentInstructionsModal from "./components/PaymentInstructionsModal/PaymentInstructionsModal";
+import UserProfilePage from "./pages/user/user_profile/user_profilepage";
 
 function App() {
   return (
@@ -16,11 +18,13 @@ function App() {
           <Route path="/admin" element={<ApplicationList_Admin />} />
           <Route path="/user_homepage" element={<UserHomepage />} /> 
           <Route path="/user_aboutus" element={<AboutUs />} /> 
+          <Route path="/user_profilepage" element={<UserProfilePage />} />
           <Route path="/employee_homepage" element={<EmployeeHomepage />} /> 
           <Route path="/employee_featurespage" element={<EmployeeFeaturesPage />} /> 
           <Route path="/student_sidebar" element={<StudentSidebar />} /> 
         </Routes>
       </Router>
+      {/* <PaymentInstructionsModal isModalOpen={true} setIsModalOpen={() => null}/> */}
     </div>
   );
 }

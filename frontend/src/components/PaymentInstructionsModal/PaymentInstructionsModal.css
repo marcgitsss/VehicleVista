@@ -1,0 +1,11 @@
+.pay-ins-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 2em;
+}
+
+.pay-ins-container button {
+  width: 280px;
+  margin: 0 auto;
+}
