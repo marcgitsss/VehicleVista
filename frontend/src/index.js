@@ -4,13 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import UserStatus from './pages/user/UserStatus';
+import Invoice from './components/Invoice';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
-
-    <UserStatus />
+    <App />
   </React.StrictMode>
 );
 
