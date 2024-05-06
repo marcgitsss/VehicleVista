@@ -1,14 +1,14 @@
 import React from 'react'
 // import '../../pages/user_login/LoginBgm.css';
-import login_background from "../../assets/login_background.jpeg"
-import loginWheel from "../../assets/loginWheel.jpg"
-import LoginCard from "../../pages/user_login/LoginCard"
+import login_background from "../../../assets/login_background.jpeg"
+import loginWheel from "../../../assets/loginWheel.jpg"
 import { Container, Grid, Typography } from '@mui/material'
-import Footer from '../../components/Footer'
-import Navbar from '../../components/Header'
-import AdminHeader from '../../components/AdminHeader/AdminHeader'
+import Footer from '../../../components/Footer'
+import Navbar from '../../../components/Header'
+import PassCard from './PassCard'
+import ForgetPasswordCard from './ForgetPasswordCard'
 
-export default function LoginPage() {
+export default function ChangePass() {
   return (
     <main className='main-content'>
       <div >
@@ -36,7 +36,8 @@ export default function LoginPage() {
             display: 'flex',
             justifyContent: 'center',
           }}>
-            <LoginCard />
+            {/* <PassCard /> */}
+            <ForgetPasswordCard />
           </Grid>
           <div style={{ position: 'absolute', bottom: 0, width: '100%',mt:'20rem' }}>
             <Footer />
