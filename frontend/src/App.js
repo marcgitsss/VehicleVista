@@ -132,7 +132,7 @@ function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="/choose-user-type" element={<ChooseUserTypeModal />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="forgotpass" element={<ChangePass />} />
+          <Route path="/forgotpass" element={<ChangePass />} />
           <Route path="/" exact element={<LandingPage />} />
           <Route path="/forgotpass" element={<ChangePassPage />} />
         </Routes>
