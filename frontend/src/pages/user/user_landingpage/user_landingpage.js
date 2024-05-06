@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import Navbar from '../../components/Header';
-import Footer from '../../components/Footer';
-import LandingBG from '../../assets/LandPageBG.png';
+import Footer from '../../../components/Footer';
+import LandingBG from '../../../assets/LandPageBG.png';
 import TransitionsModal from './landingModal';
 import './user_landingpage.css';
+import Navbar from '../../../components/Header';
 
 const LandingPage = () => {
   return (

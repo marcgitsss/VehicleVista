@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* Ensure the landingPage container covers the entire viewport height */
-  background-image: url('../../assets/LandPageBG.png');
+  background-image: url('../../../assets/LandPageBG.png');
   background-size: cover;
   background-repeat: no-repeat;
 }
