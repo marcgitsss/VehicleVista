@@ -44,6 +44,16 @@ public class OTPService {
         DocumentReference existingDoc = firestore.collection("OTPEntity").document(otp.getEmail());
         ApiFuture<DocumentSnapshot> existingDocFuture = existingDoc.get();
         DocumentSnapshot existingDocSnapshot = existingDocFuture.get();
+        
+     // Check if document with the same email exists in tbluser
+        DocumentReference userDocRef = firestore.collection("tbluser").document(otp.getEmail());
+        ApiFuture<DocumentSnapshot> userDocFuture = userDocRef.get();
+        DocumentSnapshot userDocSnapshot = userDocFuture.get();
+
+        if (userDocSnapshot.exists()) {
+            // Document with email already exists in tbluser
+            return new OTPCreateResponse();
+        }
 
         if (existingDocSnapshot.exists()) {
             System.out.println("Document with email " + otp.getEmail() + " already exists");
