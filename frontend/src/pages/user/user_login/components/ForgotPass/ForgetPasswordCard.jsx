@@ -109,11 +109,11 @@ export default function ForgetPasswordCard() {
     }
 
     // Check if new passwords match
-    if (passwordData.newPassword !== passwordData.confirmNewPassword) {
-      setSnackbarMessage('New passwords do not match.');
-      setSnackbarOpen(true);
-      return;
-    }
+    // if (passwordData.newPassword !== passwordData.confirmNewPassword) {
+    //   setSnackbarMessage('New passwords do not match.');
+    //   setSnackbarOpen(true);
+    //   return;
+    // }
 
     console.log(passwordData);
 
@@ -174,7 +174,6 @@ export default function ForgetPasswordCard() {
               onChange={handleInputChange}
               style={{ paddingRight: "2.5rem" }} // Add padding for the icon
             />
-
             {showNewPassword ? (
               <MdVisibilityOff
                 onClick={toggleNewPasswordVisibility}

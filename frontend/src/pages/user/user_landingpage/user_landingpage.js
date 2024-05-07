@@ -11,9 +11,9 @@ import { Button } from '@mui/material';
 const LandingPage = () => {
   return (
     <div>
-      {/* <div className='header'> */}
+      <div className='header'>
         <Header />
-      {/* </div> */}
+      </div>
       
       <div className="landingPage">
         <div className="landingPageIntroduction">
