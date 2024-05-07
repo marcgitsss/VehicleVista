@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './../PassCard.css';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 export default function ForgetPasswordCard() {
   const location = useLocation();
@@ -16,6 +17,7 @@ export default function ForgetPasswordCard() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+  const [disableButton, setDisableButton] = useState(false);
   
 
   const toggleNewPasswordVisibility = () => {
@@ -32,6 +34,32 @@ export default function ForgetPasswordCard() {
       ...prevData,
       [name]: value
     }));
+    //check password
+    // Check if confirm new password is being updated
+    if (name === 'confirmNewPassword') {
+      // Check if new passwords match
+      if (passwordData.newPassword !== value) {
+        setDisableButton(true);
+        setSnackbarMessage('New passwords do not match.');
+        setSnackbarOpen(true);
+        
+      } 
+      // if (passwordData.newPassword === value) {
+      //   setDisableButton(false);
+      //   setSnackbarMessage('New passwords match.');
+      //   setSnackbarOpen(true);
+      // }
+      else {
+        // Close snackbar if passwords match
+        setSnackbarOpen(false);
+
+        if (disableButton) {
+          setDisableButton(false);
+          setSnackbarMessage('New passwords match.');
+          setSnackbarOpen(true);
+        }
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -45,11 +73,11 @@ export default function ForgetPasswordCard() {
     }
 
     // Check if new passwords match
-    if (passwordData.newPassword !== passwordData.confirmNewPassword) {
-      setSnackbarMessage('New passwords do not match.');
-      setSnackbarOpen(true);
-      return;
-    }
+    // if (passwordData.newPassword !== passwordData.confirmNewPassword) {
+    //   setSnackbarMessage('New passwords do not match.');
+    //   setSnackbarOpen(true);
+    //   return;
+    // }
 
     console.log(passwordData);
 
@@ -102,19 +130,18 @@ export default function ForgetPasswordCard() {
               onChange={handleInputChange}
               style={{ paddingRight: "2.5rem" }} // Add padding for the icon
             />
-            <span
-              className="visibility-icon"
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "10px", // Adjust as per your design
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={toggleNewPasswordVisibility}
-            >
-              {showNewPassword ? "🙈" : "👁️"}
-            </span>
+            
+            {showNewPassword ? (
+              <MdVisibilityOff
+                onClick={toggleNewPasswordVisibility}
+                style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', cursor: 'pointer' }}
+              />
+            ) : (
+              <MdVisibility
+                onClick={toggleNewPasswordVisibility}
+                style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', cursor: 'pointer' }}
+              />
+            )}
           </div>
           <div className="input-container">
             <input
@@ -125,25 +152,23 @@ export default function ForgetPasswordCard() {
               onChange={handleInputChange}
               style={{ paddingRight: "2.5rem" }} // Add padding for the icon
             />
-            <span
-              className="visibility-icon"
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "10px", // Adjust as per your design
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={toggleConfirmNewPasswordVisibility}
-            >
-              {showConfirmNewPassword ? "🙈" : "👁️"}
-            </span>
+            {showConfirmNewPassword ? (
+              <MdVisibilityOff
+                onClick={toggleConfirmNewPasswordVisibility}
+                style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', cursor: 'pointer' }}
+              />
+            ) : (
+              <MdVisibility
+                onClick={toggleConfirmNewPasswordVisibility}
+                style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', cursor: 'pointer' }}
+              />
+            )}
           </div>
           {/* Snackbar for successful or unsuccessful password change */}
           {snackbarOpen && (
             <div className="snackbar">{snackbarMessage}</div>
           )}
-          <button type="submit" className="submit">
+          <button type="submit" className="submit" disabled={disableButton}>
             Save Changes
           </button>
         </form>
