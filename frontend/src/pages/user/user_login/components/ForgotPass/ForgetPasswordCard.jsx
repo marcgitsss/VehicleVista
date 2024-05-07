@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './PassCard.css';
+import './../PassCard.css';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 

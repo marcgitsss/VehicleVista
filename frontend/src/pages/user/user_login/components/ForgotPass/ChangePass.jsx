@@ -1,11 +1,11 @@
 import React from 'react'
 // import '../../pages/user_login/LoginBgm.css';
-import login_background from "../../../assets/login_background.jpeg"
-import loginWheel from "../../../assets/loginWheel.jpg"
+import login_background from "../../../../../assets/login_background.jpeg"
+import loginWheel from "../../../../../assets/loginWheel.jpg"
 import { Container, Grid, Typography } from '@mui/material'
-import Footer from '../../../components/Footer'
-import Navbar from '../../../components/Header'
-import PassCard from './PassCard'
+import Footer from '../../../../../components/Footer'
+import Navbar from '../../../../../components/Header'
+import PassCard from '../ChangePass/PassCard'
 import ForgetPasswordCard from './ForgetPasswordCard'
 
 export default function ChangePass() {
