@@ -108,7 +108,17 @@ export default function ForgetPasswordCard() {
       return;
     }
 
-    setLoading(true);
+    // Check if new passwords match
+    if (passwordData.newPassword !== passwordData.confirmNewPassword) {
+      setSnackbarMessage('New passwords do not match.');
+      setSnackbarOpen(true);
+      return;
+    }
+
+    console.log(passwordData);
+
+    // Make API call to change password
+    // Change lang Ari na part jess ang API for forgot pass
     axios.post('http://localhost:8080/user/forgot-password', null, {
       params: {
         username: email,
