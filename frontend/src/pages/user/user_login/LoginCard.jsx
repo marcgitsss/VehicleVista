@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './logincard.css';
 import axios from 'axios';
 import { Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import VerifyEmailModal from './components/VerifyEmail/VerifyEmailModal';
 
 export default function LoginCard() {
