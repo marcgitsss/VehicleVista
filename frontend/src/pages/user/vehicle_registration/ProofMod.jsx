@@ -56,7 +56,7 @@ export default function ProofMod() { // Define the ProofMod functional component
         const formData = new FormData();
             formData.append('image', orcr); // Assuming imageFile is a File object from an input type="file" element
             formData.append('name', name);
-        
+            formData.append('email',user);
         axios.post(`http://localhost:8080/photo/gdrive-upload`, formData, config2)
             .then(res => {
                 console.log(res.json());
