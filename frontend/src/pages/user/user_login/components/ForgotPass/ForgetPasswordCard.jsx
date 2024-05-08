@@ -18,6 +18,7 @@ export default function ForgetPasswordCard() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   
 
   const toggleNewPasswordVisibility = () => {
@@ -27,6 +28,15 @@ export default function ForgetPasswordCard() {
   const toggleConfirmNewPasswordVisibility = () => {
     setShowConfirmNewPassword(!showConfirmNewPassword);
   };
+
+  const handleShowSuccess = () => {
+    setTimeout(() => {
+      setShowSuccess(true);
+    }, 500);
+    setTimeout(() => {
+      setShowSuccess(false);
+    } , 1500);
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -168,7 +178,10 @@ export default function ForgetPasswordCard() {
           {snackbarOpen && (
             <div className="snackbar">{snackbarMessage}</div>
           )}
-          <button type="submit" className="submit" disabled={disableButton}>
+          {showSuccess && (
+            <div className="snackbar">Password reset successfully!</div>
+          )}
+          <button type="submit" className="submit" disabled={disableButton} onClick={handleShowSuccess} style={{ cursor: disableButton ? 'not-allowed' : 'pointer' }}>
             Save Changes
           </button>
         </form>
