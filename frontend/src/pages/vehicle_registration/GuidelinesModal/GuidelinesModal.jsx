@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import { Checkbox, FormControlLabel, FormGroup, Snackbar } from "@mui/material";
 import "./GuidelinesModal.css";
 import { Link } from "react-router-dom";
+import PayMod from "../payMod";
 
 
 const style = {
@@ -150,11 +151,13 @@ export default function GuidelinesModal(props) {
                   }
                   label="I have read and understood the Guidelines"
                 />
-                <Link to="/assumptions-liability">
+                {/* <Link to="/assumptions-liability">
                   <Button variant="contained" onClick={handleSubmit}>
                       Submit
+                      
                   </Button>
-                </Link>
+                </Link> */}
+                <PayMod/>
               </FormGroup>
             </div>
           </div>

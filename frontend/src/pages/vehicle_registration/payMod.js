@@ -49,7 +49,7 @@ export default function PayMod(props) {
 
     return (
         <div>
-            <Button onClick={handleOpen}>Open modal</Button> 
+            <Button onClick={handleOpen}>Submit</Button> 
             <Modal
                 open={open}
                 onClose={handleClose}
