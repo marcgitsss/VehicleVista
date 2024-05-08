@@ -39,7 +39,7 @@ export default function ProofMod() { // Define the ProofMod functional component
         console.log(orcr); // Log the selected file
 
         // const token = localStorage.getItem('token'); //@TODO: PLEASE ALILI THE BELOW TOKEN TO THIS FUNCTION IF NAA NAY LOGIN
-        const token = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJqZXNzcmV5Z2FycmlkbzIyQGdtYWlsLmNvbSIsImlhdCI6MTcxNDU3OTU5NywiZXhwIjoxNzE0NjY1OTk3fQ.-eULwUZPOrCw7jgj6q-0yDlEnaWCFxoRhAcZ_TtFQJ-qOlNUsQMlFOdEB0H0xN7Z"
+        const token = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJqZXNzcmV5Z2FycmlkbzIyQGdtYWlsLmNvbSIsImlhdCI6MTcxNTE3MzQyOCwiZXhwIjoxNzE1MjU5ODI4fQ.MJjLfL4r9Ae8K7vMbaAhQuh5B1aXnJwX6x5NVuluZUGEaXeyIghgfF7A_tXwT1t8"
         const decodedToken = jwtDecode(token); // decode your token here
         const user = decodedToken.sub;
         setName(`${user}:proof_of_payment`);
@@ -56,6 +56,7 @@ export default function ProofMod() { // Define the ProofMod functional component
         const formData = new FormData();
             formData.append('image', orcr); // Assuming imageFile is a File object from an input type="file" element
             formData.append('name', name);
+            formData.append('email',user); //
         
         axios.post(`http://localhost:8080/photo/gdrive-upload`, formData, config2)
             .then(res => {
