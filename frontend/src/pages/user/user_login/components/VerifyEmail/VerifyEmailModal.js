@@ -9,6 +9,7 @@ import MuiAlert from '@mui/material/Alert';
 import "./VerifyEmailModal.css";
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { Link, useNavigate  } from 'react-router-dom';
+import axios from 'axios';
 
 const style = {
   position: 'absolute',
@@ -56,24 +57,61 @@ export default function VerifyEmailModal({ onClose }) {
     setEmailError('');
 
     // Send email logic here
+    //RETURNS ID: NULL if not exist therefore atong buhaton is error if null ang response.data.id
+    axios.post('http://localhost:8080/forgot-password/generate-otp', null, {
+      params: {
+        email: email
+      }
+    })
+    .then(response => {
+      console.log('Email sent successfully');
+      // Show Snackbar]
+      console.log(response.data);
+      setSnackbarOpen(true);
+    })
+    .catch(error => {
+      console.error('Error sending email:', error);
+      // Handle error and show Snackbar
+      setSnackbarOpen(true);
+    });
 
     // Show Snackbar
     setSnackbarOpen(true);
-  };
+};
 
-  const handleSubmit = () => {
-    // Validate code
-    if (!code.trim()) {
-      setCodeError('Please enter the verification code');
-      return;
+const handleSubmit = () => {
+  // Validate code
+  if (!code.trim()) {
+    setCodeError('Please enter the verification code');
+    return;
+  }
+  setCodeError('');
+
+  // Submit code logic here
+  axios.post('http://localhost:8080/forgot-password/verify-otp', null, {
+    params: {
+      email: email,
+      otp: code
     }
-    setCodeError('');
-    setCorrectCode(true);
-    // Submit code logic here
-
+  })
+  .then(response => {
+    console.log(response);
     // Show Snackbar
     setSnackbarOpen(true);
-  };
+    navigate("/forgotpass", {
+      state: {
+        email: email
+      }
+    });
+    //TODO: Transfer to Next Page
+
+  })
+  .catch(error => {
+    console.error('Error submitting code:', error);
+    // Handle error and show Snackbar
+    setSnackbarOpen(true);
+  });
+};
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {

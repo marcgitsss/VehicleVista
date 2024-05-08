@@ -54,7 +54,7 @@ export default function LoginCard() {
     })
     .then((response) => {
       console.log(response.data);
-      if (response.data.success) {
+      if (response.data) {
         // Show Snackbar for successful login
         setSnackbarMessage('Successfully Logged in');
         setSnackbarOpen(true);
@@ -102,7 +102,7 @@ export default function LoginCard() {
           <div className="input-container">
             <input
               type="email"
-              placeholder="Username"
+              placeholder="Email"
               className="input-field"
               name="username"
               value={loginData.username}

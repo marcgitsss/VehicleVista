@@ -1,14 +1,14 @@
 import React from 'react'
 // import '../../pages/user_login/LoginBgm.css';
-import login_background from "../../assets/login_background.jpeg"
-import loginWheel from "../../assets/loginWheel.jpg"
+import login_background from "../../../../../assets/login_background.jpeg"
+import loginWheel from "../../../../../assets/loginWheel.jpg"
 import { Container, Grid, Typography } from '@mui/material'
-import Footer from '../../components/Footer'
-import Navbar from '../../components/Header'
-import AdminHeader from '../../components/AdminHeader/AdminHeader'
 import PassCard from './PassCard'
+import ForgetPasswordCard from '../ForgotPass/ForgetPasswordCard'
+import Header from '../../../../../components/Navbar/UserHeader'
+import Footer from '../../../../../components/Navbar/UserFooter'
 
-export default function ChangePass() {
+export default function ChangePassword() {
   return (
     <main className='main-content'>
       <div >
@@ -18,7 +18,7 @@ export default function ChangePass() {
         <Grid container xs={12} >
         <div style={{ position: 'absolute', top: 0, width: '95%', zIndex: 1 }}>
             {/* <AdminHeader /> */}
-            <Navbar />
+            <Header />
           </div>
           <Grid item xs={7} style={{
             backgroundImage: `url(${login_background})`,

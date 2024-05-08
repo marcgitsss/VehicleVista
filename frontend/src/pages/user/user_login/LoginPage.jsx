@@ -1,12 +1,11 @@
 import React from 'react'
 // import '../../pages/user_login/LoginBgm.css';
-import login_background from "../../assets/login_background.jpeg"
-import loginWheel from "../../assets/loginWheel.jpg"
-import LoginCard from "../../pages/user_login/LoginCard"
+import login_background from "../../../assets/login_background.jpeg"
+import loginWheel from "../../../assets/loginWheel.jpg"
 import { Container, Grid, Typography } from '@mui/material'
-import Footer from '../../components/Footer'
-import Navbar from '../../components/Header'
-import AdminHeader from '../../components/AdminHeader/AdminHeader'
+import LoginCard from './LoginCard'
+import Header from '../../../components/Navbar/UserHeader'
+import Footer from '../../../components/Navbar/UserFooter'
 
 export default function LoginPage() {
   return (
@@ -17,8 +16,7 @@ export default function LoginPage() {
         {/* <img src={login_background} alt="background2" className="bkg2" /> */}
         <Grid container xs={12} >
         <div style={{ position: 'absolute', top: 0, width: '95%', zIndex: 1 }}>
-            {/* <AdminHeader /> */}
-            <Navbar />
+          <Header />
           </div>
           <Grid item xs={7} style={{
             backgroundImage: `url(${login_background})`,

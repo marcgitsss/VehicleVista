@@ -1,16 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import Navbar from '../../components/Header';
-import Footer from '../../components/Footer';
-import LandingBG from '../../assets/LandPageBG.png';
+// import Footer from '../../../components/Footer';
+import LandingBG from '../../../assets/LandPageBG.png';
 import TransitionsModal from './landingModal';
 import './user_landingpage.css';
+import Footer from '../../../components/Navbar/UserFooter';
+import Header from '../../../components/Navbar/UserHeader';
 
 const LandingPage = () => {
   return (
     <div>
       <div className='header'>
-        <Navbar />
+        <Header />
       </div>
       
       <div className="landingPage">
