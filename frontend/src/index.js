@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import UserStatus from './pages/user/UserStatus';
 import Invoice from './components/Invoice';
+import UserStatus from './pages/user/UserStatus';
+import Invoice from './components/Invoice';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
