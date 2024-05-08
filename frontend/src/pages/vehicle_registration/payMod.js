@@ -52,11 +52,7 @@ export default function PayMod(props) {
 
     return (
         <div>
-<<<<<<< HEAD
             <Button onClick={handleOpen}>Submit</Button> 
-=======
-            <Button onClick={handleOpen}>Open modal</Button> 
->>>>>>> 8ac5782 (Initial Login User)
             <Modal
                 open={open}
                 onClose={handleClose}

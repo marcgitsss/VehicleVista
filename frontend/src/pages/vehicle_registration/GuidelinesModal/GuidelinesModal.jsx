@@ -5,12 +5,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Checkbox, FormControlLabel, FormGroup, Snackbar } from "@mui/material";
 import "./GuidelinesModal.css";
-<<<<<<< HEAD
-import { Link } from "react-router-dom";
-import PayMod from "../payMod";
 
-=======
->>>>>>> c8562ca (Added User Type Modal and guidelines)
 
 const style = {
   position: "absolute",
@@ -154,19 +149,12 @@ export default function GuidelinesModal(props) {
                   }
                   label="I have read and understood the Guidelines"
                 />
-<<<<<<< HEAD
-                {/* <Link to="/assumptions-liability">
+                <Link to="/assumptions-liability">
                   <Button variant="contained" onClick={handleSubmit}>
                       Submit
                       
                   </Button>
-                </Link> */}
-                <PayMod/>
-=======
-                <Button variant="contained" onClick={handleSubmit}>
-                  Submit
-                </Button>
->>>>>>> c8562ca (Added User Type Modal and guidelines)
+                </Link>
               </FormGroup>
             </div>
           </div>

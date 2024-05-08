@@ -10,7 +10,7 @@ import MuiAlert from "@mui/material/Alert";
 import "./landingModal.css";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import axios from "axios";
-import ChooseUserTypeModal from "../vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal";
+import { Link } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -195,10 +195,12 @@ export default function TransitionsModal() {
                 Your verification was successful. Proceed to choose your user
                 type.
               </Typography>
-              {/* <Button >
-                Close
-              </Button> */}
-              <ChooseUserTypeModal />
+              <Link to="/login">
+                <Button >
+                  Proceed to log in
+                </Button>
+              </Link>
+             
             </Box>
           </Fade>
         </Modal>
