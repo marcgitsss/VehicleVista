@@ -23,7 +23,7 @@ const Footer = () => {
       return (
         <div className="footer">
           <div className="logoContainer">
-            <img src={LogoFooter} alt="FooterLogo"className='footerLogo' style={{width: '12.5rem'}}/>
+            <img src={LogoFooter} alt="FooterLogo"className='footerLogo' style={{width: '9.5rem'}}/>
           </div>
     
           <div className='info1'>
