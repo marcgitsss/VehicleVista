@@ -47,6 +47,7 @@ export default function Invoice() {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
+                        <div style={{ marginTop: "1rem" }}>
                         <Typography id="modal-modal-title" variant="h6" component="h2" style={{ textAlign: "left", fontSize: "2rem", fontWeight: "bold" }}>
                             Invoice
                         </Typography>
@@ -73,7 +74,7 @@ export default function Invoice() {
                         </div>
                         <div>
                             <TableContainer  >
-                                <Table sx={{ width: '100%' }} aria-label="caption table" style={{ borderCollapse: 'separate', borderSpacing: '0 1em', }}>
+                                <Table sx={{ width: '100%' }} aria-label="caption table" style={{ borderCollapse: 'separate', borderSpacing: '0 1em', marginTop: "2.5rem" }}>
                                     <TableHead>
                                         <TableRow >
                                             <TableCell align="center" sx={{ borderBottom: '.15rem solid black', width: '12rem', fontSize: "1.125rem", fontWeight: 'bold' }}>Item</TableCell>
@@ -94,32 +95,7 @@ export default function Invoice() {
                             </TableContainer>
                         </div>
                         <div >
-                            <TableContainer style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", }}>
-                                <Table sx={{ width: 350 }} aria-label="caption table" style={{ borderCollapse: 'separate', borderSpacing: '0 1em', }}>
-                                    <TableHead >
-                                        <TableRow >
-                                            <TableCell align="center" sx={{ borderBottom: '.15rem solid black' }}></TableCell>
-                                            <TableCell align="center" sx={{ borderBottom: '.15rem solid black' }}></TableCell>
-                                            <TableCell align="center" sx={{ borderBottom: '.15rem solid black' }}></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody >
-                                        <TableRow >
-                                            <TableCell align="left" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontWeight: 'bold', fontSize: "1.125rem" }}>Subtotal</TableCell>
-                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem' }}></TableCell>
-                                            <TableCell align="right" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>php 400.00</TableCell>
-                                        </TableRow>
-                                        <TableRow >
-                                            <TableCell align="left" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontWeight: 'bold', fontSize: "1.125rem" }}>Discount (20%)</TableCell>
-                                            <TableCell align="center" sx={{ borderBottom: 'none', }}></TableCell>
-                                            <TableCell align="right" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>0</TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </div>
-                        <div >
-                            <TableContainer style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", }}>
+                            <TableContainer style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "2.5rem" }}>
                                 <Table sx={{ width: 350 }} aria-label="caption table" style={{ borderCollapse: 'separate', borderSpacing: '0 1em', }}>
                                     <TableHead >
                                         <TableRow >
@@ -138,11 +114,12 @@ export default function Invoice() {
                                 </Table>
                             </TableContainer>
                         </div>
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center",}}>
-                            <Button sx={{  bottom: '-2rem', padding: '.2rem 2rem .2rem 2rem', borderRadius: '5rem', backgroundColor: '#F4C522', color: 'black', fontWeight: 'bold', textTransform: 'none', fontSize: '1.125rem', '&:hover': { backgroundColor: '#8A252C' }, '&:br': { padding: '50rem' } }}>Submit Proof of <br/>Payment</Button>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "2.5rem" }}>
+                            <Button sx={{  bottom: '-2rem', padding: '.2rem 2rem .2rem 2rem', borderRadius: '5rem', backgroundColor: '#F4C522', color: 'black', fontWeight: 'bold', textTransform: 'none', fontSize: '1.125rem', '&:hover': { backgroundColor: '#F4C522' }, '&:br': { padding: '50rem' } }}>Submit Proof of <br/>Payment</Button>
                         
                         </div>
 
+                        </div>
                     </Box>
 
                 </Modal>

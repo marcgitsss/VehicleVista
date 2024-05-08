@@ -9,6 +9,7 @@ import LandingPage from "./pages/user/user_landingpage/user_landingpage";
 import Registration from "./pages/user/vehicle_registration/vehicle_registration";
 import ChangePassword from "./pages/user/user_login/components/ChangePass/ChangePassword";
 import UserStatus from "./pages/user/UserStatus";
+import Invoice from "./pages/user/user_login/components/Invoice";
 function App() {
   return (
     <Router>
@@ -21,6 +22,7 @@ function App() {
           <Route path="/changepass" element={<ChangePassword />} />
           <Route path="/" exact element={<LandingPage />} />
           <Route path="/applist" element={<UserStatus />} />
+          <Route path="/invoice" element={<Invoice />} />
         </Routes>
       </div>
     </Router>

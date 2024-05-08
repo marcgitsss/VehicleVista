@@ -1,11 +1,4 @@
-import {
-  Button,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Button, Container, Grid, Paper, Typography, useMediaQuery } from "@mui/material";
 import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -19,52 +12,15 @@ import Header from "../../components/Navbar/UserHeader";
 import StudentSidebar from "../../components/StudentSidebar/StudentSidebar";
 import Footer from "../../components/Navbar/UserFooter";
 import axios from "axios";
-function createData(date, appType, verify, payment, approval, status) {
-  return { date, appType, verify, payment, approval, status };
-}
+
 const email = "ludivicombalaterojr@gmail.com";
-const exampleData = [
-  {
-    date: "05/01/24",
-    appType: "Student",
-    verify: "Verified",
-    payment: "Pending",
-    approval: "Pending",
-    status: "Pending",
-  },
-  {
-    date: "06/22/24",
-    appType: "Faculty",
-    verify: "Verified",
-    payment: "Paid",
-    approval: "Approved",
-    status: "Success",
-  },
-  {
-    date: "02/21/24",
-    appType: "Faculty",
-    verify: "Verified",
-    payment: "Paid",
-    approval: "Approved",
-    status: "Success",
-  },
-];
-
-const sortedData = exampleData.sort((a, b) => {
-  const dateA = new Date(a.date);
-  const dateB = new Date(b.date);
-  return dateA - dateB;
-});
-
-const rows = sortedData.map(
-  ({ date, appType, verify, payment, approval, status }) =>
-    createData(date, appType, verify, payment, approval, status)
-);
 
 export default function UserStatus() {
   const isMobile = useMediaQuery("(max-width: 37.5rem)");
   const [open, setOpen] = useState(false);
-  const [applications, setApplications] = useState([]);
+  const [applications, setApplications] = useState({});
+  const [date, setDate] = useState();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -74,6 +30,9 @@ export default function UserStatus() {
         if (response.data) {
           console.log(response.data);
           setApplications(response.data);
+          setDate(response.data.datesubmitted);
+
+
         }
       } catch (error) {
         console.error(error);
@@ -81,6 +40,10 @@ export default function UserStatus() {
     };
     fetchData();
   }, []);
+
+  const dateObject = new Date(date);
+  const formattedDate = `${dateObject.getMonth() + 1}/${dateObject.getDate()}/${dateObject.getFullYear().toString().slice(-2)}`;
+
   const handleFalseOption = () => {
     setOpen(false);
   };
@@ -201,19 +164,13 @@ export default function UserStatus() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows.map((row) => (
-                        <TableRow
-                          key={row.name}
-                          sx={{ backgroundColor: "#EBEBEB" }}
-                        >
-                          <TableCell align="center">{row.date}</TableCell>
-                          <TableCell align="center">{row.appType}</TableCell>
-                          <TableCell align="center">{row.verify}</TableCell>
-                          <TableCell align="center">{row.payment}</TableCell>
-                          <TableCell align="center">{row.approval}</TableCell>
-                          <TableCell align="center">{row.status}</TableCell>
-                        </TableRow>
-                      ))}
+
+                      <TableCell align="center">{formattedDate}</TableCell>
+                      <TableCell align="center">{applications.isStaff ? 'Staff' : 'Student'}</TableCell>
+                      <TableCell align="center">{applications.verified ? 'Verified' : 'Pending'}</TableCell>
+                      <TableCell align="center">{applications.paid ? 'Paid' : 'Pending'}</TableCell>
+                      <TableCell align="center">{applications.approved ? 'Approved' : 'Pending'}</TableCell>
+                      <TableCell align="center">{applications.verified && applications.paid && applications.approved ? 'Success' : 'Pending'}</TableCell>
                     </TableBody>
                   </Table>
                   <Button
