@@ -3,6 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 7rem;
     padding: 1rem;
     color: white;
     background-color: rgba(255, 255, 255); 
@@ -78,6 +79,7 @@ h6 {
   margin: auto;
   margin-left: 300px;
   margin-top: -2rem;
+  font-size: 1rem;
 }
 
 .info1 p {
@@ -125,6 +127,8 @@ h6 {
     margin: auto;
     margin-left: 50px;
     margin-top: -35px;
+    
+ 
   }
 
   .info2 {
