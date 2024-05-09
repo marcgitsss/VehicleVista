@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
+    padding: 1rem;
     color: white;
     background-color: rgba(255, 255, 255); 
     font-family: 'Kumbh Sans', sans-serif;
@@ -15,8 +15,8 @@
     transition: width 0.5s ease-in-out; 
 }
 
-.footerImage {
-  width: 100%;
+.footerLogo {
+  width: 80%;
 }
 
 .nav-footer {
@@ -134,26 +134,28 @@ h6 {
   }
 }
 
-@media (max-width: 660px) {
+@media (max-width: 645px) {
   .footer {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
   }
 
   .logoContainer {
-    order: 2;
-    margin-top: -10px;
-    width: 200px;
-    margin-left: 40px;
+  
+    margin-top: -10%;
+    width: 10%;
+    left:0;
   }
-
-  .info1,
-  .info2 {
-    margin-top: 0;
-  }
+  
+.footerLogo {
+  width: 30vw;
+  top:0;
+  margin-left: -30%;
+}
 
   .info1 {
-    margin-left: 30px;
+   margin-top: -10%;
+   margin-left: 25%;
   }
 
   .info1,
@@ -168,7 +170,7 @@ h6 {
   }
 
   .nav-footer {
-    margin-top: 10px;
+    margin-top: 10%;
   }
   .nav-footer a,
   p {
@@ -177,5 +179,6 @@ h6 {
   .this,
   .title {
     font-size: 1rem;
+
   }
 }
