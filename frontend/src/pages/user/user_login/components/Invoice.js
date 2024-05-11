@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-
+import axios from "axios";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -31,6 +31,36 @@ export default function Invoice() {
     const [open, setOpen] = React.useState(false); // Start with modal closed
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [applications, setApplications] = React.useState({});
+    const email = "ludivicombalaterojr@gmail.com";
+    const [date, setDate] = React.useState();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(
+              "http://localhost:8080/applicants/" + email
+            );
+            if (response.data) {
+              console.log('Invoice',response.data);
+              setApplications(response.data);
+              setDate(response.data.datesubmitted);
+    
+    
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        fetchData();
+      }, []);
+
+      const dateObject = new Date(date);
+      const oneWeekLater = new Date(dateObject.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const formattedDate = `${dateObject.getDate().toString().padStart(2, '0')} ${months[dateObject.getMonth()]}, ${dateObject.getFullYear()}`;
+      const formattedOneWeekLater = `${oneWeekLater.getDate().toString().padStart(2, '0')} ${months[oneWeekLater.getMonth()]}, ${oneWeekLater.getFullYear()}`;
+
 
     React.useEffect(() => {
         handleOpen(); // Open the modal when the component mounts
@@ -58,7 +88,7 @@ export default function Invoice() {
                                 </Typography>
 
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }} style={{ fontSize: "1rem" }}>
-                                    01 Jan, 2022
+                                    {formattedDate}
                                 </Typography>
                             </div>
                             &nbsp;
@@ -67,7 +97,7 @@ export default function Invoice() {
                                     Due
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }} style={{ textAlign: "left", fontSize: "1rem" }}>
-                                    07 Jan, 2022
+                                    {formattedOneWeekLater}
                                 </Typography>
                             </div>
 
@@ -85,10 +115,10 @@ export default function Invoice() {
                                     </TableHead>
                                     <TableBody >
                                         <TableRow   >
-                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>2-wheel sticker</TableCell>
-                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>php 400.00</TableCell>
+                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}> {applications.isFourWheel ? "4-wheel sticker" : "2-wheel sticker"}</TableCell>
+                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{applications.isFourWheel ? (applications.isParking ? "php 2000.00" : "php 400.00") : (applications.isParking ? "php 750.00" : "php 200.00")}</TableCell>
                                             <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>1</TableCell>
-                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>php 400.00</TableCell>
+                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{applications.isFourWheel ? (applications.isParking ? "php 2000.00" : "php 400.00") : (applications.isParking ? "php 750.00" : "php 200.00")}</TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -108,7 +138,7 @@ export default function Invoice() {
                                         <TableRow >
                                             <TableCell align="left" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontWeight: 'bold', fontSize: "1.125rem" }}>Total</TableCell>
                                             <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem' }}></TableCell>
-                                            <TableCell align="right" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>php 400.00</TableCell>
+                                            <TableCell align="right" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{applications.isFourWheel ? (applications.isParking ? "php 2000.00" : "php 400.00") : (applications.isParking ? "php 750.00" : "php 200.00")}</TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
