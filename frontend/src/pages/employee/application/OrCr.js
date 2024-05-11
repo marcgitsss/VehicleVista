@@ -1,4 +1,5 @@
 import { Container, Grid, Paper, Typography, useMediaQuery } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; 
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,26 +8,52 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import HP_background from '../../../assets/HP_Background.jpg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../../../components/Navbar/UserHeader';
 import Footer from '../../../components/Navbar/UserFooter';
+import axios from "axios";
 
-function createData(appName, appType, dateApp) {
-    return { appName, appType, dateApp };
-}
 
-const exampleData = [
-    { name: 'John Doe', type: 'Individual', date: 'December 12, 2012' },
-    { name: 'Jane Smith', type: 'Organization', date: 'June 21, 2021' },
-    { name: 'Alice Johnson', type: 'Individual', date: 'August 19, 2024' }
-];
-
-const rows = exampleData.map(({ name, type, date }) =>
-    createData(name, type, date)
-);
 
 export default function OrCr() {
     const isMobile = useMediaQuery('(max-width: 37.5rem)');
+    const [applications, setApplications] = useState([]);
+    const [date, setDate] = useState();
+    const navigate = useNavigate();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const [selectedEmail, setSelectedEmail] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:8080/applicants/all");
+                    const filteredApplicants = response.data.filter(applicant => applicant.verified === false);
+                    setApplications(filteredApplicants);
+            
+                    // Set date state (assuming response.data contains a datesubmitted property)
+                    if (filteredApplicants.length > 0) {
+                        setDate(filteredApplicants[0].datesubmitted);
+                    }
+                    
+                   
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchData();
+    }, []);
+    
+
+    const handleRowClick = (email) => {
+        // Update state or props to store the selected email
+        setSelectedEmail(email);
+    
+        // Navigate to 'selectorcr' page
+        navigate('/selectorcr', { state: { email } });
+    };
+
+
 
     return (
         <div className='verifyPay' style={{
@@ -63,14 +90,28 @@ export default function OrCr() {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {rows.map((row) => (
-                                            <TableRow key={row.name} sx={{ backgroundColor: '#EBEBEB' }}>
-                                                <TableCell align="center">{row.appName}</TableCell>
-                                                <TableCell align="center">{row.appType}</TableCell>
-                                                <TableCell align="center">{row.dateApp}</TableCell>
-                                            </TableRow>
-                                        ))}
+                                        {applications.map((row) => {
+                                            // Parse the date string into a Date object
+                                            const submittedDate = new Date(row.datesubmitted);
+
+                                            // Get the month, day, and year components
+                                            const month = submittedDate.toLocaleString('default', { month: 'long' });
+                                            const day = submittedDate.getDate();
+                                            const year = submittedDate.getFullYear();
+
+                                            // Construct the formatted date string
+                                            const formattedDate = `${month} ${day}, ${year}`;
+
+                                            return (
+                                                <TableRow key={row.applicantid} sx={{ backgroundColor: '#EBEBEB', cursor: 'pointer' }} onClick={() => handleRowClick(row.email)}>
+                                                    <TableCell align="center">{row.email}</TableCell>
+                                                    <TableCell align="center">{row.isStaff ? 'Staff' : 'Student'}</TableCell>
+                                                    <TableCell align="center">{formattedDate}</TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
                                     </TableBody>
+
                                 </Table>
                             </TableContainer>
                         </div>

@@ -10,58 +10,66 @@ import { useState } from 'react';
 import Header from '../../../components/Navbar/UserHeader';
 import Footer from '../../../components/Navbar/UserFooter';
 import HP_background from '../../../assets/HP_Background.jpg';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import axios from "axios";
 
-function createData(appName, appType, dateApp, isChecked = false) {
-    return { appName, appType, dateApp, isChecked };
-}
-
-function createDataNew(appNameNew, appTypeNew, dateAppNew, isCheckedNew = false) {
-    return { appNameNew, appTypeNew, dateAppNew, isCheckedNew };
-}
-
-const exampleData = [
-    { name: 'John Doe', type: 'Individual', date: 'December 12, 2012' },
-    { name: 'Jane Smith', type: 'Organization', date: 'June 21, 2021' },
-    { name: 'Alice Johnson', type: 'Individual', date: 'August 19, 2024' }
-];
-
-const exampleDataNew = [
-    { name: 'Ludivico Balatero', type: 'student', date: 'December 12, 2012' },
-    { name: 'Jessrey Garrido', type: 'teacher', date: 'June 21, 2021' },
-    { name: 'Marc Gomolon', type: 'staff', date: 'August 19, 2024' }
-];
-
-const rows = exampleData.map(({ name, type, date }) =>
-    createData(name, type, date)
-);
-
-const rowsNew = exampleDataNew.map(({ name, type, date }) =>
-    createDataNew(name, type, date)
-);
 
 export default function ApproveApplication() {
     const isMobile = useMediaQuery('(max-width: 37.5rem)');
     const [checked, setChecked] = useState(false);
     const [selectedRows, setSelectedRows] = useState([]);
+    const [applications, setApplications] = useState([]);
+    const [date, setDate] = useState();
+    const navigate = useNavigate();
+    const [selectedEmail, setSelectedEmail] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:8080/applicants/all");
+                const filteredApplicants = response.data.filter(applicant => applicant.verified === true && applicant.paid === true && applicant.approved === false);
+                setApplications(filteredApplicants);
+
+                // Set date state (assuming response.data contains a datesubmitted property)
+                if (filteredApplicants.length > 0) {
+                    setDate(filteredApplicants[0].datesubmitted);
+                }
+
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const handleCheckboxChange = (event) => {
         setChecked(event.target.checked);
         setSelectedRows([]);
     };
 
-    const handleCheckboxRow = (event, name, isNew) => {
+
+    const handleCheckboxRow = (event, firstName) => {
         event.stopPropagation(); // Stop propagation to prevent row click
-        const rowIndex = isNew ? rowsNew.findIndex(row => row.appNameNew === name) : rows.findIndex(row => row.appName === name);
-        const newArray = isNew ? [...rowsNew] : [...rows];
+        const rowIndex = applications.findIndex(applicant => applicant.firstName === firstName);
+        const newArray = [...applications];
         newArray[rowIndex].isChecked = !newArray[rowIndex].isChecked;
-        if (isNew) {
-            newArray[rowIndex].isCheckedNew = !newArray[rowIndex].isCheckedNew; // Toggle isCheckedNew
-        }
-        setSelectedRows(newArray.filter(row => row.isChecked || row.isCheckedNew).map(row => row.appName || row.appNameNew));
-        console.log("Selected rows:", newArray.filter(row => row.isChecked || row.isCheckedNew));
+        setSelectedRows(newArray.filter(row => row.isChecked).map(row => row.firstName));
+        console.log("Selected rows:", newArray.filter(row => row.isChecked));
     };
+    
 
     const isSelected = (name) => selectedRows.indexOf(name) !== -1;
+
+    const handleRowClick = (email) => {
+        // Update state or props to store the selected email
+        setSelectedEmail(email);
+
+        // Navigate to 'selectorcr' page
+        navigate('/appchoice', { state: { email } });
+    };
 
     return (
         <div className='verifyPay' style={{
@@ -82,7 +90,7 @@ export default function ApproveApplication() {
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
                                     <Paper sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '4rem', padding: 'clamp(0.125rem, 1vw, 0.5rem)', backgroundColor: '#8A252C', borderRadius: '0.5rem 0 0 0', }}>
-                                        <Typography  style={{ fontWeight: 'bold', fontSize: 'clamp(1rem, 2vw, 1.125rem)', color: 'white' }}>New Registrations</Typography>
+                                        <Typography style={{ fontWeight: 'bold', fontSize: 'clamp(1rem, 2vw, 1.125rem)', color: 'white' }}>New Registrations</Typography>
                                     </Paper>
                                 </div>
 
@@ -94,41 +102,53 @@ export default function ApproveApplication() {
                                 </div>
                             </div>
                             <TableContainer component={Paper} sx={{ backgroundColor: '#D9D9D9', borderRadius: '0.5rem', height: 'clamp(20rem, 50vh, 30rem)', width: 'clamp(20rem, 70vw, 70rem)' }}>
-                                    <Table aria-label="simple table">
-                                        <TableHead>
-                                            <TableRow>
-                                                {checked && (
-                                                    <TableCell align="center" sx={{ fontWeight: 'bold' }}>Select</TableCell>
-                                                )}
-                                                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Applicant Name</TableCell>
-                                                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Applicant Type</TableCell>
-                                                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date of Application</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {rows.map((row) => (
+                                <Table aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            {checked && (
+                                                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Select</TableCell>
+                                            )}
+                                            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Applicant Name</TableCell>
+                                            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Applicant Type</TableCell>
+                                            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Date of Application</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {applications.map((row) => {
+                                            const submittedDate = new Date(row.datesubmitted);
+                                            const month = submittedDate.toLocaleString('default', { month: 'long' });
+                                            const day = submittedDate.getDate();
+                                            const year = submittedDate.getFullYear();
+                                            const formattedDate = `${month} ${day}, ${year}`;
+
+                                            return (
                                                 <TableRow
-                                                    key={row.appName}
-                                                    sx={{ backgroundColor: isSelected(row.appName) ? '#EBEBEB' : 'transparent' }}
+                                                    key={row.applicantid}
+                                                    sx={{
+                                                        backgroundColor: isSelected(row.email) ? '#EBEBEB' : 'transparent',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => handleRowClick(row.email)}
                                                 >
                                                     {checked && (<TableCell align="center">
                                                         <Checkbox
                                                             checked={row.isChecked}
-                                                            onChange={(event) => handleCheckboxRow(event, row.appName)}
+                                                            onChange={(event) => handleCheckboxRow(event, row.firstName)}
                                                             onClick={(event) => event.stopPropagation()} // Stop propagation on checkbox click
                                                         />
                                                     </TableCell>
 
                                                     )}
-                                                    <TableCell align="center">{row.appName}</TableCell>
-                                                    <TableCell align="center">{row.appType}</TableCell>
-                                                    <TableCell align="center">{row.dateApp}</TableCell>
+                                                    <TableCell align="center">{row.firstName} {row.lastName}</TableCell>
+                                                    <TableCell align="center">{row.isStaff ? 'Staff' : 'Student'}</TableCell>
+                                                    <TableCell align="center">{formattedDate}</TableCell>
                                                 </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+
                         </div>
                     </Grid>
                     <Grid item xs={2} > </Grid>

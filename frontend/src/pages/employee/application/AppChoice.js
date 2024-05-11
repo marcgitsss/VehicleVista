@@ -4,6 +4,10 @@ import backButton from '../../../assets/backButton.jpg';
 import Header from '../../../components/Navbar/UserHeader';
 import Footer from '../../../components/Navbar/UserFooter';
 import HP_background from '../../../assets/HP_Background.jpg';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import axios from "axios";
 
 function createData(appName, appType, dateApp) {
     return { appName, appType, dateApp };
@@ -22,6 +26,44 @@ const rows = exampleData.map(({ name, type, date }) =>
 console.log(rows);
 
 export default function AppChoice() {
+
+
+    const location = useLocation();
+    const email = location.state?.email;
+    const [applications, setApplications] = useState({});
+    const navigate = useNavigate();
+
+
+    const handleVerifyClick = async () => {
+        console.log('handleVerifyClick called');
+        try {
+            const response = await axios.put(
+                `http://localhost:8080/applicants/updatePaidStatus/${email}`);
+            console.log('Verification status updated successfully:', response.data);
+            navigate('/verifypay');
+        } catch (error) {
+            console.error('Error updating verification status:', error);
+        }
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:8080/applicants/" + email
+                );
+                if (response.data) {
+                    console.log(response.data);
+                    setApplications(response.data);
+                    console.log('handleVerifyClick called', applications.verified);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchData();
+    }, []);
+
     return (
         <div className='verifyPay' style={{
             backgroundImage: `url(${HP_background})`,
@@ -47,7 +89,7 @@ export default function AppChoice() {
                                 </Grid>
                                 <Grid item xs={10}>
                                     <div style={{ display: "flex", alignItems: "center" }}>
-                                        <img src={backButton} alt="Logo" style={{ width: "3rem", height: "3rem",  }} />
+                                    <Link to="/approve" style={{ textDecoration: "none" }}> <img src={backButton} alt="Logo" style={{ width: "3rem", height: "3rem",  }} /> </Link>
                                         <h1 style={{ textAlign: "center", fontSize: 'clamp(1.5rem, 5vw, 2rem)', flex: 1 }}>Select Application</h1>
                                     </div>
                                 </Grid>
@@ -59,24 +101,24 @@ export default function AppChoice() {
                                     <div>
                                         <Typography component="div" sx={{ fontSize: 'clamp(1rem, 2vw, 1.125rem)' }}>
                                             <div style={{ display: "flex", alignItems: "center", }}>
-                                                <h3>Application Name:</h3>&nbsp;<p style={{ textAlign: "left" }}>John E. Doe</p>
+                                                <h3>Application Name:</h3>&nbsp;<p style={{ textAlign: "left" }}>{applications.firstName} {applications.middleInitial}. {applications.lastName}</p>
                                             </div>
                                         </Typography>
                                         <Typography component="div" sx={{ marginLeft:  'clamp(2rem, 10%, 20rem)' }}>
                                             <div style={{ display: "flex", alignItems: "center", margin: "-1rem" }}>
-                                                <h3 style={{ textAlign: "left" }}>User Type:</h3>&nbsp;<p>Student</p>
+                                                <h3 style={{ textAlign: "left" }}>User Type:</h3>&nbsp;<p>{applications.isStaff ? 'Staff' : 'Student'}</p>
                                             </div>
                                             <div style={{ display: "flex", alignItems: "center", margin: "-1rem" }}>
-                                                <h3 style={{ textAlign: "left" }}>Affiliated ID Number:</h3>&nbsp;<p style={{ textAlign: "left" }}>20-3464-185</p>
+                                                <h3 style={{ textAlign: "left" }}>Affiliated ID Number:</h3>&nbsp;<p style={{ textAlign: "left" }}>{applications.idNumber}</p>
                                             </div>
                                             <div style={{ display: "flex", alignItems: "center", margin: "-1rem" }}>
-                                                <h3 style={{ textAlign: "left" }}>Address:</h3>&nbsp;<p style={{ textAlign: "left" }}>Purok Dos, Barangay San Juan, California, 6000</p>
+                                                <h3 style={{ textAlign: "left" }}>Address:</h3>&nbsp;<p style={{ textAlign: "left" }}>{applications.address}</p>
                                             </div>
                                             <div style={{ display: "flex", alignItems: "center", margin: "-1rem" }}>
-                                                <h3 style={{ textAlign: "left" }}>Contact Number:</h3>&nbsp;<p style={{ textAlign: "left" }}>09171234567</p>
+                                                <h3 style={{ textAlign: "left" }}>Contact Number:</h3>&nbsp;<p style={{ textAlign: "left" }}>{applications.contactNumber}</p>
                                             </div>
                                             <div style={{ display: "flex", alignItems: "center", margin: "-1rem" }}>
-                                                <h3 style={{ textAlign: "left" }}>Proof of Payment:</h3>&nbsp;<Button sx={{ textTransform: "none", color: "#8A252C" }}>Click to View Image</Button>
+                                                <h3 style={{ textAlign: "left" }}>Status:</h3>&nbsp;<p style={{ textTransform: "none", color: "#5E6600" }}>{applications.verified === true && applications.paid === true && applications.approved === false? "Fully Verified" : "Not Fully Verified"}</p>
                                             </div>
                                         </Typography>
                                     </div>
