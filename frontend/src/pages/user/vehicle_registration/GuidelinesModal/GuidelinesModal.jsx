@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Checkbox, FormControlLabel, FormGroup, Snackbar } from "@mui/material";
 import "./GuidelinesModal.css";
+import { useNavigate } from "react-router-dom";
+import PayMod from "../payMod";
 
 const style = {
   position: "absolute",
@@ -22,15 +24,20 @@ const style = {
 export default function GuidelinesModal(props) {
   const [checked, setChecked] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const navigate = useNavigate();
+  const [payMod, setPayMod] = useState(false);
 
   const handleCheckboxChange = (event) => {
     setChecked((x) => !x);
   };
+
   const handleSubmit = () => {
     if (checked) {
       const formData = { ...props.registrationData };
       props.toggleModal((x) => !x);
       setSnackbarOpen(false);
+      navigate('/registration');
+
       // Proceed to next page
     } else {
       setSnackbarOpen(true);
@@ -41,6 +48,10 @@ export default function GuidelinesModal(props) {
     setSnackbarOpen(false);
   };
 
+  const handleClose = () => {
+    props.toggleModal(false);
+  };
+
   return (
     <div>
       <Modal
@@ -49,6 +60,7 @@ export default function GuidelinesModal(props) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <Button onClick={handleClose} style={{ position: 'absolute', top: '8px', right: '8px' }}>Close</Button>
           {/* Modal Content */}
           <div className="guidelines-container">
             <div className="guidelines-header">
@@ -166,6 +178,7 @@ export default function GuidelinesModal(props) {
           horizontal: "center",
         }}
       />
+      {payMod && <PayMod isOpen={true} toggleModal={setPayMod} />}
     </div>
   );
 }

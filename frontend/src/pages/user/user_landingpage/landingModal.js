@@ -11,6 +11,8 @@ import "./landingModal.css";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import axios from "axios";
 import ChooseUserTypeModal from "../vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal";
+import { Link } from "react-router-dom";
+
 
 const style = {
   position: "absolute",
@@ -46,11 +48,20 @@ export default function TransitionsModal() {
     setEmailError("");
 
     try {
-      setSnackbarMessage("Email sent successfully");
-      setSnackbarOpen(true);
-      await axios.post("http://localhost:8080/register/generateOtp/", {
+      const res = await axios.post("http://localhost:8080/register/generateOtp/", {
         email,
       });
+
+      if (res.data.id === null){
+        console.log(res.data)
+        setSnackbarMessage("Failed to send email");
+      } else{
+        setSnackbarMessage("Email Sent Successfully");
+        console.log(res.data)
+      }
+      setSnackbarOpen(true);
+
+      
     } catch (error) {
       setSnackbarMessage("Failed to send email");
       setSnackbarOpen(true);
@@ -198,7 +209,11 @@ export default function TransitionsModal() {
               {/* <Button >
                 Close
               </Button> */}
-              <ChooseUserTypeModal />
+              <Link to="/login">
+                <Button >
+                  Proceed to log in
+                </Button>
+              </Link>
             </Box>
           </Fade>
         </Modal>

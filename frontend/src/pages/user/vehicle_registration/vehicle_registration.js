@@ -20,6 +20,7 @@ export default function Registration() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [orcrFile, setORCRFile] = useState(null);
   const [licenseFile, setLicenseFile] = useState(null);
+  
   const [registrationData, setRegistrationData] = useState({
     surname: "",
     givenname: "",
@@ -32,6 +33,8 @@ export default function Registration() {
     plateno: "",
     color: "",
     vehicleType: "",
+    stickerType: ""
+
   });
   const [inputErrors, setInputErrors] = useState({
     surname: "",
@@ -45,9 +48,10 @@ export default function Registration() {
     plateno: "",
     color: "",
     vehicleType: "",
+    stickerType: "",
   });
   useEffect(() => {
-    console.log(localStorage.getItem("token"));
+    // console.log(token);
   }, []);
 
   const handleORCRUpload = (e) => {
@@ -166,6 +170,18 @@ export default function Registration() {
     setInputErrors((prevErrors) => ({
       ...prevErrors,
       vehicleType: "",
+    }));
+  };
+
+  const handleStickerChange = (e) => {
+    const { value } = e.target;
+    setRegistrationData((prevData) => ({
+      ...prevData,
+      stickerType: value,
+    }));
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      stickerType: "",
     }));
   };
 
@@ -554,6 +570,36 @@ export default function Registration() {
                   label="4 Wheeler"
                 />
               </RadioGroup>
+           
+               {/* Sticker Type */}
+              <label
+                className="bold-label"
+                style={{
+                  fontSize: "1.125rem",
+                  marginBottom: "1rem",
+                  marginRight: "1rem",
+                }}
+              >
+                Sticker Type:
+              </label>
+
+              <RadioGroup
+                name="stickerType"
+                value={registrationData.stickerType}
+                onChange={handleStickerChange}
+                style={{ flexDirection: "row" }}
+              >
+                <FormControlLabel
+                  value="DropOff"
+                  control={<Radio />}
+                  label="Drop-off"
+                />
+                <FormControlLabel
+                  value="Parking"
+                  control={<Radio />}
+                  label="Parking"
+                />
+              </RadioGroup>
 
               <div
                 style={{
@@ -567,6 +613,7 @@ export default function Registration() {
                 <FileUpload label="License" onChange={setLicenseFile} />
               </div>
             </div>
+            
           </div>
 
           <Button

@@ -12,12 +12,15 @@ import {
 } from "@mui/material";
 import FileUpload from "./uploadImage";
 import axios from "axios";
+import { useUser } from "../../context/AuthProvider";
 
 export default function RegistrationForm() {
+  const {token} =  useUser();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [orcrFile, setORCRFile] = useState(null);
   const [licenseFile, setLicenseFile] = useState(null);
+  const email = localStorage.getItem("email");
   const [registrationData, setRegistrationData] = useState({
     surname: "",
     givenname: "",
@@ -29,7 +32,8 @@ export default function RegistrationForm() {
     vmake: "",
     plateno: "",
     color: "",
-    vehicleType: "",
+    isFourWheel: "",
+    stickerType: "",
     address: "", // Add address field here
   });
   
@@ -44,11 +48,11 @@ export default function RegistrationForm() {
     vmake: "",
     plateno: "",
     color: "",
-    vehicleType: "",
+    isFourWheel: "",
   });
 
   useEffect(() => {
-    console.log(localStorage.getItem("token"));
+    console.log(token);
   }, []);
 
   const handleORCRUpload = (e) => {
@@ -97,7 +101,7 @@ export default function RegistrationForm() {
       // Submit data to the server
       const config = {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       };
       const lastName = registrationData.surname;
@@ -111,9 +115,9 @@ export default function RegistrationForm() {
       const address = registrationData.address;
       const plateNo = registrationData.plateno;
       const color = registrationData.color;
-      const vehicleType = registrationData.vehicleType;
+      const isFourWheel = registrationData.isFourWheel;
       const email = localStorage.getItem("email");
-      
+      const isStaff = localStorage.getItem("isStaff")
       // Submit applicant registration data
       const res1 = await axios.post(
         "http://localhost:8080/applicants/register",
@@ -130,7 +134,8 @@ export default function RegistrationForm() {
           vehicleMake: vehicleMake,
           plateNo: plateNo,
           color: color,
-          vehicleType: vehicleType,
+          isFourWheel: isFourWheel,
+          isStaff: isStaff,
         },
         config
       );
@@ -144,7 +149,7 @@ export default function RegistrationForm() {
       const config2 = {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       };
       const res2 = await axios.post(
@@ -174,18 +179,18 @@ export default function RegistrationForm() {
     const errors = {};
   
     // Validate Surname
-    if (!registrationData.surname.trim()) {
-      errors.surname = "Surname is required";
-    } else if (!/^[a-zA-Z]+$/.test(registrationData.surname)) {
-      errors.surname = "Surname must contain only letters";
-    }
-  
-    // Validate Given Name
-    if (!registrationData.givenname.trim()) {
-      errors.givenname = "Given Name is required";
-    } else if (!/^[a-zA-Z]+$/.test(registrationData.givenname)) {
-      errors.givenname = "Given Name must contain only letters";
-    }
+      if (!registrationData.surname.trim()) {
+        errors.surname = "Surname is required";
+      } else if (!/^[a-zA-Z\s]+$/.test(registrationData.surname)) {
+        errors.surname = "Surname must contain only letters and spaces";
+      }
+
+      // Validate Given Name
+      if (!registrationData.givenname.trim()) {
+        errors.givenname = "Given Name is required";
+      } else if (!/^[a-zA-Z\s]+$/.test(registrationData.givenname)) {
+        errors.givenname = "Given Name must contain only letters and spaces";
+      }
   
     // Validate M.I.
     if (!registrationData.mi.trim()) {
@@ -237,15 +242,14 @@ export default function RegistrationForm() {
     }
   
     // Validate Vehicle Type
-    if (!registrationData.vehicleType) {
-      errors.vehicleType = "Vehicle Type is required";
+    if (registrationData.isFourWheel === null) {
+      errors.isFourWheel = "Vehicle Type is required";
     }
   
     setInputErrors(errors);
     return Object.keys(errors);
   };
   
-
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
@@ -264,16 +268,32 @@ export default function RegistrationForm() {
 
   const handleRadioChange = (e) => {
     const { value } = e.target;
+    const isFourWheeler = value === "true"; // Set isFourWheeler to true if "4 Wheeler" is selected
     setRegistrationData((prevData) => ({
       ...prevData,
-      vehicleType: value,
+      isFourWheel: isFourWheeler, // Update isFourWheel directly with the boolean value
     }));
     setInputErrors((prevErrors) => ({
       ...prevErrors,
-      vehicleType: "",
+      isFourWheel: "", // Reset any previous validation error
     }));
   };
 
+  const handleStickerChange = (e) => {
+    const { value } = e.target;
+    setRegistrationData((prevData) => ({
+      ...prevData,
+      stickerType: value,
+    }));
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      stickerType: "",
+    }));
+  };
+
+  console.log("orcr",orcrFile);
+  console.log("license",licenseFile);
+  console.log("email",email);
   return (
     <Container maxWidth="lg">
       <Box sx={{ p: 2, alignItems: "center" }}>
@@ -505,24 +525,49 @@ export default function RegistrationForm() {
                 Vehicle Type:
               </Typography>
               <RadioGroup
-                name="vehicleType"
-                value={registrationData.vehicleType}
+                name="isFourWheel"
+                value={registrationData.isFourWheel}
                 onChange={handleRadioChange}
                 style={{ flexDirection: "row" }}
               >
                 <FormControlLabel
-                  value="2 Wheeler"
+                  value= 'false'
                   control={<Radio />}
                   label="2 Wheeler"
                 />
                 <FormControlLabel
-                  value="4 Wheeler"
+                  value="true"
                   control={<Radio />}
                   label="4 Wheeler"
                 />
               </RadioGroup>
 
-              <div
+              {/* Sticker Type */}
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: "bold", marginRight: "1rem" }}
+              >
+                Sticker Type:
+              </Typography>
+              <RadioGroup
+                name="stickerType"
+                value={registrationData.stickerType}
+                onChange={handleStickerChange}
+                style={{ flexDirection: "row" }}
+              >
+                <FormControlLabel
+                  value="DropOff"
+                  control={<Radio />}
+                  label="Drop-off"a
+                />
+                <FormControlLabel
+                  value="PickUp"
+                  control={<Radio />}
+                  label="Pick-up"
+                />
+              </RadioGroup>
+            </div>
+            <div
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -533,7 +578,6 @@ export default function RegistrationForm() {
                 <FileUpload label="OR/CR" onChange={setORCRFile} />
                 <FileUpload label="License" onChange={setLicenseFile} />
               </div>
-            </div>
           </div>
 
           <Button

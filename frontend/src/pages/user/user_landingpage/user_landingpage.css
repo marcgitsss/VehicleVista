@@ -54,9 +54,13 @@
 /* user_landingpage.css */
 
 .modalContainer {
-  position: absolute;
-  top: 50%;
-  left: 40%;
-  margin-top: 10%; /* Additional margin-top */
+  display: flex; /* Use flexbox to arrange the elements side by side */
+  align-items: center; /* Center the content vertically */
+  position: absolute; /* Set the position of the modal container to absolute */
+  top: 50%; /* Align the top of the modal container to the middle of the viewport */
+  right: -20%; /* Align the right side of the modal container with a 20% offset */
+  width: 50%; /* Set width for the modal container */
+  padding: 0 2rem; /* Add padding to the modal container */
+  text-align: right; /* Align content to the right */
 }
 
