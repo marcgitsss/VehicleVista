@@ -1,4 +1,4 @@
-import { Checkbox, Container, Grid, Paper, Typography, useMediaQuery } from '@mui/material';
+import { Button, Checkbox, Container, Grid, Paper, TableFooter, Typography, useMediaQuery } from '@mui/material';
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,15 +14,17 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import axios from "axios";
 
-
 export default function ApproveApplication() {
     const isMobile = useMediaQuery('(max-width: 37.5rem)');
     const [checked, setChecked] = useState(false);
     const [selectedRows, setSelectedRows] = useState([]);
+    const [selectMultiple, setSelectMultiple] = useState([]);
     const [applications, setApplications] = useState([]);
     const [date, setDate] = useState();
     const navigate = useNavigate();
     const [selectedEmail, setSelectedEmail] = useState(null);
+    const [updateRender, setUpdateRender] = useState(false);
+    const [message, setMessage] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,25 +33,24 @@ export default function ApproveApplication() {
                     "http://localhost:8080/applicants/all");
                 const filteredApplicants = response.data.filter(applicant => applicant.verified === true && applicant.paid === true && applicant.approved === false);
                 setApplications(filteredApplicants);
-
+                if (filteredApplicants.length > 0) {
+                    setChecked(false);
+                }
                 // Set date state (assuming response.data contains a datesubmitted property)
                 if (filteredApplicants.length > 0) {
                     setDate(filteredApplicants[0].datesubmitted);
                 }
-
-
             } catch (error) {
                 console.error(error);
             }
         };
         fetchData();
-    }, []);
+    }, [updateRender]);
 
     const handleCheckboxChange = (event) => {
         setChecked(event.target.checked);
         setSelectedRows([]);
     };
-
 
     const handleCheckboxRow = (event, firstName) => {
         event.stopPropagation(); // Stop propagation to prevent row click
@@ -58,8 +59,31 @@ export default function ApproveApplication() {
         newArray[rowIndex].isChecked = !newArray[rowIndex].isChecked;
         setSelectedRows(newArray.filter(row => row.isChecked).map(row => row.firstName));
         console.log("Selected rows:", newArray.filter(row => row.isChecked));
+        setSelectMultiple(newArray.filter(row => row.isChecked));
     };
-    
+
+    const handleVerifyClick = async () => {
+        console.log('handleVerifyClick called');
+        try {
+            const promises = selectMultiple.map(async (user) => {
+                const response = await axios.put(`http://localhost:8080/applicants/approveApplicant/${user.email}`);
+                console.log('Verification status updated successfully for:', user.email);
+                setMessage("Approval status updated successfully");
+            setTimeout(() => {
+                setMessage("");
+                setUpdateRender(!updateRender);
+            }, 2000);
+                
+                return response.data; // Return data for each request if needed
+            });
+
+            const results = await Promise.all(promises);
+            console.log('All verification requests completed:', results);
+            // navigate('/verifypay');
+        } catch (error) {
+            console.error('Error updating verification status:', error);
+        }
+    };
 
     const isSelected = (name) => selectedRows.indexOf(name) !== -1;
 
@@ -101,7 +125,7 @@ export default function ApproveApplication() {
                                     </Typography>
                                 </div>
                             </div>
-                            <TableContainer component={Paper} sx={{ backgroundColor: '#D9D9D9', borderRadius: '0.5rem', height: 'clamp(20rem, 50vh, 30rem)', width: 'clamp(20rem, 70vw, 70rem)' }}>
+                            <TableContainer component={Paper} sx={{ backgroundColor: '#D9D9D9', borderRadius: '0.5rem', height: 'clamp(20rem, 50vh, 30rem)', width: 'clamp(20rem, 70vw, 70rem)' , position: 'relative' }}>
                                 <Table aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
@@ -126,13 +150,16 @@ export default function ApproveApplication() {
                                                     key={row.applicantid}
                                                     sx={{
                                                         backgroundColor: isSelected(row.email) ? '#EBEBEB' : 'transparent',
-                                                        cursor: 'pointer'
+                                                        cursor: !checked ? 'pointer' : 'default'
                                                     }}
-                                                    onClick={() => handleRowClick(row.email)}
+                                                    onClick={!checked ? () => handleRowClick(row.email) : undefined}
+                                                    // {!checked && (
+                                                    //     onClick={() => handleRowClick(row.email)}
+                                                    // )}
                                                 >
                                                     {checked && (<TableCell align="center">
                                                         <Checkbox
-                                                            checked={row.isChecked}
+                                                            checked={row.isChecked || false} // Initialize with a default value of false
                                                             onChange={(event) => handleCheckboxRow(event, row.firstName)}
                                                             onClick={(event) => event.stopPropagation()} // Stop propagation on checkbox click
                                                         />
@@ -146,10 +173,27 @@ export default function ApproveApplication() {
                                             );
                                         })}
                                     </TableBody>
-                                </Table>
+                                    
+                                    </Table>
+                                    {checked && (
+                                    <div style={{ position: 'absolute', bottom: 0,  left: '40%', }}>
+                                        <TableFooter>
+                                        <div style={{ color: 'red', textAlign: 'center', position: 'relative', top: '1rem' }}>
+                                        {(message)}
+                                    </div>
+                                            <TableRow>
+                                            
+                                                <TableCell colSpan={4} align="center" >
+                                                    <Button sx={{ textTransform: "none", color: "black", backgroundColor: "#F4C522", borderRadius: "5rem", width: 'clamp(10rem, 30vw, 10rem)', height: 'clamp(2rem, 10vh, 2.5rem)', fontSize: 'clamp(1rem, 3vw, 1.125rem)' }} onClick={handleVerifyClick}>Approve</Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableFooter>
+                                    </div>
+                                )}
+                                
                             </TableContainer>
-
                         </div>
+
                     </Grid>
                     <Grid item xs={2} > </Grid>
                 </Grid>

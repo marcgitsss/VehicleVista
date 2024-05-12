@@ -20,7 +20,6 @@ import OrCr from './pages/employee/application/OrCr';
 import AppChoice from './pages/employee/application/AppChoice';
 import ApproveApplication from './pages/employee/application/ApproveApplication';
 import ProofPayment from './pages/employee/application/ProofPayment';
-import RegisterApp from './pages/employee/application/RegisterApp';
 import SelectOrCr from './pages/employee/application/SelectOrCr';
 import VerifyPayment from './pages/employee/application/VerifyPayment';
 
@@ -40,7 +39,6 @@ function App() {
           <Route path="/appchoice" element={<AppChoice />} />
           <Route path="/approve" element={<ApproveApplication />} />
           <Route path="/proofpay" element={<ProofPayment />} />
-          <Route path="/registerapp" element={<RegisterApp />} />
           <Route path="/selectorcr" element={<SelectOrCr />} />
           <Route path="/verifypay" element={<VerifyPayment />} />
           {/* //Changes */}

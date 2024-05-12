@@ -7,26 +7,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from "axios";
 
-function createData(appName, appType, dateApp) {
-    return { appName, appType, dateApp };
-}
-
-const exampleData = [
-    { name: 'John Doe', type: 'Individual', date: 'December 12, 2012' },
-    { name: 'Jane Smith', type: 'Organization', date: 'June 21, 2021' },
-    { name: 'Alice Johnson', type: 'Individual', date: 'August 19, 2024' }
-];
-
-const rows = exampleData.map(({ name, type, date }) =>
-    createData(name, type, date)
-);
-
-console.log(rows);
-
 export default function SelectOrCr() {
     const location = useLocation();
     const email = location.state?.email;
     const [applications, setApplications] = useState({});
+    const [message, setMessage] = useState("");
     const navigate = useNavigate();
 
     const handleVerifyClick = async () => {
@@ -34,12 +19,21 @@ export default function SelectOrCr() {
         try {
             const response = await axios.put(
                 `http://localhost:8080/applicants/updatePreApprovedStatus/${email}`);
-            console.log('Verification status updated successfully:', response.data);
-            navigate('/orcr');
+            setMessage("Verification status updated successfully");
+            setTimeout(() => {
+                navigate('/orcr');
+            }, 2000);
         } catch (error) {
             console.error('Error updating verification status:', error);
         }
     }
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setMessage('');
+        }, 3000);
+        return () => clearTimeout(timeout);
+    }, [message]);
 
 
     useEffect(() => {
@@ -59,8 +53,6 @@ export default function SelectOrCr() {
         };
         fetchData();
     }, []);
-
-
 
 
     return (
@@ -124,10 +116,12 @@ export default function SelectOrCr() {
                                                 <h3 style={{ textAlign: "left" }}>OR/CR:</h3>&nbsp; <a href={applications.orcrimg} target="_blank"><Button sx={{ textTransform: "none", color: "#8A252C" }}>Click to View Image</Button></a>
 
                                             </div>
-
+                                            
                                         </Typography>
                                     </div>
-
+                                    <div style={{ color: 'red', textAlign: 'center', position: 'relative', top: '1rem' }}>
+                                        {(message)}
+                                    </div>
                                 </Paper>
                             </div>
                             <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem", padding: "1rem" }}>
@@ -156,6 +150,7 @@ export default function SelectOrCr() {
                                             fontSize: 'clamp(1rem, 3vw, 1.5rem)'
                                         }}
                                         onClick={handleVerifyClick}>Verify</Button>
+                                    
                                 </div>
                             </div>
                         </div>
