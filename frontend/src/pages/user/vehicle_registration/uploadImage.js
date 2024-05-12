@@ -1,18 +1,30 @@
 import React, { useState } from "react";
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, Snackbar } from "@mui/material";
 
 export default function FileUpload({ label, onChange }) {
   const [fileName, setFileName] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    setFileName(file.name);
-    onChange(file);
+    // Check if file is not an image
+    if (file && !file.type.startsWith("image")) {
+      setSnackbarMessage("Only images are allowed");
+      setSnackbarOpen(true);
+    } else {
+      setFileName(file.name);
+      onChange(file);
+    }
   };
 
   const handleRemoveFile = () => {
     setFileName(null);
     onChange(null);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -61,6 +73,14 @@ export default function FileUpload({ label, onChange }) {
           </label>
         </>
       )}
+      {/* Snackbar for displaying validation errors */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      />
     </div>
   );
 }
