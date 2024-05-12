@@ -1,5 +1,5 @@
 import { Container, Grid, Paper, Typography, useMediaQuery } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; 
+import { useLocation, useNavigate } from 'react-router-dom'; 
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,7 +12,6 @@ import { useState, useEffect } from 'react';
 import Header from '../../../components/Navbar/UserHeader';
 import Footer from '../../../components/Navbar/UserFooter';
 import axios from "axios";
-
 
 
 export default function OrCr() {
@@ -43,8 +42,8 @@ export default function OrCr() {
         };
         fetchData();
     }, []);
-    
 
+    
     const handleRowClick = (email) => {
         // Update state or props to store the selected email
         setSelectedEmail(email);
@@ -52,8 +51,6 @@ export default function OrCr() {
         // Navigate to 'selectorcr' page
         navigate('/selectorcr', { state: { email } });
     };
-
-
 
     return (
         <div className='verifyPay' style={{
@@ -80,7 +77,7 @@ export default function OrCr() {
 
 
                             </div>
-                            <TableContainer component={Paper} sx={{ backgroundColor: '#D9D9D9', borderRadius: '0.5rem', height: 'clamp(20rem, 50vh, 30rem)', width: 'clamp(20rem, 70vw, 70rem)' }}>
+                            <TableContainer component={Paper} sx={{ backgroundColor: '#D9D9D9', borderRadius: '0.5rem', height: 'clamp(20rem, 50vh, 30rem)', width: 'clamp(20rem, 70vw, 70rem)', position: 'relative' }}>
                                 <Table aria-label="simple table">
                                     <TableHead>
                                         <TableRow>

@@ -15,19 +15,6 @@ import { useEffect } from 'react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-function createData(appName, appType, dateApp) {
-    return { appName, appType, dateApp };
-}
-
-const exampleData = [
-    { name: 'John Doe', type: 'Individual', date: 'December 12, 2012' },
-    { name: 'Jane Smith', type: 'Organization', date: 'June 21, 2021' },
-    { name: 'Alice Johnson', type: 'Individual', date: 'August 19, 2024' }
-];
-
-const rows = exampleData.map(({ name, type, date }) =>
-    createData(name, type, date)
-);
 
 export default function VerifyPayment() {
     const isMobile = useMediaQuery('(max-width: 37.5rem)');

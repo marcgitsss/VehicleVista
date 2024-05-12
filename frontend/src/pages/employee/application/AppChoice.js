@@ -9,25 +9,9 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from "axios";
 
-function createData(appName, appType, dateApp) {
-    return { appName, appType, dateApp };
-}
-
-const exampleData = [
-    { name: 'John Doe', type: 'Individual', date: 'December 12, 2012' },
-    { name: 'Jane Smith', type: 'Organization', date: 'June 21, 2021' },
-    { name: 'Alice Johnson', type: 'Individual', date: 'August 19, 2024' }
-];
-
-const rows = exampleData.map(({ name, type, date }) =>
-    createData(name, type, date)
-);
-
-console.log(rows);
 
 export default function AppChoice() {
-
-
+    const [message, setMessage] = useState("");
     const location = useLocation();
     const email = location.state?.email;
     const [applications, setApplications] = useState({});
@@ -38,13 +22,22 @@ export default function AppChoice() {
         console.log('handleVerifyClick called');
         try {
             const response = await axios.put(
-                `http://localhost:8080/applicants/updatePaidStatus/${email}`);
-            console.log('Verification status updated successfully:', response.data);
-            navigate('/verifypay');
+                `http://localhost:8080/applicants/approveApplicant/${email}`);
+            setMessage("Approval status updated successfully");
+            setTimeout(() => {
+                navigate('/approve');
+            }, 2000);
         } catch (error) {
             console.error('Error updating verification status:', error);
         }
     }
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setMessage('');
+        }, 3000);
+        return () => clearTimeout(timeout);
+    }, [message]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -122,16 +115,31 @@ export default function AppChoice() {
                                             </div>
                                         </Typography>
                                     </div>
-
+                                    <div style={{ color: 'red', textAlign: 'center', position: 'relative', top: '1rem' }}>
+                                        {(message)}
+                                    </div>
                                 </Paper>
                             </div>
                             <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem", padding: "1rem" }}>
                                 <div>
-                                    <Button sx={{ textTransform: "none", color: "white", backgroundColor: "#8A252C", borderRadius: "5rem", width: 'clamp(10rem, 30vw, 13.25rem)', height: 'clamp(2rem, 10vh, 3.44rem)', fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>Reject</Button>
+                                    <Button sx={{ textTransform: "none",
+                                     color: "white",
+                                      backgroundColor: "#8A252C",
+                                      borderRadius: "5rem",
+                                       width: 'clamp(10rem, 30vw, 13.25rem)',
+                                        height: 'clamp(2rem, 10vh, 3.44rem)',
+                                         fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>Reject</Button>
                                 </div>
                                 &nbsp;
                                 <div>
-                                    <Button sx={{ textTransform: "none", color: "black", backgroundColor: "#F4C522", borderRadius: "5rem", width: 'clamp(10rem, 30vw, 13.25rem)', height: 'clamp(2rem, 10vh, 3.44rem)', fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>Approve</Button>
+                                    <Button sx={{ textTransform: "none",
+                                     color: "black",
+                                     backgroundColor: "#F4C522",
+                                      borderRadius: "5rem",
+                                       width: 'clamp(10rem, 30vw, 13.25rem)',
+                                        height: 'clamp(2rem, 10vh, 3.44rem)',
+                                         fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}
+                                         onClick={handleVerifyClick}>Approve</Button>
                                 </div>
                             </div>
                         </div>
