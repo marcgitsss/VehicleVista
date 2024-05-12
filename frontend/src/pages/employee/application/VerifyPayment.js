@@ -10,9 +10,9 @@ import { useState } from 'react';
 import Header from '../../../components/Navbar/UserHeader';
 import Footer from '../../../components/Navbar/UserFooter';
 import HP_background from '../../../assets/HP_Background.jpg';
-import StudentSidebar from '../../../components/StudentSidebar/StudentSidebar';
 import { useEffect } from 'react';
 import axios from "axios";
+import EmployeeSideBar from '../../../components/EmployeeSidebar/employeeSidebar';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -60,7 +60,7 @@ export default function VerifyPayment() {
             minHeight: '100vh',
         }}>
             <Header />
-            <StudentSidebar />
+            <EmployeeSideBar />
             <Container maxWidth="lg">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>

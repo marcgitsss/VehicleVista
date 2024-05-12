@@ -11,6 +11,7 @@ import HP_background from '../../../assets/HP_Background.jpg';
 import { useState, useEffect } from 'react';
 import Header from '../../../components/Navbar/UserHeader';
 import Footer from '../../../components/Navbar/UserFooter';
+import EmployeeSideBar from '../../../components/EmployeeSidebar/employeeSidebar';
 import axios from "axios";
 
 
@@ -60,7 +61,7 @@ export default function OrCr() {
         }}>
             {/* <AdminHeader /> */}
             <Header />
-            {/* <UserSidebar /> */}
+            <EmployeeSideBar />
             <Container maxWidth="lg">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
