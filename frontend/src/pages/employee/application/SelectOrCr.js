@@ -6,6 +6,7 @@ import HP_background from '../../../assets/HP_Background.jpg';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from "axios";
+import EmployeeSideBar from '../../../components/EmployeeSidebar/employeeSidebar';
 
 export default function SelectOrCr() {
     const location = useLocation();
@@ -63,6 +64,7 @@ export default function SelectOrCr() {
             fontSize: '16px', // Set base font size
         }}>
             <Header />
+            <EmployeeSideBar />
             <Container maxWidth="lg">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>

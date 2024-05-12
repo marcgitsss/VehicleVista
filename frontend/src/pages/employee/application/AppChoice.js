@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from "axios";
+import EmployeeSideBar from '../../../components/EmployeeSidebar/employeeSidebar';
 
 
 export default function AppChoice() {
@@ -65,6 +66,7 @@ export default function AppChoice() {
             fontSize: '16px', // Set base font size
         }}>
             <Header />
+            <EmployeeSideBar />
             <Container maxWidth="lg">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>

@@ -13,6 +13,7 @@ import HP_background from '../../../assets/HP_Background.jpg';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import axios from "axios";
+import EmployeeSideBar from '../../../components/EmployeeSidebar/employeeSidebar';
 
 export default function ApproveApplication() {
     const isMobile = useMediaQuery('(max-width: 37.5rem)');
@@ -102,6 +103,7 @@ export default function ApproveApplication() {
             minHeight: '100vh',
         }}>
             <Header />
+            <EmployeeSideBar />
             <Container maxWidth="lg">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>

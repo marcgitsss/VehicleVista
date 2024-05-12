@@ -6,7 +6,7 @@ import HP_background from '../../../assets/HP_Background.jpg';
 import { useEffect, useState } from 'react';
 import axios from "axios";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
+import EmployeeSideBar from '../../../components/EmployeeSidebar/employeeSidebar';
 
 export default function ProofPayment() {
     const location = useLocation();
@@ -62,6 +62,7 @@ export default function ProofPayment() {
             fontSize: '16px', // Set base font size
         }}>
             <Header />
+            <EmployeeSideBar />
             <Container maxWidth="lg">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
