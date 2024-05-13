@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Typography } from '@mui/material';
 // import { Link } from 'react-router-dom';
 import VerifyEmailModal from './components/VerifyEmail/VerifyEmailModal';
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 export default function LoginCard() {
   const [loginData, setLoginData] = useState({
@@ -14,7 +15,11 @@ export default function LoginCard() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false); // State for controlling modal
   const [shouldCloseModal, setShouldCloseModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
 
   const handleCloseModal = () => {
@@ -112,13 +117,24 @@ export default function LoginCard() {
           </div>
           <div className="input-container">
             <input
-              type="password"
+             type={showPassword ? "text" : "password"}
               placeholder="Password"
               className="input-field"
               name="password"
               value={loginData.password}
               onChange={handleInputChange}
             />
+            {showPassword ? (
+              <MdVisibilityOff
+                onClick={togglePasswordVisibility}
+                style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', cursor: 'pointer' }}
+              />
+            ) : (
+              <MdVisibility
+                onClick={togglePasswordVisibility}
+                style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', cursor: 'pointer' }}
+              />
+            )}
           </div>
            {/* Snackbar for successful or unsuccessful login */}
       {snackbarOpen && (
