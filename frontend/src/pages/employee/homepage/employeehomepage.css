@@ -1,0 +1,98 @@
+/* Homepage Container */
+.employeehomepage {
+    text-align: center;
+    position: relative;
+  }
+  
+  /* Background Image */
+  .employeebackgroundImage {
+    /* width: 20%;
+    height: auto; */
+    width: 100%;
+    height: 100%; /* Adjust this value to control the height of the background image */
+    position: fixed; /* Ensure the background image covers the entire viewport */
+    top: 0;
+    left: 0;
+    z-index: -1; /* Move the background image behind other content */
+  }
+  
+  body {
+    overflow-x: hidden;
+  }
+  
+  .buttons-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 40vw;
+    text-align: center;
+  }
+  
+  /* Profile Button */
+  .profileButton {
+    background-color: #8A252C;
+    padding: 45px;
+    margin-right: 10px;
+    width: 30%;
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  /* Media Query for Mobile Devices */
+  @media screen and (max-width: 320px) {
+    .profileButton {
+      margin-right: 50%;
+      padding: 35px;
+      font-size: 12px;
+    }
+  }
+  
+  .profileButton:hover {
+    background-color: #6c1d21; /* Darken the color on hover */
+  }
+  
+  /* Dashboard Button */
+  .dashboardButton {
+    background-color: #5F191E;
+    padding: 45px;
+    margin-right: 10px;
+    width: 30%;
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  @media screen and (max-width: 320px) {
+    .dashboardButton {
+      margin-left: 70%;
+      margin-top: -50px;
+      padding: 35px;
+      font-size: 12px;
+    }
+  }
+  .dashboardButton:hover {
+    background-color: #4e1619; /* Darken the color on hover */
+  }
+  
+  /* Employee Features Button */
+  .employeefeaturesButton {
+    background-color: #F4C522;
+    margin-right: 60px;
+    margin-top: 10px;
+    margin-left: 50px;
+    padding: 40px;
+    width: 64%;
+    border-radius: 10px;
+    color: rgb(0, 0, 0);
+    font-size: 20px
+    
+  }
+  
+  .employeefeaturesButton:hover {
+    background-color: #ebb905; /* Darken the color on hover */
+  }

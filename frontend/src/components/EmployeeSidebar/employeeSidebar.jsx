@@ -39,7 +39,10 @@ function EmployeeSidebar({ activeMenuItem }) {
               <div className={`employee-sidebar ${isMobile ? 'mobile' : ''}`}>
                 <ul className="employee-sidebar-menu">
                   <li className={activeMenuItem === "Home" ? "active" : ""}>
-                    <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} /> Homepage
+                    <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                    <div onClick={() => { if (location.pathname !== "/employee-homepage") window.location.href = "/employee-homepage"; }}>
+                      Homepage
+                    </div>
                   </li>
                   <li className={activeMenuItem === "Registration" ? "active" : ""}>
                     <TaskIcon sx={{ color: "black", marginRight: "1.5rem" }} />
@@ -68,7 +71,10 @@ function EmployeeSidebar({ activeMenuItem }) {
             <div className={`employee-sidebar ${isMobile ? 'mobile' : ''}`}>
               <ul className="employee-sidebar-menu">
                 <li className={activeMenuItem === "Home" ? "active" : ""}>
-                  <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} /> Homepage
+                  <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                  <div onClick={() => { if (location.pathname !== "/employee-homepage") window.location.href = "/employee-homepage"; }}>
+                      Homepage
+                    </div>
                 </li>
                 <li className={activeMenuItem === "Registration" ? "active" : ""}>
                   <TaskIcon sx={{ color: "black", marginRight: "1.5rem" }} />

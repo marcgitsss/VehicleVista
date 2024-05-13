@@ -109,7 +109,7 @@ export default function ProofPayment() {
                                                 <h3 style={{ textAlign: "left" }}>Contact Number:</h3>&nbsp;<p style={{ textAlign: "left" }}>{applications.contactNumber}</p>
                                             </div>
                                             <div style={{ display: "flex", alignItems: "center", margin: "-1rem" }}>
-                                                <h3 style={{ textAlign: "left" }}>Proof of Payment:</h3>&nbsp;<Button sx={{ textTransform: "none", color: "#8A252C" }}>Click to View Image</Button>
+                                                <h3 style={{ textAlign: "left" }}>Proof of Payment:</h3>&nbsp; <a href={applications.proofofpayment} target="_blank"><Button sx={{ textTransform: "none", color: "#8A252C" }}>Click to View Image</Button></a>
                                             </div>
                                         </Typography>
                                     </div>
