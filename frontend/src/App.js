@@ -22,6 +22,8 @@ import ApproveApplication from './pages/employee/application/ApproveApplication'
 import ProofPayment from './pages/employee/application/ProofPayment';
 import SelectOrCr from './pages/employee/application/SelectOrCr';
 import VerifyPayment from './pages/employee/application/VerifyPayment';
+import EmployeeHomepage from './pages/employee/homepage/employeehomepage';
+import EmployeeFeaturePage from './pages/employee/featurepage/employee_featurespage';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
           <Route path="/proofpay" element={<ProofPayment />} />
           <Route path="/selectorcr" element={<SelectOrCr />} />
           <Route path="/verifypay" element={<VerifyPayment />} />
+          <Route path="/employee-homepage" element={<EmployeeHomepage />} />
+          <Route path="/employee-featurepage" element={<EmployeeFeaturePage />} />
           {/* //Changes */}
 
           <Route path="/" exact element={<LandingPage />} />

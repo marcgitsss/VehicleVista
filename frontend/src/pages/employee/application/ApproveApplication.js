@@ -68,13 +68,23 @@ export default function ApproveApplication() {
         try {
             const promises = selectMultiple.map(async (user) => {
                 const response = await axios.put(`http://localhost:8080/applicants/approveApplicant/${user.email}`);
-                console.log('Verification status updated successfully for:', user.email);
                 setMessage("Approval status updated successfully");
-            setTimeout(() => {
-                setMessage("");
-                setUpdateRender(!updateRender);
-            }, 2000);
-                
+                if (response.data) {
+                    const resApproved = await axios.post("http://localhost:8080/vehicles/register"
+                        , {
+                            username: applications.email,
+                            vehicleMake: applications.vehicleMake,
+                            plateNo: applications.plateNo,
+                            color: applications.color,
+                            isFourWheel: applications.isFourWheel
+                        }
+                    );
+                }
+                setTimeout(() => {
+                    setMessage("");
+                    setUpdateRender(!updateRender);
+                }, 2000);
+
                 return response.data; // Return data for each request if needed
             });
 
@@ -127,7 +137,7 @@ export default function ApproveApplication() {
                                     </Typography>
                                 </div>
                             </div>
-                            <TableContainer component={Paper} sx={{ backgroundColor: '#D9D9D9', borderRadius: '0.5rem', height: 'clamp(20rem, 50vh, 30rem)', width: 'clamp(20rem, 70vw, 70rem)' , position: 'relative' }}>
+                            <TableContainer component={Paper} sx={{ backgroundColor: '#D9D9D9', borderRadius: '0.5rem', height: 'clamp(20rem, 50vh, 30rem)', width: 'clamp(20rem, 70vw, 70rem)', position: 'relative' }}>
                                 <Table aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
@@ -155,9 +165,9 @@ export default function ApproveApplication() {
                                                         cursor: !checked ? 'pointer' : 'default'
                                                     }}
                                                     onClick={!checked ? () => handleRowClick(row.email) : undefined}
-                                                    // {!checked && (
-                                                    //     onClick={() => handleRowClick(row.email)}
-                                                    // )}
+                                                // {!checked && (
+                                                //     onClick={() => handleRowClick(row.email)}
+                                                // )}
                                                 >
                                                     {checked && (<TableCell align="center">
                                                         <Checkbox
@@ -175,16 +185,16 @@ export default function ApproveApplication() {
                                             );
                                         })}
                                     </TableBody>
-                                    
-                                    </Table>
-                                    {checked && (
-                                    <div style={{ position: 'absolute', bottom: 0,  left: '40%', }}>
+
+                                </Table>
+                                {checked && (
+                                    <div style={{ position: 'absolute', bottom: 0, left: '40%', }}>
                                         <TableFooter>
-                                        <div style={{ color: 'red', textAlign: 'center', position: 'relative', top: '1rem' }}>
-                                        {(message)}
-                                    </div>
+                                            <div style={{ color: 'red', textAlign: 'center', position: 'relative', top: '1rem' }}>
+                                                {(message)}
+                                            </div>
                                             <TableRow>
-                                            
+
                                                 <TableCell colSpan={4} align="center" >
                                                     <Button sx={{ textTransform: "none", color: "black", backgroundColor: "#F4C522", borderRadius: "5rem", width: 'clamp(10rem, 30vw, 10rem)', height: 'clamp(2rem, 10vh, 2.5rem)', fontSize: 'clamp(1rem, 3vw, 1.125rem)' }} onClick={handleVerifyClick}>Approve</Button>
                                                 </TableCell>
@@ -192,7 +202,7 @@ export default function ApproveApplication() {
                                         </TableFooter>
                                     </div>
                                 )}
-                                
+
                             </TableContainer>
                         </div>
 
