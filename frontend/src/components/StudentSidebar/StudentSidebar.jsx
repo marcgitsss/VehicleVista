@@ -25,5 +25,4 @@ function StudentSidebar({ activeMenuItem, onMenuItemClick }) {
     </div>
   );
 }
-
 export default StudentSidebar;

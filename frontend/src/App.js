@@ -17,10 +17,6 @@ import RegistrationForm from "./pages/user/vehicle_registration/vehicle_registra
 import UserProfilePage from "./pages/user/user_profile/user_profile/user_profilepage";
 import PrivateRoutes from "./Utils/PrivateRoutes";
 
-import ChooseUserTypeModal from './pages/user/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal';
-import LoginPage from './pages/user/user_login/LoginPage';
-import ChangePass from './pages/user/user_login/components/ForgotPass/ChangePass';
-import LandingPage from './pages/user/user_landingpage/user_landingpage';
 import Registration from './pages/user/vehicle_registration/vehicle_registration';
 import ChangePassword from './pages/user/user_login/components/ChangePass/ChangePassword';
 import OrCr from './pages/employee/application/OrCr';
