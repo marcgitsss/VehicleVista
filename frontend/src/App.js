@@ -6,14 +6,8 @@ import ChooseUserTypeModal from "./pages/user/vehicle_registration/ChooseUserTyp
 import LoginPage from "./pages/user/user_login/LoginPage";
 import ChangePass from "./pages/user/user_login/components/ForgotPass/ChangePass";
 import LandingPage from "./pages/user/user_landingpage/user_landingpage";
-import Registration from "./pages/user/vehicle_registration/vehicle_registration";
-import ChangePassword from "./pages/user/user_login/components/ChangePass/ChangePassword";
 import UserStatus from "./pages/user/UserStatus";
 import Invoice from "./pages/user/user_login/components/Invoice";
-import ChooseUserTypeModal from './pages/user/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal';
-import LoginPage from './pages/user/user_login/LoginPage';
-import ChangePass from './pages/user/user_login/components/ForgotPass/ChangePass';
-import LandingPage from './pages/user/user_landingpage/user_landingpage';
 import Registration from './pages/user/vehicle_registration/vehicle_registration';
 import ChangePassword from './pages/user/user_login/components/ChangePass/ChangePassword';
 import OrCr from './pages/employee/application/OrCr';
