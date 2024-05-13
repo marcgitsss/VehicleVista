@@ -12,7 +12,7 @@ const EmployeeFeaturePage = () => {
       <Header />
         
       <div className='employeefeaturespagebuttons-container'>
-        <button className='dashboardButton'>Dashboard</button>
+        <button className='fdashboardButton'>Dashboard</button>
         <button className='verifyorcrdButton'>Verify OR/CR and License</button>
         
       </div>

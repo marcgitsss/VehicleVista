@@ -42,6 +42,15 @@ body {
   text-align: center;
 }
 
+/* Media Query for Mobile Devices */
+@media screen and (max-width: 320px) {
+  .profileButton {
+    margin-right: 50%;
+    padding: 35px;
+    font-size: 12px;
+  }
+}
+
 .profileButton:hover {
   background-color: #6c1d21; /* Darken the color on hover */
 }
@@ -49,14 +58,23 @@ body {
 /* Dashboard Button */
 .dashboardButton {
   background-color: #5F191E;
-  margin-right: 21px;
   padding: 45px;
-  width: 51%;
+  margin-right: 10px;
+  width: 30%;
   border-radius: 10px;
   color: white;
-  font-size: 20px
+  font-size: 20px;
+  text-align: center;
 }
 
+@media screen and (max-width: 320px) {
+  .dashboardButton {
+    margin-left: 70%;
+    margin-top: -50px;
+    padding: 35px;
+    font-size: 12px;
+  }
+}
 .dashboardButton:hover {
   background-color: #4e1619; /* Darken the color on hover */
 }
@@ -66,9 +84,9 @@ body {
   background-color: #F4C522;
   margin-right: 60px;
   margin-top: 10px;
-  margin-left: 32px;
-  padding: 45px;
-  width: 80%;
+  margin-left: 50px;
+  padding: 40px;
+  width: 64%;
   border-radius: 10px;
   color: rgb(0, 0, 0);
   font-size: 20px

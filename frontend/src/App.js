@@ -8,7 +8,9 @@ import ChangePass from './pages/user/user_login/components/ForgotPass/ChangePass
 import LandingPage from './pages/user/user_landingpage/user_landingpage';
 import Registration from './pages/user/vehicle_registration/vehicle_registration';
 import ChangePassword from './pages/user/user_login/components/ChangePass/ChangePassword';
-
+import EmployeeHomepage from './pages/employee/employee_homepage';
+import UserHomePage from './pages/user/user_homepage/user_homepage';
+import EmployeeFeaturePage from './pages/employee/employee_featurespage';
 function App() {
   return (
     <Router>
@@ -20,6 +22,9 @@ function App() {
           <Route path="/forgotpass" element={<ChangePass />} />
           <Route path="/changepass" element={<ChangePassword />} />
           <Route path="/" exact element={<LandingPage />} />
+          <Route path="/employee_homepage" exact element={<EmployeeHomepage />} />
+          <Route path="/user_homepage" exact element={<UserHomePage />} />
+          <Route path="/employee_features" exact element={<EmployeeFeaturePage />} />
         </Routes>
       </div>
     </Router>

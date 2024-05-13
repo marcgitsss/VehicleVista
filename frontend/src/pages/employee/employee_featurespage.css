@@ -30,6 +30,16 @@ body {
   text-align: center;
 }
 
+@media (max-width: 320px) {
+  .employeefeaturespagebuttons-container {
+    top: 50%; /* Adjust vertical positioning */
+    max-width: 80%; /* Adjust maximum width for smaller screens */
+    transform: translate(-50%, -50%); /* Reset transform */
+    left: 50%; /* Reset left positioning */
+  }
+}
+
+
 .employeefeaturespagebuttons2-container{
   position: absolute;
   top: 60%;
@@ -41,10 +51,16 @@ body {
 
 }
 
+@media (max-width: 320px) {
+  .employeefeaturespagebuttons2-container {
+    top: 60%; /* Adjust vertical positioning */
+    max-width: 40%; /* Adjust maximum width for smaller screens */
+    transform: translate(-50%, -50%); /* Reset transform */
+    left: 40%; /* Reset left positioning */
+  }
+}
 
-
-
-.dashboardButton {
+.fdashboardButton {  
   background-color: #5F191E;
   padding: 7%;
   margin-right: auto;

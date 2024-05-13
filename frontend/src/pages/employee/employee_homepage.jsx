@@ -6,11 +6,11 @@ import '../../components/Navbar/UserFooter.css'; // Corrected import path for Fo
 import './employee_homepage.css';
 
 const EmployeeHomepage = () => {
-  
+
   return (
     <section>
       <Header />
-        
+
       <div className='buttons-container'>
         <button className='profileButton'>Profile</button>
         <button className='dashboardButton'>Dashboard</button>
@@ -20,7 +20,7 @@ const EmployeeHomepage = () => {
       <div className='employeehomepage'>
         <img src={employeebackgroundImage} alt='employeebackgroundImage' className='employeebackgroundImage' />
       </div>
-    
+
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
         <Footer />
       </div>
