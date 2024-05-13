@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './../PassCard.css';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 export default function ForgetPasswordCard() {
   const location = useLocation();
   const { state } = location;
   const email = state.email;
+  const navigate = useNavigate();
 
   const [passwordData, setPasswordData] = useState({
     newPassword: '',
@@ -17,7 +18,7 @@ export default function ForgetPasswordCard() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-  const [disableButton, setDisableButton] = useState(false);
+  const [disableButton, setDisableButton] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
 
 
@@ -36,6 +37,9 @@ export default function ForgetPasswordCard() {
     setTimeout(() => {
       setShowSuccess(false);
     }, 1500);
+       setTimeout(() => {
+            navigate('/login');
+        }, 2000);
   }
 
   const handleInputChange = (e) => {
@@ -47,18 +51,22 @@ export default function ForgetPasswordCard() {
     //check password
     // Check if confirm new password is being updated
 
-
+ 
       //New
       if (passwordData.newPassword.length < 8) {
+        setDisableButton(true);
         setSnackbarMessage("Password must be at least 8 characters long"); // Set error message
+        setSnackbarOpen(true);
         return;
       }
 
       var passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[A-Z]).*$/;
       if (!passwordRegex.test(passwordData.newPassword)) {
+        setDisableButton(true);
         setSnackbarMessage(
           "Password must contain at least one symbol or a capital letter"
         ); // Set error message
+        setSnackbarOpen(true);
         return;
       }
       //New
@@ -112,10 +120,12 @@ export default function ForgetPasswordCard() {
           setSnackbarMessage('Password Reset successfully');
           setSnackbarOpen(true);
           // Clear input fields
+       
           setPasswordData({
             newPassword: '',
             confirmNewPassword: ''
           });
+          
         } else {
           // Show Snackbar for unsuccessful password change
           setSnackbarMessage(response.data.message);
