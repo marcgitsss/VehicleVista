@@ -12,7 +12,10 @@ import Invoice from "./pages/user/user_login/components/Invoice";
 import VehicleRegistration from './pages/vehicle_registration/vehicle_registration';
 import PayMod from './pages/vehicle_registration/payMod';
 import UserHomepage from './pages/user/user_homepage/user_homepage';
-import RegistrationForm from './pages/vehicle_registration/vehicle_registrationform';
+import RegistrationForm1 from "./pages/user/vehicle_registration/vehicle_registrationform";
+import RegistrationForm from "./pages/user/vehicle_registration/vehicle_registrationform1";
+import UserProfilePage from "./pages/user/user_profile/user_profile/user_profilepage";
+import PrivateRoutes from "./Utils/PrivateRoutes";
 
 function App() {
   return (

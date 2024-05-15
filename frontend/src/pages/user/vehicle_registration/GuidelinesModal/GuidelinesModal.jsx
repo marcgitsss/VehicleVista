@@ -90,8 +90,6 @@ useEffect(() => {
       const formData = { ...props.registrationData };
       props.toggleModal((x) => !x);
       setSnackbarOpen(false);
-      navigate('/registration');
-
       // Proceed to next page
       navigate("/registration");
 
@@ -104,10 +102,6 @@ useEffect(() => {
     setSnackbarOpen(false);
   };
 
-  const handleClose = () => {
-    props.toggleModal(false);
-  };
-
   return (
     <div>
       <Modal
@@ -116,7 +110,6 @@ useEffect(() => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Button onClick={handleClose} style={{ position: 'absolute', top: '8px', right: '8px' }}>Close</Button>
           {/* Modal Content */}
           <div className="guidelines-container">
             <div className="guidelines-header">
@@ -289,7 +282,6 @@ useEffect(() => {
           horizontal: "center",
         }}
       />
-      {payMod && <PayMod isOpen={true} toggleModal={setPayMod} />}
     </div>
   );
 }
