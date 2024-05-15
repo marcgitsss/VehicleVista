@@ -1,0 +1,61 @@
+.button-maroon {
+  background-color: #8A252C;
+  color: #FFFFFF;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* Center horizontally */
+  margin-top: 1rem; /* Adjust vertical position */
+  width: 10rem; /* Set width to 10rem */
+}
+
+.button-maroon:hover {
+  background-color: #6C1D23; /* Darken the background color on hover */
+}
+
+.button-maroon:active {
+  background-color: #57171B; /* Darken the background color when clicked */
+}
+
+.big-icon-button {
+  background-color: #FFFFFF;
+  color: #8A252C;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.big-icon-button:hover {
+  background-color: #8A252C;
+  color: #FFFFFF;
+}
+
+.big-icon-button:active {
+  background-color: #57171B;
+}
+
+.icon {
+  font-size: 2rem; /* Set the size of the icon */
+  margin-bottom: 0.5rem; /* Adjust spacing between icon and text */
+}
+.error {
+  color: red;
+  font-size: 0.875rem; /* Adjust font size as needed */
+}
+
+/* landingModal.css */
+
+/* Increase z-index of snackbar */
+.MuiSnackbar-root {
+  z-index: 2000; /* Adjust z-index value as needed */
+}
+

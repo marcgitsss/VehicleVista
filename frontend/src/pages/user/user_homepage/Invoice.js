@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Container } from '@mui/material';
+import ProofMod from './ProofMod';
 
 const style = {
     position: 'absolute',
@@ -27,14 +28,14 @@ const style = {
 };
 
 
-export default function Invoice() {
-    const [open, setOpen] = React.useState(false); // Start with modal closed
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+export default function Invoice({ open, handleClose }) {
+    // const [open, setOpen] = React.useState(false); // Start with modal closed
+    // const handleOpen = () => setOpen(true);
+    // const handleClose = () => setOpen(false);
 
-    React.useEffect(() => {
-        handleOpen(); // Open the modal when the component mounts
-    }, []);
+    // React.useEffect(() => {
+    //     handleOpen(); // Open the modal when the component mounts
+    // }, []);
 
     return (
         <div>
@@ -138,10 +139,11 @@ export default function Invoice() {
                                 </Table>
                             </TableContainer>
                         </div>
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center",}}>
+                        {/* <div style={{ display: "flex", justifyContent: "center", alignItems: "center",}}>
                             <Button sx={{  bottom: '-2rem', padding: '.2rem 2rem .2rem 2rem', borderRadius: '5rem', backgroundColor: '#F4C522', color: 'black', fontWeight: 'bold', textTransform: 'none', fontSize: '1.125rem', '&:hover': { backgroundColor: '#8A252C' }, '&:br': { padding: '50rem' } }}>Submit Proof of <br/>Payment</Button>
                         
-                        </div>
+                        </div> */}
+                        <ProofMod/>
 
                     </Box>
 

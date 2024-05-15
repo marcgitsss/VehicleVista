@@ -20,20 +20,31 @@ const style = {
   p: 4,
 };
 
-export default function ChooseUserTypeModal(props) {
-  // change useState to a prop to use this modal
-  const [open, setOpen] = useState(false);
-
+export default function ChooseUserTypeModal({ isOpen, toggleModal }) {
   const [guidelinesModal, setGuidelinesModal] = useState(false);
+ 
 
-  const handleSubmit = () => {
-    setOpen(false)
-    setGuidelinesModal(true)
+  const handleStudent = () => {
+    localStorage.setItem("isStaff",false);
+    toggleModal(false);
+    setGuidelinesModal(true);
+  };
+  const handleStaff = () => {
+    localStorage.setItem("isStaff",true);
+    toggleModal(false);
+    setGuidelinesModal(true);
+  };
+
+  const handleClose = () => {
+    toggleModal(false); // Close the modal when the close button is clicked
+  };
+
+  const handleIsStaff = () => {
+    
   };
 
   return (
-    <div>
-      <Button onClick={setOpen}>Open User Type Modal</Button>
+    <>
       {/* Guidelines Modal */}
       <GuidelinesModal
         isModalOpen={guidelinesModal}
@@ -41,23 +52,25 @@ export default function ChooseUserTypeModal(props) {
       />
 
       <Modal
-        open={open ?? false}
+        open={isOpen ?? false}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
           {/* Modal Content */}
           <div className="choose-user-header">Choose Type Of User</div>
-          <div onClick={handleSubmit} className="choose-user-buttons">
-            <Button variant="contained" style={{ background: "#8A252C" }}>
+          {/* Close button */}
+          <Button onClick={handleClose} style={{ position: 'absolute', top: '8px', right: '8px' }}>Close</Button>
+          <div  className="choose-user-buttons">
+            <Button variant="contained" onClick={handleStudent} style={{ background: "#8A252C" }}>
               Student
             </Button>
-            <Button variant="contained" style={{ background: "#F4C522" }}>
+            <Button variant="contained" onClick={handleStaff} style={{ background: "#F4C522" }}>
               Personnel
             </Button>
           </div>
         </Box>
       </Modal>
-    </div>
+    </>
   );
 }

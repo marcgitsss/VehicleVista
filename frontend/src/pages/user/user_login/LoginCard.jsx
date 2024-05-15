@@ -4,8 +4,13 @@ import axios from 'axios';
 import { Typography } from '@mui/material';
 // import { Link } from 'react-router-dom';
 import VerifyEmailModal from './components/VerifyEmail/VerifyEmailModal';
+import { useUser } from '../../../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginCard() {
+
+  const navigate = useNavigate ();
+  const {login} = useUser();
   const [loginData, setLoginData] = useState({
     username: '',
     password: ''
@@ -59,7 +64,12 @@ export default function LoginCard() {
         setSnackbarMessage('Successfully Logged in');
         setSnackbarOpen(true);
         localStorage.setItem('token', response.data.token);
-        localStorage.setItem('email', loginData.username);
+
+        login(response.data.token);
+        
+        navigate('/homepage');
+        // localStorage.setItem('email', loginData.username);
+
       } else {
         // Show Snackbar for unsuccessful login
         setSnackbarMessage('Wrong username or password');
@@ -133,7 +143,7 @@ export default function LoginCard() {
             Sign in
           </button>
           <p className="signup-link">
-            No account? <a href="#">Sign up</a>
+            No account? <a href="/">Sign up</a>
           </p>
         </form>
       </div>

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Checkbox, FormControlLabel, FormGroup, Snackbar } from "@mui/material";
 import "./GuidelinesModal.css";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -22,16 +24,75 @@ const style = {
 export default function GuidelinesModal(props) {
   const [checked, setChecked] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  
+  const isStaff = localStorage.getItem("isStaff");
+  // const isStaff = false
+  const [twoWheelPU, setTwoWheelPU] = useState()
+  const [fourWheelPU, setFourWheelPU] = useState()
+  const [twoWheelPK, setTwoWheelPK] = useState()
+  const [fourWheelPK, setFourWheelPK] = useState()
+  const [schoolYear, setSchoolYear] = useState()
+  const navigate = useNavigate();
+
+useEffect(() => {
+  const fetchData = async () => {
+      try {
+          const response = await axios.get('http://localhost:8080/prices/get-prices');
+          console.log(response.data);
+
+          if(isStaff) {
+            setTwoWheelPU(response.data.staffTwoWheelPickup)
+            setFourWheelPU(response.data.staffFourWheelPickup)
+            setTwoWheelPK(response.data.staffTwoWheelPickup)
+            setFourWheelPK(response.data.staffFourWheelPickup)
+          } else{
+            setTwoWheelPU(response.data.studentTwoWheelPickup)
+            setFourWheelPU(response.data.studentFourWheelPickup)
+            setTwoWheelPK(response.data.studentTwoWheelParking)
+            setFourWheelPK(response.data.studentFourWheelParking)
+          }
+      } catch (error) {
+          console.error('Error fetching data: ', error);
+      }
+
+      try {
+        const response = await axios.get('http://localhost:8080/expiration/get-expiration');
+        console.log(response.data);
+
+        setSchoolYear(response.data.currentSchoolYear);
+
+      } catch (error) {
+          console.error('Error fetching data: ', error);
+      }
+
+      // try {
+      //   const response = await axios.get('http://localhost:8080/expiration/get-expiration');
+      //   console.log(response.data);
+
+      //   setSchoolYear(response.data.currentSchoolYear);
+
+      // } catch (error) {
+      //     console.error('Error fetching data: ', error);
+      // }
+  };
+  fetchData();
+}, []); // The empty array [] means this effect will only run once
+
+
 
   const handleCheckboxChange = (event) => {
     setChecked((x) => !x);
   };
+
+
   const handleSubmit = () => {
     if (checked) {
       const formData = { ...props.registrationData };
       props.toggleModal((x) => !x);
       setSnackbarOpen(false);
       // Proceed to next page
+      navigate("/registration");
+
     } else {
       setSnackbarOpen(true);
     }
@@ -90,7 +151,7 @@ export default function GuidelinesModal(props) {
                 <table>
                   <tbody>
                     <tr>
-                      <td colSpan={2}>S.Y. 2023-2024</td>
+                      <td colSpan={2}>S.Y. {schoolYear}</td>
                     </tr>
                     <tr>
                       <td></td>
@@ -98,19 +159,19 @@ export default function GuidelinesModal(props) {
                     </tr>
                     <tr>
                       <td>4-Wheel Parking</td>
-                      <td>PHP2000/Semester</td>
+                      <td><b>PHP{fourWheelPK}</b>/Semester</td>
                     </tr>
                     <tr>
                       <td>2-Wheel Parking</td>
-                      <td>750/Semester</td>
+                      <td><b>PHP{twoWheelPK}</b>/Semester</td>
                     </tr>
                     <tr>
                       <td>4-Wheel DROP&PICK</td>
-                      <td>PHP400/Semester</td>
+                      <td><b>PHP{fourWheelPU}</b>/Semester</td>
                     </tr>
                     <tr>
                       <td>2-Wheel DROP&PICK</td>
-                      <td>PHP200/Semester</td>
+                      <td><b>PHP{twoWheelPU}</b>/Semester</td>
                     </tr>
                   </tbody>
                 </table>
@@ -134,6 +195,61 @@ export default function GuidelinesModal(props) {
                   passengers. In the evening, headlights should be dimmed when
                   approaching the guardhouse.
                 </div>
+                <div className="indent">
+                  3.2. Faculty members, administrative personnel, and college students are eligible to request
+                  vehicle stickers for parking purposes. However, applicants from the Basic Education department
+                  (Elementary to SHS) are limited to obtaining stickers specifically for drop-off and pick-up purposes.
+                  Vehicles assigned for drop-off and pickup will be granted a 20-minute grace period for parking.
+                </div>
+                <div className="indent">
+                  3.3. CIT-U employees are advised not to park their vehicles near the main and backgate for purpose of time in and time out
+                </div>
+                <div className="indent">
+                  3.4. The sticker shall remain mounted at all times on the designated vehicle.
+                  No vehicle shall be allowed entry into and to park inside the University campus without the appropriate pass
+                </div>
+                <div className="indent">
+                  <b>3.5. The vehicle owner/driver agrees to conform to the following:</b>
+                  <br/>
+                  <span style={{marginLeft:'5%'}}>3.5.1. All policies governing the operation of motor vehicles</span><br/>
+                  <span style={{marginLeft:'5%'}}>3.5.2. All traffic rules and policies</span><br/>
+                  <span style={{marginLeft:'5%'}}>3.5.3. 10km/hr speed limit within the campus area</span><br/>
+                  <span style={{marginLeft:'5%'}}>3.5.4. Strict adherence to road signs</span><br/>
+                  <span style={{marginLeft:'5%'}}>3.5.5. No blowing of horns and no obstruction while inside the campus</span>
+                </div>
+                <div className="indent">
+                  3.6. The vehicle owner will be responsible forthe cost of replacing lost, stolen, or destroyed stickers which is the same cost for obtaining
+                  a new sticker
+                </div>
+                <div className="indent">
+                  3.7. Parking is on a first-come-first-serve basis in designated parking areas: Full parking will be
+                  enforced, and drivers must wait with their vehicles until a parking space becomes available. Unattended vehicles are not permitted in full parking
+                  areas.<br/>
+                  <b>Overnight Parking is Prohibited</b>
+                </div>
+                <div className="indent">
+                  3.8. Campus visitors will be issued a temporary pass in the form of a laminated card and will be directed to "Open Parking" areas or appropriate
+                  visitor parking areas.
+                </div>
+                <div className="indent">
+                  3.9. The vehicle owner/driver understands that any violations of the conditions set forth by the University may result in the termination of this
+                  previlege.<br/>
+                  <b>Due to limited space, the University can ONLY acommodate ({200}) parking spaces for students, and
+                  ({270}) parking spaces for personnel.</b>
+                </div>
+                <li className="guidelines-text-block">
+                  <b> Transfer of Ownership of Vehicle: </b> if vehicle ownership is transferred to another person, the registered owner must inform the SSD prior
+                  to the transfer. This ensures that the removal of the sticker and the appropriate update of the records of the office.
+                </li>
+                <li className="guidelines-text-block">
+                  <b>Liability: </b> The University shall not assume liability for any loss or damage incurred by vehicles or items 
+                  stolen from them. Additionally, the University shall not be held responsible for any loss or damage caused to vehicles and their
+                  belongings while on University premises due to weather or other natural causes or conditions. This provision also ensures to non-vehicular 
+                  modes of transportation such as bicycles or E-bikes.
+                  <br/>
+                  <br/>
+                </li>
+                
               </li>
             </ol>
             <div className="guidelines-footer">
