@@ -3,6 +3,8 @@ import './AdminHeader.css'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Avatar, Typography, IconButton, Tooltip, Menu, Box, MenuItem } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout';
+import CITLogo from '../../assets/cit-logo 1.png'
+
 const settings = ['Profile', 'Settings'];
 export default function AdminHeader() {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -15,7 +17,9 @@ export default function AdminHeader() {
   return (
     <>
     <div className="admin-header">
-      <div className="admin-logo"><Typography>Logo</Typography></div>
+      <div className="admin-logo">
+        <img src={CITLogo} alt="" height={45}/>
+      </div>
       <div className="admin-controls">
         <div className='admin-username'>
             <Typography> <span className='admin-username-text'>Hello</span>, Admin</Typography>

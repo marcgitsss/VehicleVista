@@ -1,5 +1,5 @@
-import AdminHeader from "../../components/AdminHeader/AdminHeader";
-import AdminSidebar from "../../components/AdminSidebar/AdminSidebar";
+import AdminHeader from "../../../components/AdminHeader/AdminHeader";
+import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import EditIcon from "@mui/icons-material/Edit";
@@ -19,19 +19,13 @@ function AccountExpiration() {
     setAge(event.target.value);
   };
 
-  function handleClick(event) {
-    event.preventDefault();
-    console.info("You clicked a breadcrumb.");
-  }
-
   return (
     <>
       <AdminHeader />
       <AdminSidebar />
       <main className="admin-container">
-
         {/* Breadcrumbs Navigation */}
-        <div role="presentation" onClick={handleClick}>
+        <div role="presentation">
           <Breadcrumbs
             aria-label="breadcrumb"
             style={{ fontSize: "2em", marginTop: "1em" }}
@@ -39,18 +33,12 @@ function AccountExpiration() {
             <Link
               underline="hover"
               color="inherit"
-              href="/"
+              href="/configuration"
               style={{ color: "#8A252C" }}
             >
               Configuration
             </Link>
-            <Link
-              underline="hover"
-              color="inherit"
-              href="/material-ui/getting-started/installation/"
-            >
-              Account Expiration
-            </Link>
+            <span>Account Expiration</span>
           </Breadcrumbs>
         </div>
 
@@ -120,7 +108,7 @@ function AccountExpiration() {
             <div className="accexp-current-set-text">
               <span>Student:</span> Sept 30, 2024
             </div>
-          </Box>    
+          </Box>
         </div>
       </main>
     </>

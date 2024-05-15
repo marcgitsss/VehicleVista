@@ -1,5 +1,5 @@
-import AdminHeader from "../../components/AdminHeader/AdminHeader";
-import AdminSidebar from "../../components/AdminSidebar/AdminSidebar";
+import AdminHeader from "../../../components/AdminHeader/AdminHeader";
+import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import { Box, Tab } from "@mui/material";
@@ -11,11 +11,6 @@ import Permissions_Tab from "./Permissions_Tab";
 function UserManagement() {
   const [tabValue, setTabValue] = useState("1");
 
-  function handleClick(event) {
-    event.preventDefault();
-    console.info("You clicked a breadcrumb.");
-  }
-
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -26,7 +21,7 @@ function UserManagement() {
       <AdminSidebar />
       <main className="admin-container">
         {/* Breadcrumbs Navigation */}
-        <div role="presentation" onClick={handleClick}>
+        <div role="presentation">
           <Breadcrumbs
             aria-label="breadcrumb"
             style={{ fontSize: "2em", marginTop: "1em" }}
@@ -34,18 +29,12 @@ function UserManagement() {
             <Link
               underline="hover"
               color="inherit"
-              href="/"
+              href="/configuration"
               style={{ color: "#8A252C" }}
             >
               Configuration
             </Link>
-            <Link
-              underline="hover"
-              color="inherit"
-              href="/material-ui/getting-started/installation/"
-            >
-              User Management
-            </Link>
+            <span>User Management</span>
           </Breadcrumbs>
         </div>
 

@@ -1,5 +1,5 @@
-import AdminHeader from "../../components/AdminHeader/AdminHeader";
-import AdminSidebar from "../../components/AdminSidebar/AdminSidebar";
+import AdminHeader from "../../../components/AdminHeader/AdminHeader";
+import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import Box from "@mui/material/Box";
 import SellIcon from "@mui/icons-material/Sell";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";

@@ -1,30 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./AdminSidebar.css";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-function AdminSidebar({ activeMenuItem }) {
+function AdminSidebar() {
+  const [page, setPage] = useState("");
+  const location = useLocation();
+  const activeMenuItem = "";
+  const currentPath = location.pathname;
+
+  useEffect(() => {}, []);
+
   return (
     <div className="admin-sidebar">
       <ul className="admin-sidebar-menu">
-        <li className={activeMenuItem === "Dashboard" ? "active" : ""}>
-          <DashboardOutlinedIcon
-            sx={{ color: "black", marginRight: "1.5rem" }}
-          />{" "}
-          Dashboard
+        <li className={currentPath === "/dashboard" ? "active" : ""}>
+          <Link to="/">
+            <DashboardOutlinedIcon
+              sx={{ color: "black", marginRight: "1.5rem" }}
+            />{" "}
+            Dashboard
+          </Link>
         </li>
-        <li className={activeMenuItem === "ApplicationList" ? "active" : ""}>
-          <Link to={"/application-list"}>
+        <li className={currentPath === "/application-list" ? "active" : ""}>
+          <Link to="/application-list">
             <FormatListBulletedOutlinedIcon
               sx={{ color: "black", marginRight: "1.5rem" }}
             />{" "}
             Application List
           </Link>
         </li>
-        <li className={activeMenuItem === "Configuration" ? "active" : ""}>
-          <Link to={'/'}>
+        <li className={currentPath === "/configuration" ? "active" : ""}>
+          <Link to="/configuration">
             <SettingsOutlinedIcon
               sx={{ color: "black", marginRight: "1.5rem" }}
             />{" "}

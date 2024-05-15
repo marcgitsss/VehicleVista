@@ -1,24 +1,19 @@
-import AdminHeader from "../../components/AdminHeader/AdminHeader";
-import AdminSidebar from "../../components/AdminSidebar/AdminSidebar";
+import AdminHeader from "../../../components/AdminHeader/AdminHeader";
+import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 function ParkingManagement() {
-  function handleClick(event) {
-    event.preventDefault();
-    console.info("You clicked a breadcrumb.");
-  }
-
   return (
     <>
       <AdminHeader />
       <AdminSidebar />
       <main className="admin-container">
         {/* Breadcrumbs Navigation */}
-        <div role="presentation" onClick={handleClick}>
+        <div role="presentation">
           <Breadcrumbs
             aria-label="breadcrumb"
             style={{ fontSize: "2em", marginTop: "1em" }}
@@ -26,18 +21,12 @@ function ParkingManagement() {
             <Link
               underline="hover"
               color="inherit"
-              href="/"
+              href="/configuration"
               style={{ color: "#8A252C" }}
             >
               Configuration
             </Link>
-            <Link
-              underline="hover"
-              color="inherit"
-              href="/material-ui/getting-started/installation/"
-            >
-              Parking Management
-            </Link>
+            <span>Parking Management</span>
           </Breadcrumbs>
         </div>
 
