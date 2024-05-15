@@ -33,11 +33,7 @@ export default function ChooseUserTypeModal(props) {
 
   return (
     <div>
-<<<<<<< HEAD
       <Button onClick={setOpen}>Close</Button>
-=======
-      <Button onClick={setOpen}>Open User Type Modal</Button>
->>>>>>> c8562ca (Added User Type Modal and guidelines)
       {/* Guidelines Modal */}
       <GuidelinesModal
         isModalOpen={guidelinesModal}

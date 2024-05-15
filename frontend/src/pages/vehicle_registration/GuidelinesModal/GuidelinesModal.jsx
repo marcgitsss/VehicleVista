@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Checkbox, FormControlLabel, FormGroup, Snackbar } from "@mui/material";
 import "./GuidelinesModal.css";
+import { Link } from "react-router-dom";
 
 
 const style = {
