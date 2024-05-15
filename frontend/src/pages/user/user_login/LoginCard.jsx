@@ -63,9 +63,10 @@ export default function LoginCard() {
         // Show Snackbar for successful login
         setSnackbarMessage('Successfully Logged in');
         setSnackbarOpen(true);
-        // localStorage.setItem('token', response.data.token);
+        localStorage.setItem('token', response.data.token);
 
         login(response.data.token);
+        
         navigate('/homepage');
         // localStorage.setItem('email', loginData.username);
 

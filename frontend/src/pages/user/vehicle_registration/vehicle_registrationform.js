@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ModalComponent from "./SuccessModal";
 import {
   Typography,
   Box,
@@ -9,18 +10,23 @@ import {
   Snackbar,
   TextField,
   FormControlLabel,
+  CircularProgress,
 } from "@mui/material";
 import FileUpload from "./uploadImage";
 import axios from "axios";
 import { useUser } from "../../../context/AuthProvider";
+import { jwtDecode } from "jwt-decode";
 
-export default function RegistrationForm() {
-  const {token} =  useUser();
+export default function RegistrationForm1() {
+  const { token } = useUser();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [orcrFile, setORCRFile] = useState(null);
   const [licenseFile, setLicenseFile] = useState(null);
+  const [loading, setLoading] = useState(false); // State for loader
+  const [modalOpen, setModalOpen] = useState(false); // State for modal
   const email = localStorage.getItem("email");
+
   const [registrationData, setRegistrationData] = useState({
     surname: "",
     givenname: "",
@@ -36,7 +42,7 @@ export default function RegistrationForm() {
     stickerType: "",
     address: "", // Add address field here
   });
-  
+
   const [inputErrors, setInputErrors] = useState({
     surname: "",
     givenname: "",
@@ -55,16 +61,6 @@ export default function RegistrationForm() {
     console.log(token);
   }, []);
 
-  const handleORCRUpload = (e) => {
-    const file = e.target.files[0];
-    setORCRFile(file);
-  };
-
-  const handleLicenseUpload = (e) => {
-    const file = e.target.files[0];
-    setLicenseFile(file);
-  };
-
   const handleSubmit = async () => {
     // Validate the form
     const invalidFields = validateForm();
@@ -72,7 +68,7 @@ export default function RegistrationForm() {
     // Check if there are any validation errors
     if (invalidFields.length > 0 || !orcrFile || !licenseFile) {
       // If there are validation errors or if OR/CR or License files are missing
-      let errorMessage = '';
+      let errorMessage = "";
 
       // Check if OR/CR file is missing
       if (!orcrFile) {
@@ -86,16 +82,20 @@ export default function RegistrationForm() {
 
       // Display validation error message if any
       if (invalidFields.length > 0) {
-        errorMessage += ` Please fill in all required fields and correct the following: ${invalidFields.join(", ")}`;
+        errorMessage += ` Please fill in all required fields and correct the following: ${invalidFields.join(
+          ", "
+        )}`;
       }
 
       // Display error message in Snackbar
       setSnackbarMessage(errorMessage);
       setSnackbarOpen(true);
-      
+
       // Exit the function early
       return;
     }
+
+    setLoading(true); // Show loader while waiting for submission
 
     try {
       // Submit data to the server
@@ -115,9 +115,11 @@ export default function RegistrationForm() {
       const address = registrationData.address;
       const plateNo = registrationData.plateno;
       const color = registrationData.color;
+      const decodedtoken = jwtDecode(token,{header: true});
       const isFourWheel = registrationData.isFourWheel;
-      const email = localStorage.getItem("email");
-      const isStaff = localStorage.getItem("isStaff")
+      const email = decodedtoken.sub;
+      const isStaff = localStorage.getItem("isStaff");
+      const stickerType = registrationData.stickerType;
       // Submit applicant registration data
       const res1 = await axios.post(
         "http://localhost:8080/applicants/register",
@@ -136,6 +138,7 @@ export default function RegistrationForm() {
           color: color,
           isFourWheel: isFourWheel,
           isStaff: isStaff,
+          isParking: stickerType,
         },
         config
       );
@@ -152,11 +155,11 @@ export default function RegistrationForm() {
           Authorization: `Bearer ${token}`,
         },
       };
+
       const res2 = await axios.post(
-        "http://localhost:8080/applicants/uploadReq",
-        email,
-        orcrFile,
-        licenseFile
+        "http://localhost:8080/applicants/uploadReq", null ,
+        formData,
+        config2
       );
 
       // If both requests are successful, show success message
@@ -165,91 +168,107 @@ export default function RegistrationForm() {
         setSnackbarOpen(true);
       } else {
         // If any request fails, show error message
-        setSnackbarMessage("An error occurred during registration. Please try again later.");
+        setSnackbarMessage(
+          "An error occurred during registration. Please try again later."
+        );
         setSnackbarOpen(true);
       }
     } catch (error) {
       // Handle any errors that occur during submission
-      setSnackbarMessage("An error occurred during registration. Please try again later.");
+      setSnackbarMessage(
+        "An error occurred during registration. Please try again later."
+      );
       setSnackbarOpen(true);
+    } finally {
+      setLoading(false); // Hide loader after submission
     }
   };
 
   const validateForm = () => {
     const errors = {};
-  
-    // Validate Surname
-      if (!registrationData.surname.trim()) {
-        errors.surname = "Surname is required";
-      } else if (!/^[a-zA-Z\s]+$/.test(registrationData.surname)) {
-        errors.surname = "Surname must contain only letters and spaces";
-      }
 
-      // Validate Given Name
-      if (!registrationData.givenname.trim()) {
-        errors.givenname = "Given Name is required";
-      } else if (!/^[a-zA-Z\s]+$/.test(registrationData.givenname)) {
-        errors.givenname = "Given Name must contain only letters and spaces";
-      }
-  
+    // Validate Surname
+    if (!registrationData.surname.trim()) {
+      errors.surname = "Surname is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(registrationData.surname)) {
+      errors.surname = "Surname must contain only letters and spaces";
+    }
+
+    // Validate Given Name
+    if (!registrationData.givenname.trim()) {
+      errors.givenname = "Given Name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(registrationData.givenname)) {
+      errors.givenname = "Given Name must contain only letters and spaces";
+    }
+
     // Validate M.I.
     if (!registrationData.mi.trim()) {
       errors.mi = "M.I. is required";
     } else if (!/^[a-zA-Z]+$/.test(registrationData.mi)) {
       errors.mi = "M.I. must contain only letters";
     }
-  
+
     // Validate Name of Student
     if (!registrationData.sname.trim()) {
       errors.sname = "Name of Student is required";
     } else if (!/^[a-zA-Z\s.]+$/.test(registrationData.sname)) {
-      errors.sname = "Name of Student must contain only letters, spaces, and periods";
+      errors.sname =
+        "Name of Student must contain only letters, spaces, and periods";
     }
-  
+
     // Validate ID Number
-    if (!registrationData.idno.trim() || !/^\d*(-\d*)*$/.test(registrationData.idno)) {
+    if (
+      !registrationData.idno.trim() ||
+      !/^\d*(-\d*)*$/.test(registrationData.idno)
+    ) {
       errors.idno = "ID Number must only contain digits and dashes";
     }
-  
+
     // Validate Grade/Year Level
     if (!registrationData.yearlevel.trim()) {
       errors.yearlevel = "Grade/Year Level is required";
     }
-  
+
     // Validate Contact Number
-    if (!registrationData.contactno.trim() || !/^(09|\+639)\d{9}$/.test(registrationData.contactno)) {
+    if (
+      !registrationData.contactno.trim() ||
+      !/^(09|\+639)\d{9}$/.test(registrationData.contactno)
+    ) {
       errors.contactno = "Contact number must be in the format 09123456789";
     }
-  
+
     // Validate Vehicle Make
     if (!registrationData.vmake.trim()) {
       errors.vmake = "Vehicle Make is required";
     }
-  
+
     // Validate Plate No
     if (!registrationData.plateno.trim()) {
       errors.plateno = "Plate No is required";
     }
-  
+
     // Validate Color
     if (!registrationData.color.trim()) {
       errors.color = "Color is required";
     }
-  
+
     // Validate Address
     if (!registrationData.address.trim()) {
       errors.address = "Address is required";
     }
-  
+
     // Validate Vehicle Type
     if (registrationData.isFourWheel === null) {
       errors.isFourWheel = "Vehicle Type is required";
     }
-  
+    if (registrationData.stickerType === "") {
+      errors.stickerType = "Sticker Type is required";
+    }
+
     setInputErrors(errors);
     return Object.keys(errors);
   };
-  
+
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
@@ -281,9 +300,10 @@ export default function RegistrationForm() {
 
   const handleStickerChange = (e) => {
     const { value } = e.target;
+    const isParking = value === "true";
     setRegistrationData((prevData) => ({
       ...prevData,
-      stickerType: value,
+      stickerType: isParking,
     }));
     setInputErrors((prevErrors) => ({
       ...prevErrors,
@@ -291,9 +311,9 @@ export default function RegistrationForm() {
     }));
   };
 
-  console.log("orcr",orcrFile);
-  console.log("license",licenseFile);
-  console.log("email",email);
+  // console.log("orcr", orcrFile);
+  // console.log("license", licenseFile);
+  // console.log("email", email);
   return (
     <Container maxWidth="lg">
       <Box sx={{ p: 2, alignItems: "center" }}>
@@ -531,7 +551,7 @@ export default function RegistrationForm() {
                 style={{ flexDirection: "row" }}
               >
                 <FormControlLabel
-                  value= 'false'
+                  value="false"
                   control={<Radio />}
                   label="2 Wheeler"
                 />
@@ -556,28 +576,29 @@ export default function RegistrationForm() {
                 style={{ flexDirection: "row" }}
               >
                 <FormControlLabel
-                  value="DropOff"
+                  value="false"
                   control={<Radio />}
-                  label="Drop-off"a
+                  label="Drop-off"
+                  a
                 />
                 <FormControlLabel
-                  value="PickUp"
+                  value="true"
                   control={<Radio />}
-                  label="Pick-up"
+                  label="Parking"
                 />
               </RadioGroup>
             </div>
             <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  ml: "1rem",
-                }}
-              >
-                <FileUpload label="OR/CR" onChange={setORCRFile} />
-                <FileUpload label="License" onChange={setLicenseFile} />
-              </div>
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                ml: "1rem",
+              }}
+            >
+              <FileUpload label="OR/CR" onChange={setORCRFile} />
+              <FileUpload label="License" onChange={setLicenseFile} />
+            </div>
           </div>
 
           <Button
@@ -594,6 +615,20 @@ export default function RegistrationForm() {
         </div>
       </Box>
 
+      {/* Loader */}
+      {loading && (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {/* Modal */}
+      {modalOpen && (
+        <ModalComponent
+          onClose={() => setModalOpen(false)}
+          // Pass necessary props to your modal component
+        />
+      )}
       {/* Snackbar for displaying validation errors */}
       <Snackbar
         open={snackbarOpen}

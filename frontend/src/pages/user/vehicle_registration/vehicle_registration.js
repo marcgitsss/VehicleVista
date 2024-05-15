@@ -7,7 +7,6 @@ import {
   RadioGroup,
   Button,
   Container,
-  Modal,
 } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import FileUpload from "./uploadImage";

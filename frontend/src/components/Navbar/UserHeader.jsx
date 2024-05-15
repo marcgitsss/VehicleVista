@@ -48,7 +48,7 @@ const Header = () => {
           <DropdownMenu />
         ) : (
           <>
-            <a href="/user_homepage">Home</a>
+            <a href="/homepage">Home</a>
             <a href="/user_aboutus">About Us</a>
           </>
         )}
