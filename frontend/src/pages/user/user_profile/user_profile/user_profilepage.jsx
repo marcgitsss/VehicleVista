@@ -1,15 +1,85 @@
-import React from "react";
-import { Avatar, Box, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import "./user_profilepage.css";
 import ChangePassword from "./ChangePassword/ChangePassword";
-
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 const UserProfilePage = () => {
+
+  // const username = "ludivicombalaterojr@gmail.com";
+  const token = localStorage.getItem("token");
+  const decodedToken = jwtDecode(token);
+  const username = decodedToken.sub;
+
+  const [user, setUser] = useState([])
+  const [expiration, setExpiration] = useState([])
+  const [vehicles, setVehicles] = useState([])
+  const [showChangePassword, setShowChangePassword] = useState(false)
+  
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+  };
+
+  const handleLogout = () => {
+    //MAKE LOGOUT LOGIC
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/jwt/get-user', {
+                params: {
+                    username: username
+                }
+            });
+            setUser(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+
+        try {
+          const response = await axios.get('http://localhost:8080/expiration/get-expiration');
+          setExpiration(response.data);
+          console.log(response.data);
+        } catch (error) {
+            console.error('Error fetching expiration data:', error);
+        }
+
+        try {
+          const response = await axios.get('http://localhost:8080/vehicles/get-vehicle', {
+              params: {
+                  username: username
+              }
+          });
+          setVehicles(response.data);
+          console.log(response.data);
+      } catch (error) {
+          console.error('Error fetching vehicle data:', error);
+      }
+    };
+    
+    fetchData();
+
+    // Cleanup function to abort the fetch request if the component unmounts
+}, []); // Empty dependency array to run the effect only once on mount
+
+
   return (
     <div>
-     
+    
 
       {/* Main Content */}
+      
       <div className="user-profile-container">
+      <div className="logout-btn" style={{textAlign:'right', marginBottom:'1.5%', marginTop:'2%'}}>
+        <button 
+          onClick={() => setShowChangePassword(!showChangePassword)}>
+            LOGOUT
+        </button>
+      </div>
         <Box className="user-profile-outer">
           <Box
             className="user-profile-box user-profile-main"
@@ -20,11 +90,11 @@ const UserProfilePage = () => {
                 <Avatar sx={{ bgcolor: "purple" }}>S</Avatar>
                 <div className="user-profile-name">
                   <label>Name</label>
-                  <span>SAN JUAN IRISH LEIGH</span>
-                  <label>Sticker No.: 123</label>
+                  <span>{user.fname} {user.mname} {user.lname}</span>
+                  <label>Sticker No: {vehicles.stickerId}</label>
                 </div>
               </div>
-              <Typography color={"green"}>ACTIVE</Typography>
+              <Typography color={"green"}>{user.isEnabled?"ACTIVE":"INACTIVE"}</Typography>
             </div>
 
             <hr />
@@ -32,18 +102,18 @@ const UserProfilePage = () => {
             <div className="user-profile-details">
               <div className="user-profile-detail">
                 <label>Expiration Date</label>
-                <span>DECEMBER 12, 2024</span>
-                <span>S.Y. 2023-2024</span>
+                <span>{formatDate(user.expirationDate)}</span>
+                <span>S.Y. {expiration.currentSchoolYear}</span>
               </div>
               <div className="user-profile-detail">
                 <label>Registration Type</label>
-                <span>4 - WHEELS</span>
-                <span>Pick-up/Drop-off</span>
+                <span>{vehicles.isFourWheel?"4-Wheel Vehicle":"2-Wheel Vehicle"}</span>
+                <span>{vehicles.isParking?"Parking":"Pick-up/Drop-off"}</span>
               </div>
               <div className="user-profile-detail">
                 <label>Vehicle Type</label>
-                <span>HONDA CLICK</span>
-                <span>GED 1234</span>
+                <span>{vehicles.vehicleMake}</span>
+                <span>{vehicles.plateNo}</span>
               </div>
             </div>
           </Box>
@@ -53,29 +123,37 @@ const UserProfilePage = () => {
             sx={{ boxShadow: 3 }}
           >
             <label>Email</label>
-            <span>sanjuanirishleigh1234@gmail.com</span>
+            <span>{user.email}</span>
           </Box>
           <Box
             className="user-profile-box user-profile-number"
             sx={{ boxShadow: 3 }}
           >
             <label>Phone Number</label>
-            <span>+63 915 669 4676</span>
+            <span>{user.contactNumber}</span>
           </Box>
           <Box
             className="user-profile-box user-profile-address"
             sx={{ boxShadow: 3 }}
           >
             <label>Address</label>
-            <span>123 Street, Cebu City, Cebu, 6000</span>
+            <span>{user.address}</span>
           </Box>
-
-          <ChangePassword />
+          {
+            showChangePassword?
+            <ChangePassword setShowChangePassword={setShowChangePassword} />
+            :
+            <div className="user-profile-box user-profile-changepass" >
+              <Button 
+                sx = {{color: 'white', backgroundColor: 'green'}}
+                onClick={() => setShowChangePassword(true)}>Change Password</Button>
+            </div>
+          }
 
         </Box>
       </div>
 
-     
+    
     </div>
   );
 };
