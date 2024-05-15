@@ -1,0 +1,41 @@
+.employee-sidebar {
+  position: fixed;
+  top: 4.3rem;
+  left: 0;
+  height: 100%;
+  width: clamp(10rem, 20vw, 12rem); /* Adjust the values as needed */
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #000000;
+  font-family: Arial, Helvetica, sans-serif;
+  z-index: 999; /* Adjust the value as needed */
+}
+
+.employee-sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 3rem 0;
+}
+
+.employee-sidebar-menu > li {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  padding-left: clamp(1rem, 2vw, 1.7rem); /* Adjust the values as needed */
+  padding-right: clamp(1rem, 2vw, 1.8rem); /* Adjust the values as needed */
+  color: #000000;
+  margin: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(0.8rem, 2vw, 1rem); /* Adjust the values as needed */
+}
+
+.employee-sidebar-menu > li:hover:not(.active) {
+  transition: .2s;
+  background-color: #f4c722a2;
+}
+
+.active {
+  background-color: #f4c722a2;
+}

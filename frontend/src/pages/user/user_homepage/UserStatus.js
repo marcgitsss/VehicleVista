@@ -18,6 +18,7 @@ export default function UserStatus() {
   const token = localStorage.getItem("token");
   const isMobile = useMediaQuery("(max-width: 37.5rem)");
   const [applications, setApplications] = useState({});
+  const [isApplicant, setIsApplicant] = useState(false);
   const [date, setDate] = useState();
   const decondedToken = jwtDecode(token);
   const email = decondedToken.sub;
@@ -30,7 +31,8 @@ export default function UserStatus() {
           "http://localhost:8080/applicants/" + email
         );
         if (response.data) {
-          console.log(response.data);
+          setIsApplicant(true);
+          console.log('asdasdasd',response.data);
           setApplications(response.data);
           setDate(response.data.datesubmitted);
         }
@@ -156,16 +158,36 @@ export default function UserStatus() {
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell align="center">{formattedDate}</TableCell>
+                      {isApplicant ? (<>
+                        <TableCell align="center">{formattedDate}</TableCell>
                       <TableCell align="center">{applications.isStaff ? 'Staff' : 'Student'}</TableCell>
                       <TableCell align="center">{applications.verified ? 'Verified' : 'Pending'}</TableCell>
                       <TableCell align="center">{applications.paid ? 'Paid' : 'Pending'}</TableCell>
                       <TableCell align="center">{applications.approved ? 'Approved' : 'Pending'}</TableCell>
                       <TableCell align="center">{applications.verified && applications.paid && applications.approved ? 'Success' : 'Pending'}</TableCell>
+                      </>) : <></>}
+                      
                     </TableRow>
                   </TableBody>
                 </Table>
-                <Button
+                {applications.verified === true && applications.paid === false &&(
+                 <Button
+                 sx={{
+                   position: "absolute",
+                   bottom: "1rem",
+                   right: "1rem",
+                   backgroundColor: "#F4C522",
+                   color: "black",
+                   textTransform: "none",
+                   fontWeight: "bold",
+                   "&:hover": { backgroundColor: "#F4C522" },
+                 }}
+                 onClick={() => setIsModalOpen(true)} // Open modal on click
+               >
+                 Proceed to Payment
+               </Button>
+                )}
+                {/* <Button
                   sx={{
                     position: "absolute",
                     bottom: "1rem",
@@ -179,7 +201,7 @@ export default function UserStatus() {
                   onClick={() => setIsModalOpen(true)} // Open modal on click
                 >
                   Proceed to Payment
-                </Button>{" "}
+                </Button> */}
               </TableContainer>
             </div>
           </Grid>

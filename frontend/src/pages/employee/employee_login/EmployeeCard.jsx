@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './logincard.css';
+import './employeecard.css';
 import axios from 'axios';
-import { Typography } from '@mui/material';
+import { Typography, CircularProgress  } from '@mui/material';
 // import { Link } from 'react-router-dom';
-import VerifyEmailModal from './components/VerifyEmail/VerifyEmailModal';
-import { useUser } from '../../../context/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import VerifyEmailModal from '../../user/user_login/components/VerifyEmail/VerifyEmailModal';
+import { useNavigate } from 'react-router-dom';
 
-export default function LoginCard() {
-
-  const navigate = useNavigate ();
-  const {login} = useUser();
+export default function EmployeeCard({onLoginSuccess }) {
   const [loginData, setLoginData] = useState({
     username: '',
     password: ''
@@ -21,6 +18,8 @@ export default function LoginCard() {
   const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false); // State for controlling modal
   const [shouldCloseModal, setShouldCloseModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); 
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -38,6 +37,7 @@ export default function LoginCard() {
       [name]: value
     }));
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,24 +57,23 @@ export default function LoginCard() {
     }
   
     console.log(loginData);
+
+    setLoading(true);
   
-    axios.post('http://localhost:8080/jwt/login', {
+    axios.post('http://localhost:8080/jwt/employee-login', {
       username: loginData.username,
       password: loginData.password
     })
     .then((response) => {
       console.log(response.data);
       if (response.data) {
-        // Show Snackbar for successful login
-        setSnackbarMessage('Successfully Logged in');
-        setSnackbarOpen(true);
+        onLoginSuccess('Successfully Logged in');
         localStorage.setItem('token', response.data.token);
-
-        login(response.data.token);
-        
-        navigate('/homepage');
         // localStorage.setItem('email', loginData.username);
-
+        
+        setTimeout(() => {
+          navigate('/employee-homepage');
+        }, 2000); 
       } else {
         // Show Snackbar for unsuccessful login
         setSnackbarMessage('Wrong username or password');
@@ -86,6 +85,10 @@ export default function LoginCard() {
       // Show Snackbar for error during login
       setSnackbarMessage('An error occurred during login. Please try again later.');
       setSnackbarOpen(true);
+    })  
+    .finally(() => {
+      // Set loading to false after the request is complete
+      setLoading(false);
     });
   };
   
@@ -110,26 +113,26 @@ export default function LoginCard() {
   }, [forgotPasswordModalOpen]);
 
   return (
-    <div className="login-container">
-      <div className="form-container">
-        <form className="form" onSubmit={handleSubmit}>
-          <p className="form-title">Login</p>
-          <div className="input-container">
+    <div className="employee-container">
+      <div className="employee-form-container">
+        <form className="employee-form" onSubmit={handleSubmit}>
+          <p className="employee-form-title">Login</p>
+          <div className="employee-input-container">
             <input
               type="email"
               placeholder="Email"
-              className="input-field"
+              className="employee-input-field"
               name="username"
               value={loginData.username}
               onChange={handleInputChange}
             />
             <span></span>
           </div>
-          <div className="input-container">
+          <div className="employee-input-container">
             <input
              type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="input-field"
+              className="employee-input-field"
               name="password"
               value={loginData.password}
               onChange={handleInputChange}
@@ -148,18 +151,18 @@ export default function LoginCard() {
           </div>
            {/* Snackbar for successful or unsuccessful login */}
       {snackbarOpen && (
-        <div className="snackbar">{snackbarMessage}</div>
+        <div className="employee-snackbar">{snackbarMessage}</div>
       )}
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             {/* <Link to="/verify-email" style={{ textDecoration: 'none' }}><Typography sx={{ cursor: 'pointer', fontSize: '1rem' }}>Forgot Password?</Typography> </Link> */}
             <Typography sx={{ cursor: 'pointer', fontSize: '1rem' }} onClick={handleForgotPasswordClick}>Forgot Password?</Typography>
           </div>
 
-          <button type="submit" className="submit">
-            Sign in
+          <button type="submit" className="employee-submit" style={{ cursor: 'pointer' }}>
+          {loading ? <CircularProgress size={24} /> : 'Sign in'}
           </button>
-          <p className="signup-link">
-            No account? <a href="/">Sign up</a>
+          <p className="employee-signup-link">
+            No account? <a href="#">Sign up</a>
           </p>
         </form>
       </div>

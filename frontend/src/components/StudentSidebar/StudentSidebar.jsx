@@ -13,7 +13,7 @@ function StudentSidebar({ activeMenuItem, onMenuItemClick }) {
           <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} /> Homepage
         </li>
         <li className={activeMenuItem === "Registration" ? "active" : ""} onClick={() => onMenuItemClick("Registration")}>
-           <TaskIcon sx={{ color: "black", marginRight: "1.5rem"}} /> Registration/Renewal 
+           <TaskIcon sx={{ color: "black", marginRight: "1.5rem"}} /> Registration/<br />Renewal 
         </li>
         <li className={activeMenuItem === "Profile" ? "active" : ""} onClick={() => onMenuItemClick("Profile")}>
           <PersonIcon sx={{ color: "black", marginRight: "1.5rem"}} /> Profile
@@ -25,5 +25,4 @@ function StudentSidebar({ activeMenuItem, onMenuItemClick }) {
     </div>
   );
 }
-
 export default StudentSidebar;

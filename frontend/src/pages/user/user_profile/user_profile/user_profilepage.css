@@ -7,6 +7,19 @@
   z-index: -1;
 }
 
+.logout-btn button {
+  background-color: #d33835;
+  border: none;
+  color: white;
+  padding: 1% 2%;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 100%;
+  cursor: pointer;
+  border-radius: 50px;
+}
+
 .user-profile-footer {
   position: fixed;
   bottom: 0;
