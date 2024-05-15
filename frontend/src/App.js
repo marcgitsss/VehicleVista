@@ -6,17 +6,8 @@ import ChooseUserTypeModal from "./pages/user/vehicle_registration/ChooseUserTyp
 import LoginPage from "./pages/user/user_login/LoginPage";
 import ChangePass from "./pages/user/user_login/components/ForgotPass/ChangePass";
 import LandingPage from "./pages/user/user_landingpage/user_landingpage";
-import ChangePassword from "./pages/user/user_login/components/ChangePass/ChangePassword";
-import UserStatus from "./pages/user/user_homepage/UserStatus";
+import UserStatus from "./pages/user/UserStatus";
 import Invoice from "./pages/user/user_login/components/Invoice";
-import VehicleRegistration from './pages/vehicle_registration/vehicle_registration';
-import PayMod from './pages/vehicle_registration/payMod';
-import UserHomepage from './pages/user/user_homepage/user_homepage';
-import RegistrationForm1 from "./pages/user/vehicle_registration/vehicle_registrationform";
-import RegistrationForm from "./pages/user/vehicle_registration/vehicle_registrationform1";
-import UserProfilePage from "./pages/user/user_profile/user_profile/user_profilepage";
-import PrivateRoutes from "./Utils/PrivateRoutes";
-
 import Registration from './pages/user/vehicle_registration/vehicle_registration';
 import ChangePassword from './pages/user/user_login/components/ChangePass/ChangePassword';
 import OrCr from './pages/employee/application/OrCr';
@@ -34,6 +25,8 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgotpass" element={<ChangePass />} />
+          <Route path="/changepass" element={<ChangePassword />} />
 
           {/* //Changes */}
           <Route path="/orcr" element={<OrCr />} />
