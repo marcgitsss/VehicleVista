@@ -7,7 +7,6 @@ import VerifyEmailModal from './components/VerifyEmail/VerifyEmailModal';
 import { useUser } from '../../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 export default function LoginCard() {
 

@@ -6,7 +6,6 @@ import ChooseUserTypeModal from "./pages/user/vehicle_registration/ChooseUserTyp
 import LoginPage from "./pages/user/user_login/LoginPage";
 import ChangePass from "./pages/user/user_login/components/ForgotPass/ChangePass";
 import LandingPage from "./pages/user/user_landingpage/user_landingpage";
-import UserStatus from "./pages/user/UserStatus";
 import Invoice from "./pages/user/user_login/components/Invoice";
 import Registration from './pages/user/vehicle_registration/vehicle_registration';
 import ChangePassword from './pages/user/user_login/components/ChangePass/ChangePassword';
@@ -19,6 +18,14 @@ import VerifyPayment from './pages/employee/application/VerifyPayment';
 import EmployeeHomepage from './pages/employee/homepage/employeehomepage';
 import EmployeeFeaturePage from './pages/employee/featurepage/employee_featurespage';
 import EmployeePage from "./pages/employee/employee_login/EmployeePage";
+import UserStatus from "./pages/user/user_homepage/UserStatus";
+import VehicleRegistration from './pages/vehicle_registration/vehicle_registration';
+import PayMod from './pages/vehicle_registration/payMod';
+import UserHomepage from './pages/user/user_homepage/user_homepage';
+import RegistrationForm1 from "./pages/user/vehicle_registration/vehicle_registrationform";
+import RegistrationForm from "./pages/user/vehicle_registration/vehicle_registrationform1";
+import UserProfilePage from "./pages/user/user_profile/user_profile/user_profilepage";
+import PrivateRoutes from "./Utils/PrivateRoutes";
 
 function App() {
   return (
