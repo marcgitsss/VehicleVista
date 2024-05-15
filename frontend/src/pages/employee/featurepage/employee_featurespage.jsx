@@ -5,6 +5,7 @@ import employeebackgroundImage from '../../../assets/SIABackground.png'; // Corr
 import '../../../components/Navbar/UserFooter.css'; // Corrected import path for Footer CSS
 import './employee_featurespage.css';
 import EmployeeSidebar from '../../../components/EmployeeSidebar/employeeSidebar';
+import { Link } from 'react-router-dom';
 
 const EmployeeFeaturePage = () => {
   
@@ -14,13 +15,13 @@ const EmployeeFeaturePage = () => {
         <EmployeeSidebar />
       <div className='employeefeaturespagebuttons-container'>
         <button className='fdashboardButton'>Dashboard</button>
-        <button className='verifyorcrdButton'>Verify OR/CR and License</button>
+        <Link to="/orcr"><button className='verifyorcrdButton'>Verify OR/CR and License</button></Link>
         
       </div>
 
       <div className='employeefeaturespagebuttons2-container'>
-        <button className='verifyproofofpaymentButton'>Verify Proof Of Payment</button>
-        <button className='approveapplicationButton'>Approve Application </button>
+      <Link to="/verifypay"><button className='verifyproofofpaymentButton'>Verify Proof Of Payment</button></Link>
+        <Link to="/approve"><button className='approveapplicationButton'>Approve Application </button></Link>
       </div>
 
       <div className='employeefeaturespage'>
