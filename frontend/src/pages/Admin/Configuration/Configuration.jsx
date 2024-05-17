@@ -2,10 +2,10 @@ import AdminHeader from "../../../components/AdminHeader/AdminHeader";
 import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import Box from "@mui/material/Box";
 import SellIcon from "@mui/icons-material/Sell";
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import PersonIcon from "@mui/icons-material/Person";
 import WarningIcon from "@mui/icons-material/Warning";
 import { Link } from "react-router-dom";
+import { Breadcrumbs } from "@mui/material";
 
 function Configuration() {
   return (
@@ -13,9 +13,20 @@ function Configuration() {
       <AdminHeader />
       <AdminSidebar />
       <main className="admin-container">
-        {/* Header */}
-        <div className="admin-title">
-          <h1>Configuration Admin</h1>
+        <div role="presentation">
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            style={{ fontSize: "2em", marginTop: "1em" }}
+          >
+            <Link
+              underline="hover"
+              color="inherit"
+              href="/configuration"
+              style={{ color: "#8A252C" }}
+            >
+              Configuration
+            </Link>
+          </Breadcrumbs>
         </div>
 
         {/* Links */}
@@ -24,13 +35,6 @@ function Configuration() {
             <Box component="section" className="config-link-box">
               <SellIcon />
               <span>Sticker Pricing</span>
-            </Box>
-          </Link>
-
-          <Link to="/parking-management">
-            <Box component="section" className="config-link-box">
-              <DirectionsCarIcon />
-              <span>Parking Management</span>
             </Box>
           </Link>
 

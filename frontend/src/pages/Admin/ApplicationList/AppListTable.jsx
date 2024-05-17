@@ -10,24 +10,35 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Snackbar,
 } from "@mui/material";
 import PageviewIcon from "@mui/icons-material/Pageview";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import Button from "@mui/material/Button";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useEffect, useState } from "react";
+import ViewApplicantModal from "./modals/ViewApplicantModal";
+import DeleteApplicantModal from "./modals/DeleteApplicantModal";
+import axios from "axios";
 
-function AppListTable({ applicants }) {
+function AppListTable({ applicants, currentTab }) {
   const [filteredApplicants, setFilteredApplicants] = useState([]);
   const [userFilter, setUserFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [userOptions, setUserOptions] = useState([]);
 
+  const [openViewApplicantModal, setOpenViewApplicantModal] = useState(false);
+  const [openDeleteApplicantModal, setOpenDeleteApplicantModal] =
+    useState(false);
+  const [selectedApplicant, setSelectedApplicant] = useState({});
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
   useEffect(() => {
     setFilteredApplicants(
       applicants.filter((x) => x.studentName === userFilter)
     );
-  }, [userFilter]);
+  }, [userFilter, applicants]);
 
   useEffect(() => {
     setFilteredApplicants(
@@ -35,12 +46,55 @@ function AppListTable({ applicants }) {
         (x) => new Date(x.datesubmitted) <= new Date(dateFilter)
       )
     );
-  }, [dateFilter]);
+  }, [dateFilter, applicants]);
 
   useEffect(() => {
     setUserOptions(applicants.map((x) => x.studentName));
     setFilteredApplicants(applicants);
   }, [applicants]);
+
+  const approveApplicant = async (email) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:8080/applicants/approveApplicant/${email}`
+      );
+
+      setSnackbarMessage("Successfully Approved Application");
+      setSnackbarOpen(true);
+
+      setFilteredApplicants(
+        filteredApplicants.filter((x) => x.email !== email)
+      );
+
+      console.log("res", res);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const denieApplicant = async (email, message) => {
+    try {
+      await axios.post(
+        `http://localhost:8080/applicants/rejectApplicant`,
+        {
+          email,
+          message,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setSnackbarMessage("Successfully Denied Application");
+      setSnackbarOpen(true);
+      setFilteredApplicants(
+        filteredApplicants.filter((x) => x.email !== email)
+      );
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   return (
     <>
@@ -56,11 +110,14 @@ function AppListTable({ applicants }) {
               label="user-filter"
               sx={{ width: "150px", padding: "0" }}
               defaultValue=""
+              MenuProps={{
+                disableScrollLock: true,
+              }}
               value={userFilter}
               onChange={(e) => setUserFilter(e.target.value)}
             >
               {userOptions.map((user) => (
-                <MenuItem key={user} value={user}>
+                <MenuItem key={`${user}${new Date()}`} value={user}>
                   {user}
                 </MenuItem>
               ))}
@@ -78,11 +135,6 @@ function AppListTable({ applicants }) {
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
           />
-        </div>
-
-        {/* Button */}
-        <div className="applist-apply-button">
-          <Button variant="contained">Apply</Button>
         </div>
       </div>
 
@@ -122,7 +174,7 @@ function AppListTable({ applicants }) {
           </TableHead>
           <TableBody>
             {filteredApplicants.map((row, index) => (
-              <TableRow key={row.idNumber}>
+              <TableRow key={row.applicantid}>
                 <TableCell align="center">{index + 1}</TableCell>
                 <TableCell align="center">{row.studentName}</TableCell>
                 <TableCell align="center">
@@ -140,15 +192,65 @@ function AppListTable({ applicants }) {
                 </TableCell>
                 <TableCell align="center">{row.isFourWheel ? 4 : 2}</TableCell>
                 <TableCell align="center">
-                  <PageviewIcon style={{ color: "yellow" }} />
-                  <CheckBoxIcon style={{ color: "green" }} />
-                  <DeleteForeverIcon style={{ color: "red" }} />
+                  <PageviewIcon
+                    className="admin-icon"
+                    style={{ color: "yellow" }}
+                    fontSize="large"
+                    onClick={() => {
+                      setSelectedApplicant(row);
+                      setOpenViewApplicantModal(true);
+                    }}
+                  />
+
+                  {currentTab === "pending" && (
+                    <>
+                      <CheckBoxIcon
+                        className="admin-icon"
+                        style={{ color: "green" }}
+                        fontSize="large"
+                        onClick={() => {
+                          approveApplicant(row.email);
+                        }}
+                      />
+                      <DeleteForeverIcon
+                        className="admin-icon"
+                        style={{ color: "red" }}
+                        fontSize="large"
+                        onClick={() => {
+                          setSelectedApplicant(row);
+                          setOpenDeleteApplicantModal(true);
+                        }}
+                      />
+                    </>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Modals */}
+      <ViewApplicantModal
+        isOpen={openViewApplicantModal}
+        setIsOpen={setOpenViewApplicantModal}
+        applicant={selectedApplicant}
+      />
+
+      <DeleteApplicantModal
+        isOpen={openDeleteApplicantModal}
+        setIsOpen={setOpenDeleteApplicantModal}
+        applicant={selectedApplicant}
+        denieApplicant={denieApplicant}
+      />
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      />
     </>
   );
 }

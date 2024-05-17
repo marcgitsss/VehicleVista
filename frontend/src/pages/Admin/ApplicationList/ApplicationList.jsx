@@ -63,10 +63,16 @@ function ApplicationList() {
               </TabList>
             </Box>
             <TabPanel value="1">
-              <AppListTable applicants={pendingApplicants} />
+              <AppListTable
+                applicants={pendingApplicants}
+                currentTab="pending"
+              />
             </TabPanel>
             <TabPanel value="2">
-              <AppListTable applicants={approvedApplicants} />
+              <AppListTable
+                applicants={approvedApplicants}
+                currentTab="approved"
+              />
             </TabPanel>
           </TabContext>
         </div>

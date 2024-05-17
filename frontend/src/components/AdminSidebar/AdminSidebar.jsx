@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import "./AdminSidebar.css";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
@@ -6,17 +5,13 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { Link, useLocation } from "react-router-dom";
 
 function AdminSidebar() {
-  const [page, setPage] = useState("");
   const location = useLocation();
-  const activeMenuItem = "";
   const currentPath = location.pathname;
-
-  useEffect(() => {}, []);
 
   return (
     <div className="admin-sidebar">
       <ul className="admin-sidebar-menu">
-        <li className={currentPath === "/dashboard" ? "active" : ""}>
+        <li className={currentPath === "/admin-dashboard" ? "active" : ""}>
           <Link to="/">
             <DashboardOutlinedIcon
               sx={{ color: "black", marginRight: "1.5rem" }}

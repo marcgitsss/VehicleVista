@@ -50,6 +50,7 @@ export default function AdminHeader() {
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
+              disableScrollLock={true}
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>

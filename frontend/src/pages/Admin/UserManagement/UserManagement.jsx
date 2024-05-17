@@ -5,15 +5,11 @@ import Link from "@mui/material/Link";
 import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { useState } from "react";
-import Roles_Tab from "./Roles_Tab";
-import Permissions_Tab from "./Permissions_Tab";
+import RolesTab from "./RolesTab";
+import PermissionsTab from "./PermissionsTab";
 
 function UserManagement() {
   const [tabValue, setTabValue] = useState("1");
-
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
 
   return (
     <>
@@ -42,16 +38,19 @@ function UserManagement() {
         <div>
           <TabContext value={tabValue}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList aria-label="Tabs example" onChange={handleTabChange}>
+              <TabList
+                aria-label="Tabs example"
+                onChange={(e, newValue) => setTabValue(newValue)}
+              >
                 <Tab label="Roles" value="1" />
                 <Tab label="Permissions" value="2" />
               </TabList>
             </Box>
             <TabPanel value="1">
-              <Roles_Tab />
+              <RolesTab />
             </TabPanel>
             <TabPanel value="2">
-              <Permissions_Tab />
+              <PermissionsTab />
             </TabPanel>
           </TabContext>
         </div>

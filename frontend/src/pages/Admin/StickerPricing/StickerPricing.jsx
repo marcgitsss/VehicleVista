@@ -4,16 +4,98 @@ import Box from "@mui/material/Box";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import EditIcon from "@mui/icons-material/Edit";
-import { Button } from "@mui/material";
+import { Button, Snackbar } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function StickerPricing() {
+  const [facultyDisabled, setFacultyDisabled] = useState(true);
+  const [studentDisabled, setStudentDisabled] = useState(true);
+
+  const [staffFourWheelParking, setStaffFourWheelParking] = useState(0);
+  const [staffFourWheelPickup, setStaffFourWheelPickup] = useState(0);
+  const [staffTwoWheelParking, setStaffTwoWheelParking] = useState(0);
+  const [staffTwoWheelPickup, setStaffTwoWheelPickup] = useState(0);
+
+  const [studentFourWheelParking, setStudentFourWheelParking] = useState(0);
+  const [studentFourWheelPickup, setStudentFourWheelPickup] = useState(0);
+  const [studentTwoWheelParking, setStudentTwoWheelParking] = useState(0);
+  const [studentTwoWheelPickup, setStudentTwoWheelPickup] = useState(0);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const saveStudentPrices = async () => {
+    try {
+      const res = await axios.put(
+        "http://localhost:8080/prices/update-student-prices",
+        {
+          studentFourWheelParking,
+          studentFourWheelPickup,
+          studentTwoWheelParking,
+          studentTwoWheelPickup,
+        }
+      );
+      console.log("res", res);
+
+      setSnackbarMessage("Successfully Updated Sticker Pricing");
+      setSnackbarOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const saveFacultyPrices = async () => {
+    try {
+      const res = await axios.put(
+        "http://localhost:8080/prices/update-staff-prices",
+        {
+          staffFourWheelParking,
+          staffFourWheelPickup,
+          staffTwoWheelParking,
+          staffTwoWheelPickup,
+        }
+      );
+      
+      console.log("res", res);
+
+      setSnackbarMessage("Successfully Updated Sticker Pricing");
+      setSnackbarOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPrices = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/prices/get-prices");
+      const { data } = res;
+      console.log("data", data);
+      setStaffFourWheelParking(data.staffFourWheelParking);
+      setStaffFourWheelPickup(data.staffFourWheelPickup);
+      setStaffTwoWheelParking(data.staffTwoWheelParking);
+      setStaffTwoWheelPickup(data.staffTwoWheelPickup);
+
+      setStudentFourWheelParking(data.studentFourWheelParking);
+      setStudentFourWheelPickup(data.studentFourWheelPickup);
+      setStudentTwoWheelParking(data.studentTwoWheelParking);
+      setStudentTwoWheelPickup(data.studentTwoWheelPickup);
+      console.log("called");
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    getPrices();
+  }, []);
+
   return (
     <>
       <AdminHeader />
       <AdminSidebar />
       <main className="admin-container">
         {/* Breadcrumbs Navigation */}
-
         <div role="presentation">
           <Breadcrumbs
             aria-label="breadcrumb"
@@ -46,32 +128,64 @@ function StickerPricing() {
           <Box className="sticker-input-group">
             <div className="sticker-input-header">
               <span>Faculty</span>
-              <EditIcon />
+              <EditIcon
+                onClick={() => setFacultyDisabled(!facultyDisabled)}
+                className="admin-icon"
+              />
             </div>
 
             <div className="sticker-input">
-              <label htmlFor="price">Price</label>
-              <input type="text" name="price" />
+              <label htmlFor="4-wheel-parking">4 - Wheel Parking</label>
+              <input
+                type="number"
+                name="4-wheel-parking"
+                disabled={facultyDisabled}
+                value={staffFourWheelParking}
+                onChange={(e) => setStaffFourWheelParking(e.target.value)}
+              />
             </div>
-
             <div className="sticker-input">
-              <label htmlFor="startDate">Start Date (annual)</label>
-              <input type="date" id="startDate" name="startDate" />
+              <label htmlFor="2-wheel-parking">2 - Wheel Parking</label>
+              <input
+                type="number"
+                name="2-wheel-parking"
+                disabled={facultyDisabled}
+                value={staffTwoWheelParking}
+                onChange={(e) => setStaffTwoWheelParking(e.target.value)}
+              />
             </div>
-
             <div className="sticker-input">
-              <label htmlFor="endDate">End Date (annual)</label>
-              <input type="date" id="endDate" name="endDate" />
+              <label htmlFor="4-wheel-pickup">4 - Wheel Pickup/Dropoff</label>
+              <input
+                type="number"
+                name="4-wheel-pickup"
+                disabled={facultyDisabled}
+                value={staffFourWheelPickup}
+                onChange={(e) => setStaffFourWheelPickup(e.target.value)}
+              />
+            </div>
+            <div className="sticker-input">
+              <label htmlFor="2-wheel-pickup">2 - Wheel Pickup/Dropoff</label>
+              <input
+                type="number"
+                name="2-wheel-pickup"
+                disabled={facultyDisabled}
+                value={staffTwoWheelPickup}
+                onChange={(e) => setStaffTwoWheelPickup(e.target.value)}
+              />
             </div>
 
             <div className="sticker-buttons">
               <Button
                 style={{ backgroundColor: "#cccccc", color: "#333333" }}
                 variant="contained"
+                onClick={() => getPrices()}
               >
                 Cancel
               </Button>
-              <Button variant="contained">Save</Button>
+              <Button onClick={saveFacultyPrices} variant="contained">
+                Save
+              </Button>
             </div>
           </Box>
 
@@ -79,36 +193,76 @@ function StickerPricing() {
           <Box className="sticker-input-group">
             <div className="sticker-input-header">
               <span>Student</span>
-              <EditIcon />
+              <EditIcon
+                onClick={() => setStudentDisabled(!studentDisabled)}
+                className="admin-icon"
+              />
             </div>
 
             <div className="sticker-input">
-              <label htmlFor="price">Price</label>
-              <input type="text" name="price" />
+              <label htmlFor="s-4-wheel-parking">4 - Wheel Parking</label>
+              <input
+                type="number"
+                name="s-4-wheel-parking"
+                disabled={studentDisabled}
+                value={studentFourWheelParking}
+                onChange={(e) => setStudentFourWheelParking(e.target.value)}
+              />
             </div>
-
             <div className="sticker-input">
-              <label htmlFor="startDate">Start Date (annual)</label>
-              <input type="date" id="startDate" name="startDate" />
+              <label htmlFor="s-2-wheel-parking">2 - Wheel Parking</label>
+              <input
+                type="number"
+                name="s-2-wheel-parking"
+                disabled={studentDisabled}
+                value={studentTwoWheelParking}
+                onChange={(e) => setStudentTwoWheelParking(e.target.value)}
+              />
             </div>
-
             <div className="sticker-input">
-              <label htmlFor="endDate">End Date (annual)</label>
-              <input type="date" id="endDate" name="endDate" />
+              <label htmlFor="s-4-wheel-pickup">4 - Wheel Pickup/Dropoff</label>
+              <input
+                type="number"
+                name="s-4-wheel-pickup"
+                disabled={studentDisabled}
+                value={studentFourWheelPickup}
+                onChange={(e) => setStudentFourWheelPickup(e.target.value)}
+              />
+            </div>
+            <div className="sticker-input">
+              <label htmlFor="s-2-wheel-pickup">2 - Wheel Pickup/Dropoff</label>
+              <input
+                type="number"
+                name="s-2-wheel-pickup"
+                disabled={studentDisabled}
+                value={studentTwoWheelPickup}
+                onChange={(e) => setStudentTwoWheelPickup(e.target.value)}
+              />
             </div>
 
             <div className="sticker-buttons">
               <Button
                 style={{ backgroundColor: "#cccccc", color: "#333333" }}
                 variant="contained"
+                onClick={() => getPrices()}
               >
                 Cancel
               </Button>
-              <Button variant="contained">Save</Button>
+              <Button variant="contained" onClick={saveStudentPrices}>
+                Save
+              </Button>
             </div>
           </Box>
         </div>
       </main>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      />
     </>
   );
 }
