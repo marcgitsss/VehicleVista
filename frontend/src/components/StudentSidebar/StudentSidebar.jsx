@@ -18,9 +18,6 @@ function StudentSidebar({ activeMenuItem, onMenuItemClick }) {
         <li className={activeMenuItem === "Profile" ? "active" : ""} onClick={() => onMenuItemClick("Profile")}>
           <PersonIcon sx={{ color: "black", marginRight: "1.5rem"}} /> Profile
         </li>
-        <li className={activeMenuItem === "Payment" ? "active" : ""} onClick={() => onMenuItemClick("Payment")}>
-          <PaymentIcon sx={{ color: "black", marginRight: "1.5rem"}} /> Payment
-        </li>
       </ul>
     </div>
   );

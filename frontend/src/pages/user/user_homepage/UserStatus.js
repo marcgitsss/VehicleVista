@@ -51,11 +51,11 @@ export default function UserStatus() {
   return (
     <div
       className="verifyPay"
-      style={{
-        backgroundImage: `url(${background})`,
-        backgroundSize: "100% 100%",
-        height: "100vh",
-      }}
+      // style={{
+      //   backgroundImage: `url(${background})`,
+      //   backgroundSize: "100% 100%",
+      //   height: "100vh",
+      // }}
     >
       <Container maxWidth="lg">
         <Grid container spacing={2}>

@@ -62,7 +62,7 @@ const UserHomepage = () => {
 
   return (
     <div>
-      <div className='homepage'>
+      <div className='homepage' style={{ paddingBottom: '50px' }}>
         <Header />
       </div>
 

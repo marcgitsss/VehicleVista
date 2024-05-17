@@ -18,14 +18,13 @@ import { useUser } from "../../../context/AuthProvider";
 import { jwtDecode } from "jwt-decode";
 
 export default function RegistrationForm1() {
-  const { token } = useUser();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [orcrFile, setORCRFile] = useState(null);
   const [licenseFile, setLicenseFile] = useState(null);
   const [loading, setLoading] = useState(false); // State for loader
   const [modalOpen, setModalOpen] = useState(false); // State for modal
-  const email = localStorage.getItem("email");
+  const token = localStorage.getItem("token");
 
   const [registrationData, setRegistrationData] = useState({
     surname: "",

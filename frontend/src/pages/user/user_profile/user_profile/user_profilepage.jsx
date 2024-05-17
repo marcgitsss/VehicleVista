@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import "./user_profilepage.css";
 import ChangePassword from "./ChangePassword/ChangePassword";
+// import ChangePassword from "../components/ChangePass/ChangePassword";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 const UserProfilePage = () => {
 
   // const username = "ludivicombalaterojr@gmail.com";
@@ -15,7 +17,8 @@ const UserProfilePage = () => {
   const [expiration, setExpiration] = useState([])
   const [vehicles, setVehicles] = useState([])
   const [showChangePassword, setShowChangePassword] = useState(false)
-  
+  const navigate = useNavigate();
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -24,62 +27,66 @@ const UserProfilePage = () => {
 
   const handleLogout = () => {
     //MAKE LOGOUT LOGIC
+    localStorage.setItem("token", "");
+    console.log(token)
+    navigate("/homepage");
   }
 
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/jwt/get-user', {
-                params: {
-                    username: username
-                }
-            });
-            setUser(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-        }
-
-        try {
-          const response = await axios.get('http://localhost:8080/expiration/get-expiration');
-          setExpiration(response.data);
-          console.log(response.data);
-        } catch (error) {
-            console.error('Error fetching expiration data:', error);
-        }
-
-        try {
-          const response = await axios.get('http://localhost:8080/vehicles/get-vehicle', {
-              params: {
-                  username: username
-              }
-          });
-          setVehicles(response.data);
-          console.log(response.data);
+      try {
+        const response = await axios.get('http://localhost:8080/jwt/get-user', {
+          params: {
+            username: username
+          }
+        });
+        setUser(response.data);
+        console.log(response.data);
       } catch (error) {
-          console.error('Error fetching vehicle data:', error);
+        console.error('Error fetching user data:', error);
+      }
+
+      try {
+        const response = await axios.get('http://localhost:8080/expiration/get-expiration');
+        setExpiration(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching expiration data:', error);
+      }
+
+      try {
+        const response = await axios.get('http://localhost:8080/vehicles/get-vehicle', {
+          params: {
+            username: username
+          }
+        });
+        setVehicles(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching vehicle data:', error);
       }
     };
-    
+
     fetchData();
 
     // Cleanup function to abort the fetch request if the component unmounts
-}, []); // Empty dependency array to run the effect only once on mount
+  }, []); // Empty dependency array to run the effect only once on mount
+
 
 
   return (
     <div>
-    
+
 
       {/* Main Content */}
-      
+
       <div className="user-profile-container">
-      <div className="logout-btn" style={{textAlign:'right', marginBottom:'1.5%', marginTop:'2%'}}>
-        <button 
-          onClick={() => setShowChangePassword(!showChangePassword)}>
+        <div className="logout-btn" style={{ textAlign: 'right', marginBottom: '1.5%', marginTop: '2%' }}>
+          <button
+            onClick={handleLogout}>
             LOGOUT
-        </button>
-      </div>
+          </button>
+        </div>
         <Box className="user-profile-outer">
           <Box
             className="user-profile-box user-profile-main"
@@ -94,7 +101,7 @@ const UserProfilePage = () => {
                   <label>Sticker No: {vehicles.stickerId}</label>
                 </div>
               </div>
-              <Typography color={"green"}>{user.isEnabled?"ACTIVE":"INACTIVE"}</Typography>
+              <Typography color={"green"}>{user.isEnabled ? "ACTIVE" : "INACTIVE"}</Typography>
             </div>
 
             <hr />
@@ -107,8 +114,8 @@ const UserProfilePage = () => {
               </div>
               <div className="user-profile-detail">
                 <label>Registration Type</label>
-                <span>{vehicles.isFourWheel?"4-Wheel Vehicle":"2-Wheel Vehicle"}</span>
-                <span>{vehicles.isParking?"Parking":"Pick-up/Drop-off"}</span>
+                <span>{vehicles.isFourWheel ? "4-Wheel Vehicle" : "2-Wheel Vehicle"}</span>
+                <span>{vehicles.isParking ? "Parking" : "Pick-up/Drop-off"}</span>
               </div>
               <div className="user-profile-detail">
                 <label>Vehicle Type</label>
@@ -140,20 +147,20 @@ const UserProfilePage = () => {
             <span>{user.address}</span>
           </Box>
           {
-            showChangePassword?
-            <ChangePassword setShowChangePassword={setShowChangePassword} />
-            :
-            <div className="user-profile-box user-profile-changepass" >
-              <Button 
-                sx = {{color: 'white', backgroundColor: 'green'}}
-                onClick={() => setShowChangePassword(true)}>Change Password</Button>
-            </div>
+            showChangePassword ?
+              <ChangePassword setShowChangePassword={setShowChangePassword} />
+              :
+              <div className="user-profile-box user-profile-changepass" >
+                <Button
+                  sx={{ color: 'white', backgroundColor: 'green' }}
+                  onClick={() => setShowChangePassword(true)}>Change Password</Button>
+              </div>
           }
 
         </Box>
       </div>
 
-    
+
     </div>
   );
 };

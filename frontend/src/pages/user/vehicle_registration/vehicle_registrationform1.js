@@ -140,12 +140,14 @@ export default function RegistrationForm() {
       const address = registrationData.address;
       const plateNo = registrationData.plateno;
       const color = registrationData.color;
-      const decodedtoken = jwtDecode(token, { header: true});
+      const decodedtoken = jwtDecode(token);
       const isFourWheel = registrationData.isFourWheel;
       const email = decodedtoken.sub;
       const isStaff = localStorage.getItem("isStaff");
       const stickerType = registrationData.stickerType;
       // Submit applicant registration data
+      console.log("email", email);
+      console.log("oten", decodedtoken);
       const res1 = await axios.post(
         "http://localhost:8080/applicants/register",
         {
