@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from '../../../components/Navbar/UserHeader'; // Corrected import path for Header
+import Header from '../../../components/Navbar/EmployeeHeader';
 import Footer from '../../../components/Navbar/UserFooter'; // Corrected import path for Footer
 import employeebackgroundImage from '../../../assets/SIABackground.png'; // Corrected import path for backgroundImage
 import '../../../components/Navbar/UserFooter.css'; // Corrected import path for Footer CSS
 import './employeehomepage.css';
-import EmployeeSidebar from '../../../components/EmployeeSidebar/employeeSidebar';
+import EmployeeSidebar from '../../../components/Navbar/EmployeeSidebar/employeeSidebar';
 import { Link } from 'react-router-dom';
 
 const EmployeeHomepage = () => {
@@ -12,11 +12,11 @@ const EmployeeHomepage = () => {
     return (
         <section>
             <Header />
-            <EmployeeSidebar />
+            {/* <EmployeeSidebar /> */}
             <div className='buttons-container'>
                 <button className='profileButton'>Profile</button>
                 <button className='dashboardButton'>Dashboard</button>
-                <Link to="/employee-featurepage"><button className='employeefeaturesButton'>Employee Features</button></Link>
+                <Link to="/orcr"><button className='employeefeaturesButton'>Employee Features</button></Link>
             </div>
 
             <div className='employeehomepage'>

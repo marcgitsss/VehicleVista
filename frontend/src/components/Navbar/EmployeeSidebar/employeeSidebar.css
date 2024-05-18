@@ -1,13 +1,13 @@
 .employee-sidebar {
   position: fixed;
-  top: 4.3rem;
+  top: 3.7rem;
   left: 0;
   height: 100%;
   width: clamp(10rem, 20vw, 12rem); /* Adjust the values as needed */
   background-color: rgba(255, 255, 255, 0.5);
   color: #000000;
   font-family: Arial, Helvetica, sans-serif;
-  z-index: 999; /* Adjust the value as needed */
+  /* z-index: 0; Adjust the value as needed */
 }
 
 .employee-sidebar-menu {
@@ -39,3 +39,17 @@
 .active {
   background-color: #f4c722a2;
 }
+
+/* Sidebar.css */
+
+/* Define button color for active item */
+.employee-sidebar-menu > .active {
+  background-color: #f4c722a2; /* Adjust the color as needed */
+}
+
+/* Apply hover effect to non-active items */
+.employee-sidebar-menu > li:not(.active):hover {
+  background-color: #f4c722a2; /* Adjust the color as needed */
+  transition: background-color 0.2s;
+}
+

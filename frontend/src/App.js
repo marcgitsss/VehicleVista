@@ -1,5 +1,6 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
 import "./App.css";
 import ChooseUserTypeModal from "./pages/user/vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal";
@@ -26,54 +27,132 @@ import RegistrationForm1 from "./pages/user/vehicle_registration/vehicle_registr
 import RegistrationForm from "./pages/user/vehicle_registration/vehicle_registrationform1";
 import UserProfilePage from "./pages/user/user_profile/user_profile/user_profilepage";
 import PrivateRoutes from "./Utils/PrivateRoutes";
+import axios from "axios";
+import EmployeeRoutes from "./Utils/EmployeeRoutes";
+import Profile from "./pages/employee/application/Profile"; // Import the Profile component
+import AccountExpiration from "./pages/Admin/AccountExpiration/AccountExpiration";
+import ApplicationList from "./pages/Admin/ApplicationList/ApplicationList";
+import Configuration from "./pages/Admin/Configuration/Configuration";
+import StickerPricing from "./pages/Admin/StickerPricing/StickerPricing";
+import UserManagement from "./pages/Admin/UserManagement/UserManagement";
+import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
+import "./pages/Admin/Admin.css";
+
 
 function App() {
-  return (
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/forgotpass" element={<ChangePass />} />
-          <Route path="/changepass" element={<ChangePassword />} />
+  const [isToken, setIsToken] = useState(false);
+  const token = localStorage.getItem('token');
+  const [decodedToken, setDecodedToken] = useState();
+  const [email, setEmail] = useState();
+  const [exp, setExp] = useState();
+  const [role, setRole] = useState();
 
-          {/* //Changes */}
+  //decoding token
+  useEffect(() => {
+    const decodeJwt = async () => {
+      if (token) {
+        try {
+          const response = await axios.post('http://localhost:8080/jwt/decode', null, {
+            params: { token: token },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          const decoded = response.data.payload;
+          setEmail(response.data.payload.sub);
+          setExp(decoded.exp);
+          setDecodedToken(response.data.payload);
+        } catch (error) {
+          console.error('Error decoding token:', error);
+        }
+      }
+    };
+
+    decodeJwt();
+  }, [token]);
+// get role
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (email) {
+          const response = await axios.post('http://localhost:8080/jwt/getrole', null, {
+            params: {
+              email: email
+            }
+          });
+          setRole(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching role data:', error);
+      }
+    };
+    fetchData();
+  }, [email]);
+
+  useEffect(() => {
+    setIsToken(!!token);
+  }, [token]);
+
+  const handleLogout = () => {
+    // Clear the token from local storage
+    localStorage.removeItem('token');
+    // Redirect to the login page
+    window.location.href = '/login';
+  };
+
+  const getDefaultRoute = () => {
+    if (isToken) {
+      if (role === "USER") {
+        return <Navigate to="/homepage" />;
+      } else if (role === "EMPLOYEE") {
+        return <Navigate to="/employee-homepage" />;
+      }
+    }
+    return <LandingPage />;
+  };
+
+  return (
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={!isToken ? <LoginPage /> : getDefaultRoute()} />
+        <Route path="/forgotpass" element={!isToken ? <ChangePass /> : getDefaultRoute()} />
+        <Route path="/changepass" element={!isToken ? <ChangePassword /> : getDefaultRoute()} />
+        <Route path="/" element={getDefaultRoute()} />
+        <Route path="/employee-login" element={!isToken ? <EmployeePage /> : getDefaultRoute()} />
+        <Route path="/logout" element={<Profile redirectPath="/login" />} /> {/* Add logout route */}
+        <Route path="/employee-logout" element={<Profile redirectPath="/employee-login" />} /> {/* Add employee logout route */}
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/configuration" element={<Configuration />} />
+          <Route path="/account-expiration" element={<AccountExpiration />} />
+          <Route path="/application-list" element={<ApplicationList />} />
+          <Route path="/sticker-pricing" element={<StickerPricing />} />
+          <Route path="/user-management" element={<UserManagement />} />
+
+        {/* Employee Routes */}
+        <Route element={<EmployeeRoutes />}>
+          <Route path="/employee-homepage" element={<EmployeeHomepage />} />
+          <Route path="/employee-featurepage" element={<EmployeeFeaturePage />} />
+          <Route path="/employee-profile" element={<Profile />} />
           <Route path="/orcr" element={<OrCr />} />
           <Route path="/appchoice" element={<AppChoice />} />
           <Route path="/approve" element={<ApproveApplication />} />
           <Route path="/proofpay" element={<ProofPayment />} />
           <Route path="/selectorcr" element={<SelectOrCr />} />
           <Route path="/verifypay" element={<VerifyPayment />} />
-          <Route path="/employee-login" element={<EmployeePage />} />
-          <Route path="/employee-homepage" element={<EmployeeHomepage />} />
-          <Route path="/employee-featurepage" element={<EmployeeFeaturePage />} />
-          {/* //Changes */}
+        </Route>
 
-          <Route path="/" exact element={<LandingPage />} />
-
-          {/* <Route path="/registration" element={<RegistrationForm />} />
-          <Route path="/choose-user-type" element={<ChooseUserTypeModal />} /> */}
-          
-          {/* <Route path="/forgotpass" element={<ChangePass />} />
-          <Route path="/changepass" element={<ChangePassword />} /> */}
-          
-          {/* <Route path="/applist" element={<UserStatus />} />
-          <Route path="/invoice" element={<Invoice />} /> */}
-          {/* <Route path="/homepage" element={<UserHomepage />} /> */}
-          {/* <Route path="/profile" element={<UserProfilePage />} /> */}
-
-          {/* Private Routes  */}
-          <Route element={<PrivateRoutes/>} >
-              <Route element={<UserHomepage />} path='/homepage' exact/>
-              <Route element={<RegistrationForm />} path='/registration' exact/>
-              <Route element={<ChooseUserTypeModal />} path='/choose-user-type' exact/>
-              <Route element={<ChangePass />} path='/forgotpass' exact/>
-              <Route element={<ChangePassword />} path='/applist' exact/>
-              <Route element={<Invoice />} path='/invoice' exact/>
-              <Route element={<UserProfilePage />} path='/profile' exact/>
-
-            </Route>
-        </Routes>
-      
-
+        {/* Private User Routes */}
+        <Route element={<PrivateRoutes />}>
+          <Route path="/homepage" element={<UserHomepage />} />
+          <Route path="/registration" element={<RegistrationForm />} />
+          <Route path="/choose-user-type" element={<ChooseUserTypeModal />} />
+          <Route path="/applist" element={<UserStatus />} />
+          <Route path="/invoice" element={<Invoice />} />
+          <Route path="/profile" element={<UserProfilePage />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

@@ -52,7 +52,7 @@ function EmployeeSidebar({ activeMenuItem }) {
                   </li>
                   <li className={activeMenuItem === "Profile" ? "active" : ""}>
                     <PersonIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                    <div onClick={() => { if (location.pathname !== "/verifypay") window.location.href = "/verifypay"; }}>
+                    <div onClick={() => { if (location.pathname !== "/employee-profile") window.location.href = "/employee-profile"; }}>
                       Verify Proof <br /> of Payment
                     </div>
                   </li>
@@ -60,6 +60,12 @@ function EmployeeSidebar({ activeMenuItem }) {
                     <PaymentIcon sx={{ color: "black", marginRight: "1.5rem" }} />
                     <div onClick={() => { if (location.pathname !== "/approve") window.location.href = "/approve"; }}>
                       Approve <br /> Applications
+                    </div>
+                  </li>
+                  <li className={activeMenuItem === "Payment" ? "active" : ""}>
+                    <PaymentIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                    <div onClick={() => { if (location.pathname !== "/approve") window.location.href = "/approve"; }}>
+                      Profile
                     </div>
                   </li>
                 </ul>
@@ -72,8 +78,9 @@ function EmployeeSidebar({ activeMenuItem }) {
               <ul className="employee-sidebar-menu">
                 <li className={activeMenuItem === "Home" ? "active" : ""}>
                   <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                  <div onClick={() => { if (location.pathname !== "/employee-homepage") window.location.href = "/employee-homepage"; }}>
-                      Homepage
+                  <div onClick={() => {
+                     if (location.pathname !== "/employee-homepage") window.location.href = "/employee-homepage"; }}>
+                      Dashboard
                     </div>
                 </li>
                 <li className={activeMenuItem === "Registration" ? "active" : ""}>
@@ -92,6 +99,12 @@ function EmployeeSidebar({ activeMenuItem }) {
                   <PaymentIcon sx={{ color: "black", marginRight: "1.5rem" }} />
                   <div onClick={() => { if (location.pathname !== "/approve") window.location.href = "/approve"; }}>
                     Approve <br /> Applications
+                  </div>
+                </li>
+                <li className={activeMenuItem === "Profile" ? "active" : ""}>
+                  <PersonIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                  <div onClick={() => { if (location.pathname !== "/orcr") window.location.href = "/orcr"; }}>
+                    Profile
                   </div>
                 </li>
               </ul>

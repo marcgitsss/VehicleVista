@@ -10,15 +10,36 @@ const UserProfilePage = () => {
 
   // const username = "ludivicombalaterojr@gmail.com";
   const token = localStorage.getItem("token");
-  const decodedToken = jwtDecode(token);
-  const username = decodedToken.sub;
-
+  const [decodedToken, setDecodedToken] = useState();
+ const [username,setUserName] = useState();
+  const navigate = useNavigate();
   const [user, setUser] = useState([])
   const [expiration, setExpiration] = useState([])
   const [vehicles, setVehicles] = useState([])
   const [showChangePassword, setShowChangePassword] = useState(false)
-  const navigate = useNavigate();
 
+  //Decoding Token
+  useEffect(() => {
+    const decodeJwt = async () => {
+      if (token) {
+        try {
+          const response = await axios.post('http://localhost:8080/jwt/decode', null, {
+            params: { token: token },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          const decoded = response.data.payload;
+          setUserName(decoded.sub);
+          setDecodedToken(decoded);
+        } catch (error) {
+          console.error('Error decoding token:', error);
+        }
+      }
+    };
+
+    decodeJwt();
+  }, [token]);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -27,8 +48,8 @@ const UserProfilePage = () => {
 
   const handleLogout = () => {
     //MAKE LOGOUT LOGIC
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
+    localStorage.setItem("token", "");
+    console.log(token)
     navigate("/");
   }
 
@@ -72,11 +93,11 @@ const UserProfilePage = () => {
   return (
     <div >
       {/* Main Content */}
-
-      <div className="user-profile-container" style={{ margin: '0 auto', paddingBottom: 'clamp(5rem, 5vh, 3rem)', paddingTop: 'clamp(5rem, 5vh, 3rem)',  width: 'clamp(10rem, 100vw, 40rem)' }}>
-        <div className="logout-btn" style={{ textAlign: 'right', marginBottom: '1.5%', marginTop: '2%' }}>
-          <button
-            onClick={handleLogout}>
+      
+      <div className="user-profile-container">
+      <div className="logout-btn" style={{textAlign:'right', marginBottom:'1.5%', marginTop:'2%'}}>
+        <button 
+          onClick={handleLogout}>
             LOGOUT
           </button>
         </div>

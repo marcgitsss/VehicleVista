@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from '../../../components/Navbar/UserHeader'; // Corrected import path for Header
+import Header from '../../../components/Navbar/EmployeeHeader'; 
 import Footer from '../../../components/Navbar/UserFooter'; // Corrected import path for Footer
 import employeebackgroundImage from '../../../assets/SIABackground.png'; // Corrected import path for backgroundImage
 import '../../../components/Navbar/UserFooter.css'; // Corrected import path for Footer CSS
 import './employee_featurespage.css';
-import EmployeeSidebar from '../../../components/EmployeeSidebar/employeeSidebar';
+import EmployeeSidebar from '../../../components/Navbar/EmployeeSidebar/employeeSidebar';
 import { Link } from 'react-router-dom';
 
 const EmployeeFeaturePage = () => {
