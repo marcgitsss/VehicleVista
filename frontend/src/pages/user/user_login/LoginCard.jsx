@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './logincard.css';
 import axios from 'axios';
-import { Typography } from '@mui/material';
+import { Typography, CircularProgress } from '@mui/material';
 // import { Link } from 'react-router-dom';
 import VerifyEmailModal from './components/VerifyEmail/VerifyEmailModal';
 import { useUser } from '../../../context/AuthProvider';
@@ -21,11 +21,15 @@ export default function LoginCard() {
   const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false); // State for controlling modal
   const [shouldCloseModal, setShouldCloseModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); 
+  const token = localStorage.getItem('token');
+  const [decodedToken, setDecodedToken] = useState();
+  const [email, setEmail] = useState();
+  const [exp, setExp] = useState();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
 
   const handleCloseModal = () => {
     setForgotPasswordModalOpen(false);
@@ -43,10 +47,12 @@ export default function LoginCard() {
     e.preventDefault();
   
     // Check if any field is empty
-    if (!loginData.username || !loginData.password) {
+    if (!loginData.username && !loginData.password) {
       setSnackbarMessage('Please fill in all fields.');
       setSnackbarOpen(true);
       return;
+    }else{
+      setSnackbarOpen(false);
     }
   
     // Validate email format
@@ -54,16 +60,16 @@ export default function LoginCard() {
       setSnackbarMessage('Please enter a valid email address.');
       setSnackbarOpen(true);
       return;
+    }else{
+      setSnackbarOpen(false);
     }
   
-    console.log(loginData);
-  
+    setLoading(true);
     axios.post('http://localhost:8080/jwt/login', {
       username: loginData.username,
       password: loginData.password
     })
     .then((response) => {
-      console.log(response.data);
       if (response.data) {
         // Show Snackbar for successful login
         setSnackbarMessage('Successfully Logged in');
@@ -77,15 +83,19 @@ export default function LoginCard() {
 
       } else {
         // Show Snackbar for unsuccessful login
-        setSnackbarMessage('Wrong username or password');
+        setSnackbarMessage('Wrong email or password');
         setSnackbarOpen(true);
       }
     })
     .catch((error) => {
       console.error('Error during login:', error);
       // Show Snackbar for error during login
-      setSnackbarMessage('An error occurred during login. Please try again later.');
+      setSnackbarMessage('Wrong email or password');
       setSnackbarOpen(true);
+    })
+    .finally(() => {
+      // Set loading to false after the request is complete
+      setLoading(false);
     });
   };
   
@@ -108,6 +118,32 @@ export default function LoginCard() {
       setLoginData({ username: '', password: '' });
     }
   }, [forgotPasswordModalOpen]);
+
+   //decoding token
+ useEffect(() => {
+  const decodeJwt = async () => {
+    if (token) {
+      try {
+        const response = await axios.post('http://localhost:8080/jwt/decode', null, {
+          params: { token: token },
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const decoded = response.data.payload;
+        setEmail(response.data.payload.sub);
+        setExp(decoded.exp);
+        setDecodedToken(response.data.payload);
+        localStorage.setItem('email', email);
+        
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+  };
+
+  decodeJwt();
+}, [token]);
 
   return (
     <div className="login-container">
@@ -156,7 +192,7 @@ export default function LoginCard() {
           </div>
 
           <button type="submit" className="submit">
-            Sign in
+          {loading ? <CircularProgress size={24} /> : 'Sign in'}
           </button>
           <p className="signup-link">
             No account? <a href="/">Sign up</a>

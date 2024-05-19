@@ -24,7 +24,8 @@ const style = {
 export default function GuidelinesModal(props) {
   const [checked, setChecked] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [messageOpen, setMessageOpen] = useState(false);
   const isStaff = localStorage.getItem("isStaff");
   // const isStaff = false
   const [twoWheelPU, setTwoWheelPU] = useState()
@@ -34,35 +35,33 @@ export default function GuidelinesModal(props) {
   const [schoolYear, setSchoolYear] = useState()
   const navigate = useNavigate();
 
-useEffect(() => {
-  const fetchData = async () => {
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-          const response = await axios.get('http://localhost:8080/prices/get-prices');
-          console.log(response.data);
+        const response = await axios.get('http://localhost:8080/prices/get-prices');
 
-          if(isStaff) {
-            setTwoWheelPU(response.data.staffTwoWheelPickup)
-            setFourWheelPU(response.data.staffFourWheelPickup)
-            setTwoWheelPK(response.data.staffTwoWheelPickup)
-            setFourWheelPK(response.data.staffFourWheelPickup)
-          } else{
-            setTwoWheelPU(response.data.studentTwoWheelPickup)
-            setFourWheelPU(response.data.studentFourWheelPickup)
-            setTwoWheelPK(response.data.studentTwoWheelParking)
-            setFourWheelPK(response.data.studentFourWheelParking)
-          }
+        if (isStaff) {
+          setTwoWheelPU(response.data.staffTwoWheelPickup)
+          setFourWheelPU(response.data.staffFourWheelPickup)
+          setTwoWheelPK(response.data.staffTwoWheelPickup)
+          setFourWheelPK(response.data.staffFourWheelPickup)
+        } else {
+          setTwoWheelPU(response.data.studentTwoWheelPickup)
+          setFourWheelPU(response.data.studentFourWheelPickup)
+          setTwoWheelPK(response.data.studentTwoWheelParking)
+          setFourWheelPK(response.data.studentFourWheelParking)
+        }
       } catch (error) {
-          console.error('Error fetching data: ', error);
+        console.error('Error fetching data: ', error);
       }
 
       try {
         const response = await axios.get('http://localhost:8080/expiration/get-expiration');
-        console.log(response.data);
 
         setSchoolYear(response.data.currentSchoolYear);
 
       } catch (error) {
-          console.error('Error fetching data: ', error);
+        console.error('Error fetching data: ', error);
       }
 
       // try {
@@ -74,11 +73,14 @@ useEffect(() => {
       // } catch (error) {
       //     console.error('Error fetching data: ', error);
       // }
+    };
+    fetchData();
+  }, []); // The empty array [] means this effect will only run once
+
+
+  const handleCloseModal = () => {
+    props.toggleModal(false);
   };
-  fetchData();
-}, []); // The empty array [] means this effect will only run once
-
-
 
   const handleCheckboxChange = (event) => {
     setChecked((x) => !x);
@@ -94,7 +96,11 @@ useEffect(() => {
       navigate("/registration");
 
     } else {
-      setSnackbarOpen(true);
+      setMessageOpen(true);
+      setTimeout(() => {
+        setMessageOpen(false);
+      }, 3000);
+      setSnackbarMessage("Please agree that you have read and understood the guidelines before submitting");
     }
   };
 
@@ -106,6 +112,7 @@ useEffect(() => {
     <div>
       <Modal
         open={props.isModalOpen ?? false}
+        onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -210,12 +217,12 @@ useEffect(() => {
                 </div>
                 <div className="indent">
                   <b>3.5. The vehicle owner/driver agrees to conform to the following:</b>
-                  <br/>
-                  <span style={{marginLeft:'5%'}}>3.5.1. All policies governing the operation of motor vehicles</span><br/>
-                  <span style={{marginLeft:'5%'}}>3.5.2. All traffic rules and policies</span><br/>
-                  <span style={{marginLeft:'5%'}}>3.5.3. 10km/hr speed limit within the campus area</span><br/>
-                  <span style={{marginLeft:'5%'}}>3.5.4. Strict adherence to road signs</span><br/>
-                  <span style={{marginLeft:'5%'}}>3.5.5. No blowing of horns and no obstruction while inside the campus</span>
+                  <br />
+                  <span style={{ marginLeft: '5%' }}>3.5.1. All policies governing the operation of motor vehicles</span><br />
+                  <span style={{ marginLeft: '5%' }}>3.5.2. All traffic rules and policies</span><br />
+                  <span style={{ marginLeft: '5%' }}>3.5.3. 10km/hr speed limit within the campus area</span><br />
+                  <span style={{ marginLeft: '5%' }}>3.5.4. Strict adherence to road signs</span><br />
+                  <span style={{ marginLeft: '5%' }}>3.5.5. No blowing of horns and no obstruction while inside the campus</span>
                 </div>
                 <div className="indent">
                   3.6. The vehicle owner will be responsible forthe cost of replacing lost, stolen, or destroyed stickers which is the same cost for obtaining
@@ -224,7 +231,7 @@ useEffect(() => {
                 <div className="indent">
                   3.7. Parking is on a first-come-first-serve basis in designated parking areas: Full parking will be
                   enforced, and drivers must wait with their vehicles until a parking space becomes available. Unattended vehicles are not permitted in full parking
-                  areas.<br/>
+                  areas.<br />
                   <b>Overnight Parking is Prohibited</b>
                 </div>
                 <div className="indent">
@@ -233,27 +240,27 @@ useEffect(() => {
                 </div>
                 <div className="indent">
                   3.9. The vehicle owner/driver understands that any violations of the conditions set forth by the University may result in the termination of this
-                  previlege.<br/>
+                  previlege.<br />
                   <b>Due to limited space, the University can ONLY acommodate ({200}) parking spaces for students, and
-                  ({270}) parking spaces for personnel.</b>
+                    ({270}) parking spaces for personnel.</b>
                 </div>
                 <li className="guidelines-text-block">
                   <b> Transfer of Ownership of Vehicle: </b> if vehicle ownership is transferred to another person, the registered owner must inform the SSD prior
                   to the transfer. This ensures that the removal of the sticker and the appropriate update of the records of the office.
                 </li>
                 <li className="guidelines-text-block">
-                  <b>Liability: </b> The University shall not assume liability for any loss or damage incurred by vehicles or items 
+                  <b>Liability: </b> The University shall not assume liability for any loss or damage incurred by vehicles or items
                   stolen from them. Additionally, the University shall not be held responsible for any loss or damage caused to vehicles and their
-                  belongings while on University premises due to weather or other natural causes or conditions. This provision also ensures to non-vehicular 
+                  belongings while on University premises due to weather or other natural causes or conditions. This provision also ensures to non-vehicular
                   modes of transportation such as bicycles or E-bikes.
-                  <br/>
-                  <br/>
+                  <br />
+                  <br />
                 </li>
-                
+
               </li>
             </ol>
             <div className="guidelines-footer">
-              <FormGroup>
+              <FormGroup style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <FormControlLabel
                   required
                   control={
@@ -264,15 +271,22 @@ useEffect(() => {
                   }
                   label="I have read and understood the Guidelines"
                 />
-                <Button variant="contained" onClick={handleSubmit}>
+                <div>
+                {messageOpen && (
+                  <div className="snackbar" style={{ color: "red", padding: ".5rem", display: "flex", alignItems: "center", justifyContent: "center"  }}>{snackbarMessage}</div>
+                )}
+                </div>
+                
+                <Button variant="contained" onClick={handleSubmit}  sx={{ minWidth: "25rem" }}>
                   Submit
                 </Button>
               </FormGroup>
             </div>
+            
           </div>
         </Box>
       </Modal>
-      <Snackbar
+      {/* <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
@@ -281,7 +295,7 @@ useEffect(() => {
           vertical: "top",
           horizontal: "center",
         }}
-      />
+      /> */}
     </div>
   );
 }

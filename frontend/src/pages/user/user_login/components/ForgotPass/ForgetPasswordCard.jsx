@@ -3,6 +3,7 @@ import './../PassCard.css';
 import axios from 'axios';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import { CircularProgress } from '@mui/material';
 
 export default function ForgetPasswordCard() {
   const location = useLocation();
@@ -20,6 +21,7 @@ export default function ForgetPasswordCard() {
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [disableButton, setDisableButton] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false); 
 
 
   const toggleNewPasswordVisibility = () => {
@@ -34,9 +36,6 @@ export default function ForgetPasswordCard() {
     setTimeout(() => {
       setShowSuccess(true);
     }, 500);
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 1500);
        setTimeout(() => {
             navigate('/login');
         }, 2000);
@@ -58,6 +57,8 @@ export default function ForgetPasswordCard() {
         setSnackbarMessage("Password must be at least 8 characters long"); // Set error message
         setSnackbarOpen(true);
         return;
+      }else{
+        setSnackbarOpen(false);
       }
 
       var passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[A-Z]).*$/;
@@ -68,6 +69,8 @@ export default function ForgetPasswordCard() {
         ); // Set error message
         setSnackbarOpen(true);
         return;
+      }else{
+        setSnackbarOpen(false);
       }
       //New
 
@@ -88,8 +91,8 @@ export default function ForgetPasswordCard() {
 
         if (disableButton) {
           setDisableButton(false);
-          setSnackbarMessage('New passwords match.');
-          setSnackbarOpen(true);
+          // setSnackbarMessage('New passwords match.');
+          // setSnackbarOpen(true);
         }
       }
     }
@@ -105,7 +108,7 @@ export default function ForgetPasswordCard() {
       return;
     }
 
-
+    setLoading(true);
     axios.post('http://localhost:8080/user/forgot-password', null, {
       params: {
         username: email,
@@ -137,9 +140,15 @@ export default function ForgetPasswordCard() {
         // Show Snackbar for error during password change
         setSnackbarMessage('An error occurred while changing password. Please try again later.');
         setSnackbarOpen(true);
+      })
+      .finally(() => {
+        // Set loading to false after the request is complete
+        
+        setTimeout(() => {
+          setLoading(false);
+      }, 2000);
       });
-
-  };
+    };
 
   return (
     <div className="change-password-container">
@@ -197,7 +206,7 @@ export default function ForgetPasswordCard() {
             <div className="snackbar">Password reset successfully!</div>
           )}
           <button type="submit" className="submit" disabled={disableButton} onClick={handleShowSuccess} style={{ cursor: disableButton ? 'not-allowed' : 'pointer' }}>
-            Save Changes
+            {loading ? <CircularProgress size={24} /> : 'Save Changes'}
           </button>
         </form>
       </div>

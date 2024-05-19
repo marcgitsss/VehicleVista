@@ -38,8 +38,8 @@ export default function ModalComponent({ open, onClose }) {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Successful Registration
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          <Typography id="modal-modal-description" sx={{ mt: 2, textAlign: 'justify', wordSpacing: '0rem' }}>
+            Your vehicle registration request has been submitted successfully. Please wait for approval before proceeding to payment.
           </Typography>
           <Button onClick={handleProceed}>Proceed</Button> {/* Call handleProceed on button click */}
         </Box>

@@ -65,7 +65,6 @@ export default function RegistrationForm() {
   });
 
   useEffect(() => {
-    console.log("token",token);
   }, []);
 
   useEffect(() => {
@@ -140,7 +139,7 @@ export default function RegistrationForm() {
       const address = registrationData.address;
       const plateNo = registrationData.plateno;
       const color = registrationData.color;
-      const decodedtoken = jwtDecode(token, { header: true});
+      const decodedtoken = jwtDecode(token);
       const isFourWheel = registrationData.isFourWheel;
       const email = decodedtoken.sub;
       const isStaff = localStorage.getItem("isStaff");
@@ -338,9 +337,6 @@ export default function RegistrationForm() {
     }));
   };
 
-  // console.log("orcr", orcrFile);
-  // console.log("license", licenseFile);
-  // console.log("email", email);
   return (
     <Container maxWidth="lg">
       <Header/>

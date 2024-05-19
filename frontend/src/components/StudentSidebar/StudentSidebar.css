@@ -9,6 +9,7 @@
     background-color: rgba(255, 255, 255, 0.5);
     color: #000000;
     font-family: Arial, Helvetica, sans-serif;
+    z-index: 1;
   }
   
   .student-sidebar-menu {

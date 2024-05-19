@@ -61,20 +61,20 @@ const UserHomepage = () => {
   };
 
   return (
-    <div>
-      <div className='homepage'>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div className='homepage' style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1 }}>
         <Header />
       </div>
 
       <div className='student_sidebar'>
-        <StudentSidebar activeMenuItem={activeMenuItem} onMenuItemClick={handleMenuItemClick} />
+        <StudentSidebar activeMenuItem={activeMenuItem} onMenuItemClick={handleMenuItemClick} style={{ position: 'fixed', top: 0, left: 0, zIndex: 0 }}/>
       </div>
       <img src={backgroundImage} alt="backgroundImage" className='backgroundImage' />
-      <div className="userHomepageContainer">
+      <div className="userHomepageContainer" >
         {renderComponent()}
       </div>
 
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
+      <div style={{zIndex: 1 }}>
         <Footer />
       </div>
     </div>
