@@ -27,9 +27,9 @@ const UserProfilePage = () => {
 
   const handleLogout = () => {
     //MAKE LOGOUT LOGIC
-    localStorage.setItem("token", "");
-    console.log(token)
-    navigate("/homepage");
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    navigate("/");
   }
 
   useEffect(() => {
@@ -41,7 +41,6 @@ const UserProfilePage = () => {
           }
         });
         setUser(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -49,7 +48,6 @@ const UserProfilePage = () => {
       try {
         const response = await axios.get('http://localhost:8080/expiration/get-expiration');
         setExpiration(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching expiration data:', error);
       }
@@ -61,7 +59,6 @@ const UserProfilePage = () => {
           }
         });
         setVehicles(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching vehicle data:', error);
       }
@@ -72,15 +69,11 @@ const UserProfilePage = () => {
     // Cleanup function to abort the fetch request if the component unmounts
   }, []); // Empty dependency array to run the effect only once on mount
 
-
-
   return (
-    <div>
-
-
+    <div >
       {/* Main Content */}
 
-      <div className="user-profile-container">
+      <div className="user-profile-container" style={{ margin: '0 auto', paddingBottom: 'clamp(5rem, 5vh, 3rem)', paddingTop: 'clamp(5rem, 5vh, 3rem)',  width: 'clamp(10rem, 100vw, 40rem)' }}>
         <div className="logout-btn" style={{ textAlign: 'right', marginBottom: '1.5%', marginTop: '2%' }}>
           <button
             onClick={handleLogout}>
@@ -98,10 +91,10 @@ const UserProfilePage = () => {
                 <div className="user-profile-name">
                   <label>Name</label>
                   <span>{user.fname} {user.mname} {user.lname}</span>
-                  <label>Sticker No: {vehicles.stickerId}</label>
+                  <label>Sticker No: {vehicles.stickerId==0?'N/A':vehicles.stickerId}</label>
                 </div>
               </div>
-              <Typography color={"green"}>{user.isEnabled ? "ACTIVE" : "INACTIVE"}</Typography>
+              <Typography color={user.isEnabled?"green": "red"}>{user.isEnabled ? "ACTIVE" : "INACTIVE"}</Typography>
             </div>
 
             <hr />
@@ -109,13 +102,21 @@ const UserProfilePage = () => {
             <div className="user-profile-details">
               <div className="user-profile-detail">
                 <label>Expiration Date</label>
-                <span>{formatDate(user.expirationDate)}</span>
-                <span>S.Y. {expiration.currentSchoolYear}</span>
+                <span>{user.expirationDate ?? '' ? formatDate(user.expirationDate) : ''}</span>
+<span>S.Y. {expiration.currentSchoolYear ?? ''}</span>
               </div>
               <div className="user-profile-detail">
                 <label>Registration Type</label>
-                <span>{vehicles.isFourWheel ? "4-Wheel Vehicle" : "2-Wheel Vehicle"}</span>
-                <span>{vehicles.isParking ? "Parking" : "Pick-up/Drop-off"}</span>
+                <span>
+  {vehicles?.isFourWheel !== null && vehicles?.isFourWheel !== undefined 
+    ? (vehicles.isFourWheel ? "4-Wheel Vehicle" : "2-Wheel Vehicle") 
+    : ''}
+</span>
+<span>
+  {vehicles?.isParking !== null && vehicles?.isParking !== undefined 
+    ? (vehicles.isParking ? "Parking" : "Pick-up/Drop-off") 
+    : ''}
+</span>
               </div>
               <div className="user-profile-detail">
                 <label>Vehicle Type</label>

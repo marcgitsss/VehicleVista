@@ -65,7 +65,6 @@ export default function RegistrationForm() {
   });
 
   useEffect(() => {
-    console.log("token",token);
   }, []);
 
   useEffect(() => {
@@ -146,8 +145,6 @@ export default function RegistrationForm() {
       const isStaff = localStorage.getItem("isStaff");
       const stickerType = registrationData.stickerType;
       // Submit applicant registration data
-      console.log("email", email);
-      console.log("oten", decodedtoken);
       const res1 = await axios.post(
         "http://localhost:8080/applicants/register",
         {
@@ -340,9 +337,6 @@ export default function RegistrationForm() {
     }));
   };
 
-  // console.log("orcr", orcrFile);
-  // console.log("license", licenseFile);
-  // console.log("email", email);
   return (
     <Container maxWidth="lg">
       <Header/>

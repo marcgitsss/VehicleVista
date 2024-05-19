@@ -61,6 +61,7 @@
   font-weight: 500;
   width: 100px; 
   border-radius: 0.5rem;
+  cursor: pointer;
   text-transform: uppercase;
 }
 

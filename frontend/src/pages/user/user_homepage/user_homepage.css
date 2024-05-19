@@ -20,22 +20,29 @@ body {
   z-index: -1; /* Move the background image behind other content */
 }
 
-body {
-  overflow-x: hidden;
-}
 
 .userHomepageContainer {
-  position: absolute;
+  /* position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
   max-width: 40vw;
-  text-align: center;
+  text-align: center; */
   /* max-height: calc(100vh - 20rem); /* Adjust 120px according to your header and footer heights */
   /* overflow-y: auto;  */
 }
 
+.userHomepageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 40vw;
+  margin: auto; /* Center horizontally */
+  text-align: center;
+}
 .userHomepagebuttonContainer {
   top: 50%;
   left: 50%;
@@ -48,7 +55,7 @@ body {
 .statusButton {
   background-color: #5F191E;
   margin-right: 20px;
-  width: 70%;
+  width: 25rem;
   border-radius: 10px;
   color: white;
   font-size: 20px;
@@ -111,6 +118,7 @@ body {
 .page-container .student_sidebar{
   height: 100%;
   position: absolute;
+  z-index: 0;
 }
 .registerButton {
   background-color: #efefef;
@@ -136,12 +144,12 @@ body {
 
 
 @media (max-width: 1024px) {
-  .userHomepageContainer {
+  /* .userHomepageContainer {
     transform: translate(-35%, -50%);
     width: 100vw;
     max-width: 100w;
     text-align: center;
-  }
+  } */
 
   .statusButton {
     width: 90vw;

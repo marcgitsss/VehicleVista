@@ -32,7 +32,6 @@ export default function UserStatus() {
         );
         if (response.data) {
           setIsApplicant(true);
-          console.log('asdasdasd',response.data);
           setApplications(response.data);
           setDate(response.data.datesubmitted);
         }
@@ -46,8 +45,6 @@ export default function UserStatus() {
   const dateObject = new Date(date);
   const formattedDate = `${dateObject.getMonth() + 1}/${dateObject.getDate()}/${dateObject.getFullYear().toString().slice(-2)}`;
 
-  console.log("Email:", email);
-  console.log("Token: ",token)
   return (
     <div
       className="verifyPay"
@@ -57,7 +54,7 @@ export default function UserStatus() {
       //   height: "100vh",
       // }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" >
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <br />
@@ -101,6 +98,7 @@ export default function UserStatus() {
                     padding: "clamp(0.125rem, 1vw, 0.5rem)",
                     backgroundColor: "#8A252C",
                     borderRadius: "0.5rem 0 0 0",
+                    zIndex: 0,
                   }}
                 >
                   <Typography
@@ -126,7 +124,7 @@ export default function UserStatus() {
                   width: "clamp(20rem, 70vw, 70rem)",
                 }}
               >
-                <Table aria-label="simple table">
+                <Table aria-label="simple table"  >
                   <TableHead>
                     <TableRow>
                       <TableCell align="center" sx={{ fontWeight: "bold" }}>

@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete'; // Import DeleteIcon from Material-UI
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -14,8 +15,8 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 'clamp(20rem, 90%, 50rem)',
-    height: 'clamp(15rem, 90%, 30rem)',
+    width: 'clamp(20rem, 90%, 45rem)',
+    height: 'clamp(15rem, 90%, 25rem)',
     bgcolor: 'background.paper',
     boxShadow: 0,
     p: '2rem',
@@ -24,12 +25,17 @@ const style = {
 export default function ProofMod() {
     const [open, setOpen] = React.useState(false);
     const [submitted, setSubmitted] = React.useState(false); // State to track submission status
-    const { token } = useUser();
+    // const { token } = useUser();
     const navigate = useNavigate();
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [name, setName] = React.useState(null);
     const [submitProofOfPayment, setSubmitProofOfPayment] = React.useState();
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    const decodedToken = jwtDecode(token);
+    const username = decodedToken.sub;
+    const [loading, setLoading] = React.useState(false);
 
     const handleUploadClick = () => {
         document.getElementById('fileInput').click();
@@ -47,6 +53,9 @@ export default function ProofMod() {
     const handleSubmitClick = async () => {
         console.log(submitProofOfPayment);
 
+        
+        console.log('token: ', token);
+        console.log('email: ', username);
         const decodedToken = jwtDecode(token,{header: true});
         const user = decodedToken.sub;
         setName(`${user}:proof_of_payment`);
@@ -62,11 +71,44 @@ export default function ProofMod() {
 
         const formData = new FormData();
         formData.append('image', submitProofOfPayment);
-        formData.append('email', user);
-
+        formData.append('email', username);
+        
         const payres = await axios.post(`http://localhost:8080/applicants/uploadPay`, formData, config2);
         if (payres.data) {
             setSubmitted(true); // Set submitted state to true
+        } else {
+            alert("Failed to Submit Proof of Payment");
+        }
+    };
+
+    const handleSubmitClickNew = async () => {
+        console.log(submitProofOfPayment);
+        setLoading(true);
+        
+        console.log('token: ', token);
+        console.log('email: ', username);
+        const decodedToken = jwtDecode(token,{header: true});
+        const user = decodedToken.sub;
+        setName(`${user}:proof_of_payment`);
+
+        const config2 = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        console.log(name);
+
+        const formData = new FormData();
+        formData.append('image', submitProofOfPayment);
+        formData.append('email', username);
+        
+        const payres = await axios.post(`http://localhost:8080/applicants/uploadPay`, formData, config2);
+        
+        if (payres.data) {
+            setSubmitted(true); // Set submitted state to true
+            setLoading(false);
         } else {
             alert("Failed to Submit Proof of Payment");
         }
@@ -97,11 +139,11 @@ export default function ProofMod() {
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "2rem" }}>
                             <Typography variant="body1" style={{ marginBottom: "1rem" }}>Uploaded File: {submitProofOfPayment.name}</Typography>
                             <Button onClick={handleDeleteClick} startIcon={<DeleteIcon />} style={{ backgroundColor: '#8A252C', borderRadius: '1.25rem', color: 'white', fontWeight: 'bold', width: 'clamp(12rem, 90%, 19.1rem)', height: '3.7rem', fontSize: '2rem', textTransform: 'none' }}>Delete</Button>
-                            <Button onClick={handleSubmitClick} style={{ marginTop: "1rem", backgroundColor: '#8A252C', borderRadius: '1.25rem', color: 'white', fontWeight: 'bold', width: 'clamp(12rem, 90%, 19.1rem)', height: '3.7rem', fontSize: '2rem', textTransform: 'none' }}>Submit</Button>
+                            <Button onClick={handleSubmitClickNew} style={{ marginTop: "1rem", backgroundColor: '#8A252C', borderRadius: '1.25rem', color: 'white', fontWeight: 'bold', width: 'clamp(12rem, 90%, 19.1rem)', height: '3.7rem', fontSize: '2rem', textTransform: 'none' }}>{loading ? <CircularProgress size={30} /> : 'Submit'}</Button>
                         </div>
                     ) : (
                         <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
-                            <div style={{ marginBottom: "1.875rem", marginTop: "11.25rem" }}>
+                            <div style={{ marginBottom: "1.875rem", marginTop: "11.25rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
                                 <input
                                     type="file"
                                     id="fileInput"
@@ -111,15 +153,15 @@ export default function ProofMod() {
                                 />
                                 <Button
                                     onClick={handleUploadClick}
-                                    style={{ backgroundColor: '#D9D9D9', borderRadius: '1.25rem', color: 'black', fontWeight: 'bold', width: 'clamp(12rem, 90%, 19.1rem)', height: '3.7rem', fontSize: '2rem', textTransform: 'none' }}
+                                    style={{ backgroundColor: '#D9D9D9', borderRadius: '1.25rem', color: 'black', fontWeight: 'bold', width: 'clamp(8rem, 90%, 15.1rem)', height: '3.7rem', fontSize: '1.125rem', textTransform: 'none' }}
                                 >
                                     Upload
                                 </Button>
                             </div>
-                            <div>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                                 <Button
                                     onClick={handleSubmitClick}
-                                    style={{ backgroundColor: '#8A252C', borderRadius: '1.25rem', color: 'white', fontWeight: 'bold', width: 'clamp(12rem, 90%, 19.1rem)', height: '3.7rem', fontSize: '2rem', textTransform: 'none' }}>Submit</Button>
+                                    style={{ backgroundColor: '#8A252C', borderRadius: '1.25rem', color: 'white', fontWeight: 'bold', width: 'clamp(8rem, 90%, 15.1rem)', height: '3.7rem', fontSize: '1.125rem', textTransform: 'none' }}>Submit</Button>
                             </div>
                         </div>
                     )}
