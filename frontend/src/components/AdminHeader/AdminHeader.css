@@ -12,11 +12,6 @@
   z-index: 99;
 }
 
-body {
-  margin: 0;
-  background-color: #efefef;
-}
-
 .admin-logo {
   padding-left: 1rem;
 }

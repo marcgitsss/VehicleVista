@@ -7,6 +7,7 @@ import Configuration from "./pages/Admin/Configuration/Configuration";
 import StickerPricing from "./pages/Admin/StickerPricing/StickerPricing";
 import UserManagement from "./pages/Admin/UserManagement/UserManagement";
 import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
+import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/admin-dashboard" />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/configuration" element={<Configuration />} />
         <Route path="/account-expiration" element={<AccountExpiration />} />
         <Route path="/application-list" element={<ApplicationList />} />
