@@ -1,0 +1,21 @@
+.navbar {
+    width: 100%;
+    display: flex; /* Use flexbox */
+    align-items: center; /* Vertically center items */
+    justify-content: space-between; /* Spread items evenly */
+    background-color: #fff;
+    padding-top: 1%;
+    padding-left: 1%;
+}
+
+.navbar ul {
+    margin: 0;
+    padding-top: 0;
+    list-style: none;
+    display: flex;
+}
+
+.navbar ul li {
+    margin-right: 1%;
+}
+
