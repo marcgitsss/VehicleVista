@@ -6,6 +6,7 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SanJuanPunchMan.SystemInteg.entity.ApplicantEntity;
+import com.SanJuanPunchMan.SystemInteg.entity.Response;
 import com.SanJuanPunchMan.SystemInteg.service.ApplicantService;
+
+import jakarta.mail.MessagingException;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/applicants")
 public class ApplicantController {
 	@Autowired
@@ -30,7 +35,7 @@ public class ApplicantController {
     public String insertApplicant(@RequestBody ApplicantEntity applicant) {
         return applicantService.registerApplicant(applicant);
     }
-	
+	@CrossOrigin
     @PostMapping("/uploadReq")
     public String uploadRequirementsApplicant(@RequestParam String email, @RequestParam("orcrimg") MultipartFile orcrimg, @RequestParam("licenseimg") MultipartFile licenseimg) throws IOException, GeneralSecurityException, IllegalStateException, java.io.IOException {
     	File tmpor = File.createTempFile("temp", null);
@@ -76,19 +81,24 @@ public class ApplicantController {
     public ApplicantEntity getApplicantById(@PathVariable String applicantid) {
         return applicantService.getApplicantById(applicantid);
     }
-    
+    @CrossOrigin
     @PutMapping("/updatePreApprovedStatus/{applicantid}")
     public String updatePreApprovedStatus(@PathVariable String applicantid) {
         return applicantService.updateApplicant(applicantid);
     }
-    
+    @CrossOrigin
     @PutMapping("/updatePaidStatus/{applicantid}")
     public String updatePaidStatus(@PathVariable String applicantid) {
         return applicantService.updatePaidApplicant(applicantid);
     }
-    
+    @CrossOrigin
     @PutMapping("/approveApplicant/{applicantid}")
-    public String approveApplicant(@PathVariable String applicantid) {
+    public String approveApplicant(@PathVariable String applicantid) throws Exception {
         return applicantService.approveApplicant(applicantid);
+    }
+    @CrossOrigin
+    @PostMapping("/rejectApplicant")
+    private Response rejectApplication(@RequestParam String email, @RequestParam String message) throws MessagingException {
+    	return applicantService.rejectApplication(email, message);
     }
 }

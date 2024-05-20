@@ -1,5 +1,7 @@
 package com.SanJuanPunchMan.SystemInteg.service;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +10,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.SanJuanPunchMan.SystemInteg.beans.DecodedJwt;
 import com.SanJuanPunchMan.SystemInteg.entity.AdminEntity;
 import com.SanJuanPunchMan.SystemInteg.entity.AuthenticationResponse;
 import com.SanJuanPunchMan.SystemInteg.entity.EmployeeEntity;
 import com.SanJuanPunchMan.SystemInteg.entity.Role;
 import com.SanJuanPunchMan.SystemInteg.entity.UserEntity;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.firestore.DocumentReference;
@@ -173,6 +179,22 @@ public class AuthenticationService {
             }
         } catch (ApiException | InterruptedException | ExecutionException e) {
             throw new RuntimeException("Failed to authenticate user");
+        }
+    }
+    
+    public DecodedJwt decodeJwt(String token) {
+        String[] chunks = token.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        String header = new String(decoder.decode(chunks[0]));
+        String payload = new String(decoder.decode(chunks[1]));
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode payloadJson = mapper.readTree(payload);
+            return new DecodedJwt(payloadJson);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse JWT", e);
         }
     }
 }

@@ -22,10 +22,5 @@ public class OTPCreateResponse {
 	public void setUpdatedTime(Date date) {
 		this.updatedTime = date;
 	}
-	public OTPCreateResponse() {
-		super();
-	}
-	
-	
 	
 }
