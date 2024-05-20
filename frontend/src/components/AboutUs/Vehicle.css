@@ -1,0 +1,53 @@
+.vehicle-section {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Set to viewport height to keep it contained */
+  overflow: hidden;
+}
+
+.background {
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1; /* Background image layer */
+}
+
+.backgroundImageAU {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the entire section */
+}
+
+.text {
+  position: relative;
+  z-index: 2; /* Ensure this content appears above the background image */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px; /* Adjust as needed */
+  max-width: 80%; /* Adjust as needed */
+  text-align: center;
+}
+
+.heading {
+  font-size: 50px; /* Adjust the font size as needed */
+  margin-bottom: 10px; /* Adjust the margin as needed */
+  text-align: justify;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  color: #5d1a1f;
+}
+
+.description {
+  font-family: Arial, sans-serif;
+  font-size: 20px; /* Adjust the font size as needed */
+  text-align: justify; /* Justify the text */
+  max-width: 80%; /* Adjust the width to fit within the section */
+}
+
+body {
+  overflow-x: hidden;
+}
