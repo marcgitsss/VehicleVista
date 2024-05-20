@@ -1,11 +1,9 @@
 /* Sidebar.css */
 .admin-sidebar {
-  /* float: right; */
   position: fixed;
   top: 4.3rem;
   left: 0;
   height: 100%;
-  /* width: 12rem; */
   background-color: #ffffff;
   color: #000000;
   font-family: Arial, Helvetica, sans-serif;
@@ -17,7 +15,7 @@
   margin: 3rem 0;
 }
 
-.admin-sidebar-menu > li {
+.admin-sidebar-menu>li {
   display: flex;
   align-items: center;
   padding: 1rem;
@@ -28,20 +26,11 @@
   cursor: pointer;
 }
 
-.admin-sidebar-menu > li:hover:not(.active) {
+.admin-sidebar-menu>li:hover:not(.active) {
   transition: .2s;
-  background-color: #f4c722a2;
-}
-
-.admin-sidebar-menu > li:not(:hover) {
-  transition: .5s;
+  background-color: #f4c72241;
 }
 
 .active {
   background-color: #f4c722a2;
-}
-
-/* Remove hover effect for active item */
-.admin-sidebar-menu > .active:hover {
-  background-color: #f4c722a2; 
 }

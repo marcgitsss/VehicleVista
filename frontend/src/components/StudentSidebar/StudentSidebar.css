@@ -1,0 +1,48 @@
+/* Sidebar.css */
+.student-sidebar {
+    /* float: right; */
+    position: fixed;
+    top: 4.3rem;
+    left: 0;
+    height: 100%;
+    /* width: 12rem; */
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    z-index: 1;
+  }
+  
+  .student-sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 3rem 0;
+  }
+  
+  .student-sidebar-menu > li {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    padding-left: 1.7rem;
+    padding-right: 1.8rem;
+    color: #000000;
+    margin: 0;
+    cursor: pointer;
+  }
+  
+  .student-sidebar-menu > li:hover:not(.active) {
+    transition: .2s;
+    background-color: #f4c722a2;
+  }
+  
+  .student-sidebar-menu > li:not(:hover) {
+    transition: .5s;
+  }
+  
+  .active {
+    background-color: #f4c722a2;
+  }
+  
+  /* Remove hover effect for active item */
+  .student-sidebar-menu > .active:hover {
+    background-color: #f4c722a2; 
+  }
