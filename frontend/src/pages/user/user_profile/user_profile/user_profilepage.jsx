@@ -48,7 +48,7 @@ const UserProfilePage = () => {
 
   const handleLogout = () => {
     //MAKE LOGOUT LOGIC
-    localStorage.setItem("token", "");
+    localStorage.removeItem("token");
     console.log(token)
     navigate("/");
   }
@@ -56,7 +56,7 @@ const UserProfilePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/jwt/get-user', {
+        const response = await axios.get('http://localhost:8080/jwt/get-user',null, {
           params: {
             username: username
           }
@@ -90,6 +90,7 @@ const UserProfilePage = () => {
     // Cleanup function to abort the fetch request if the component unmounts
   }, []); // Empty dependency array to run the effect only once on mount
 
+  console.log("username",username);
   return (
     <div >
       {/* Main Content */}

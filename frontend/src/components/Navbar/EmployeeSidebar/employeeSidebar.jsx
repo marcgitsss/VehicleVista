@@ -40,7 +40,7 @@ function EmployeeSidebar({ activeMenuItem }) {
                 <ul className="employee-sidebar-menu">
                   <li className={activeMenuItem === "Home" ? "active" : ""}>
                     <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                    <div onClick={() => { if (location.pathname !== "/employee-homepage") window.location.href = "/employee-homepage"; }}>
+                    <div onClick={() => { if (location.pathname !== "/employee-dashboard") window.location.href = "/employee-dashboard"; }}>
                       Homepage
                     </div>
                   </li>
@@ -64,7 +64,7 @@ function EmployeeSidebar({ activeMenuItem }) {
                   </li>
                   <li className={activeMenuItem === "Payment" ? "active" : ""}>
                     <PaymentIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                    <div onClick={() => { if (location.pathname !== "/approve") window.location.href = "/approve"; }}>
+                    <div onClick={() => { if (location.pathname !== "/employee-profile") window.location.href = "/employee-profile"; }}>
                       Profile
                     </div>
                   </li>
@@ -79,7 +79,7 @@ function EmployeeSidebar({ activeMenuItem }) {
                 <li className={activeMenuItem === "Home" ? "active" : ""}>
                   <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} />
                   <div onClick={() => {
-                     if (location.pathname !== "/employee-homepage") window.location.href = "/employee-homepage"; }}>
+                     if (location.pathname !== "/employee-dashboard") window.location.href = "/employee-dashboard"; }}>
                       Dashboard
                     </div>
                 </li>
@@ -103,7 +103,7 @@ function EmployeeSidebar({ activeMenuItem }) {
                 </li>
                 <li className={activeMenuItem === "Profile" ? "active" : ""}>
                   <PersonIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                  <div onClick={() => { if (location.pathname !== "/orcr") window.location.href = "/orcr"; }}>
+                  <div onClick={() => { if (location.pathname !== "/employee-profile") window.location.href = "/employee-profile"; }}>
                     Profile
                   </div>
                 </li>

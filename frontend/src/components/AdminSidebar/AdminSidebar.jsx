@@ -12,7 +12,7 @@ function AdminSidebar() {
     <div className="admin-sidebar">
       <ul className="admin-sidebar-menu">
         <li className={currentPath === "/admin-dashboard" ? "active" : ""}>
-          <Link to="/">
+          <Link to="/admin-dashboard">
             <DashboardOutlinedIcon
               sx={{ color: "black", marginRight: "1.5rem" }}
             />{" "}

@@ -8,6 +8,7 @@ const EmployeeRoutes = () => {
   const [email, setEmail] = useState(null);
   const [role, setRole] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+  const [expired, setExpired] = useState(false);
 
   useEffect(() => {
     const decodeJwt = async () => {
@@ -22,6 +23,8 @@ const EmployeeRoutes = () => {
           const decoded = response.data.payload;
           setEmail(decoded.sub);
           setDecodedToken(decoded);
+          setExpired(decoded.exp < Date.now() / 1000);
+          setIsAuthenticated(true);
         } catch (error) {
           console.error('Error decoding token:', error);
           setIsAuthenticated(false);

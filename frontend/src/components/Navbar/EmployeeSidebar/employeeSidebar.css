@@ -1,6 +1,6 @@
 .employee-sidebar {
   position: fixed;
-  top: 3.7rem;
+  top: 2rem;
   left: 0;
   height: 100%;
   width: clamp(10rem, 20vw, 12rem); /* Adjust the values as needed */
