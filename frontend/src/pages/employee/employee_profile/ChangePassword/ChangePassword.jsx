@@ -1,82 +1,86 @@
+import React, { useEffect, useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-import { useState } from "react";
-import './ChangePassword.css';
+import "./ChangePassword.css";
 
-/**
- * Validation:
- * 1. new password, confirm new password must match
- * 2. must 1 uppercase and 1 special character
- * 3. must not have spaces
- */
-const ChangePassword = () => {
-
+const ChangePassword = ({ setShowChangePassword }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [email, setEmail] = useState('');
 
-  // FOR TESTING CHANGE EMAIL LANG
-  // const username  = "jessreygarrido22@gmail.com"; 
   const token = localStorage.getItem('token');
-  const decodedToken = jwtDecode(token , {header:true});
-  const username = decodedToken.sub;
+
+  useEffect(() => {
+    if (token) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.post(
+            "http://localhost:8080/jwt/decode",null,
+            {
+              params: { token:token }
+            }
+          );
+          setEmail(response.data.payload.sub);
+          console.log("email: ", response.data.payload.sub);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+      fetchData();
+    } else {
+      console.error("Token is missing or invalid.");
+    }
+  }, [token]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    console.log({
-      currentPassword, newPassword, confirmNewPassword
-    })
-
     const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
     const uppercaseRegex = /[A-Z]/;
     const numberRegex = /\d/;
-    const whitespaceRegex = /\s/
+    const whitespaceRegex = /\s/;
 
     if (!specialCharRegex.test(newPassword)) {
-      setSnackbarOpen(true)
-      setSnackbarMessage("New Password Must have atleast 1 Special Character")
-      return
+      setSnackbarOpen(true);
+      setSnackbarMessage("New Password must have at least 1 special character");
+      return;
     }
 
     if (!uppercaseRegex.test(newPassword)) {
-      setSnackbarOpen(true)
-      setSnackbarMessage("New Password Must have atleast 1 Uppercase Character")
-      return
+      setSnackbarOpen(true);
+      setSnackbarMessage("New Password must have at least 1 uppercase character");
+      return;
     }
 
     if (!numberRegex.test(newPassword)) {
-      setSnackbarOpen(true)
-      setSnackbarMessage("New Password Must have atleast 1 Number")
-      return
+      setSnackbarOpen(true);
+      setSnackbarMessage("New Password must have at least 1 number");
+      return;
     }
 
-    if (whitespaceRegex.test(newPassword)){
-      setSnackbarOpen(true)
-      setSnackbarMessage("New Password must not have spaces")
-      return
+    if (whitespaceRegex.test(newPassword)) {
+      setSnackbarOpen(true);
+      setSnackbarMessage("New Password must not have spaces");
+      return;
     }
-
 
     if (newPassword !== confirmNewPassword) {
-      setSnackbarOpen(true)
-      setSnackbarMessage("New Password Do not match")
-      return
+      setSnackbarOpen(true);
+      setSnackbarMessage("New Passwords do not match");
+      return;
     }
-    const data = {
-      username: username,
-      oldPassword: currentPassword,
-      newPassword: newPassword,
-      confirmPassword: confirmNewPassword,
-    };
 
     try {
-      const res = await axios.post('http://localhost:8080/jwt/change-password', data);
+      const res = await axios.post('http://localhost:8080/jwt/change-password', {
+        username: email,
+        oldPassword: currentPassword,
+        newPassword: newPassword,
+        confirmPassword: confirmNewPassword,
+      });
       console.log(res.data);
       setSnackbarOpen(true);
       setSnackbarMessage("Password changed successfully!");
@@ -85,48 +89,46 @@ const ChangePassword = () => {
       setSnackbarOpen(true);
       setSnackbarMessage("There was an error changing the password.");
     }
-
-    
-
-    setSnackbarOpen(false);
-
-    
-
-  }
-
-  const resetButton = () => {
-    setCurrentPassword('')
-    setNewPassword('')
-    setConfirmNewPassword('')
-  }
+  };
 
   return (
     <>
       <Box className="user-profile-box" component="form" onSubmit={onSubmit}>
         <div className="up-changepass">
-
           <h2>Change Password</h2>
-          <TextField id="outlined-basic" label="Current Password" variant="outlined" required
+          <TextField
+            id="outlined-basic"
+            label="Current Password"
+            variant="outlined"
+            required
+            type="password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
           />
-          <TextField id="outlined-basic" label="New Password" variant="outlined" required
+          <TextField
+            id="outlined-basic"
+            label="New Password"
+            variant="outlined"
+            required
+            type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
           />
-          <TextField id="outlined-basic" label="Confirm New Password" variant="outlined" required
+          <TextField
+            id="outlined-basic"
+            label="Confirm New Password"
+            variant="outlined"
+            required
+            type="password"
             value={confirmNewPassword}
             onChange={(e) => setConfirmNewPassword(e.target.value)}
           />
-
           <div className="up-button-container">
-            <Button variant="text" onClick={resetButton}>Cancel</Button>
+            <Button variant="text" onClick={() => setShowChangePassword(false)}>Cancel</Button>
             <Button variant="contained" type="submit">Save</Button>
           </div>
         </div>
       </Box>
-
-      {/* Snackbar for displaying validation errors */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
@@ -135,7 +137,7 @@ const ChangePassword = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
     </>
-  )
-}
+  );
+};
 
 export default ChangePassword;

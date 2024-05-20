@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import backgroundImage from "../../../assets/HP_Background.jpg";
 // import CarparkImg from "../../../assets/Carpark.png";
 
@@ -10,8 +10,56 @@ import Footer from "../../../components/Navbar/UserFooter";
 import "./EmployeeDashboard.css";
 import LineChart from "./LineChart";
 import VehicleCountPieChart from "./CountPieChart";
+import axios from "axios";
 
 const EmployeeDashboard = () => {
+
+  const [vehicles, setVehicles] = useState([]);
+  const [vehicleCount, setVehicleCount] = useState(0);
+  const [isFourWheel, setIsFourWheel] = useState(0);
+  const [isTwoWheel, setIsTwoWheel] = useState(0);
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    // Define an async function to fetch data
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/vehicles/all');
+        setVehicles(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+      try {
+        const response = await axios.get('http://localhost:8080/jwt/getallusers');
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData(); // Call the fetch function
+  }, []); 
+
+  useEffect(() => {
+    // Loop through the vehicles and count the number of four-wheel and two-wheel vehicles
+    if (vehicles.length > 0) {
+      let fourWheelCount = 0;
+      let twoWheelCount = 0;
+
+      vehicles.forEach(vehicle => {
+        if (vehicle.isFourWheel) {
+          fourWheelCount += 1;
+        } else {
+          twoWheelCount += 1;
+        }
+      });
+
+      setVehicleCount(vehicles.length);
+      setIsFourWheel(fourWheelCount);
+      setIsTwoWheel(twoWheelCount);
+    }
+  }, [vehicles]);
+
   return (
     <>
       {/* Components */}
@@ -29,30 +77,30 @@ const EmployeeDashboard = () => {
         <div className="ed-row-1">
           <div className="ed-item-1">
             <span>Total Vehicles:</span>
-            <span>110</span>
+            <span>{vehicleCount}</span>
           </div>
           <div className="ed-item-2">
             <span>Total 4-Wheelers:</span>
-            <span>30</span>
+            <span>{isFourWheel}</span>
           </div>
           <div className="ed-item-3">
             <span>Total 2-Wheelers:</span>
-            <span>80</span>
+            <span>{isTwoWheel}</span>
           </div>
-          <div className="ed-item-4">
+          {/* <div className="ed-item-4">
             <span>Daily Limit:</span>
             <span>1200</span>
-          </div>
+          </div> */}
         </div>
 
         <div className="ed-row-2">
           <div className="ed-item-5">
             <span>Count of Vehicles</span>
-            <VehicleCountPieChart />
+            <VehicleCountPieChart twoWheelCount={isTwoWheel} fourWheelCount={isFourWheel}/>
           </div>
           <div className="ed-item-6">
             <span>Graph</span>
-            <LineChart />
+            <LineChart users={users}/>
           </div>
         </div>
 

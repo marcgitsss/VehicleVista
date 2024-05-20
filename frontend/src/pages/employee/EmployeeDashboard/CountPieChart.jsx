@@ -1,36 +1,37 @@
+import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
-import { useState } from "react";
 
 Chart.register(CategoryScale);
 
-const sampleData = [
-  {
-    id: 1,
-    label: "2-wheels",
-    count: 121,
-  },
-  {
-    id: 3,
-    label: "4-wheels",
-    count: 40,
-  },
-];
-
-function VehicleCountPieChart() {
+function VehicleCountPieChart({ twoWheelCount, fourWheelCount }) {
   const [chartData, setChartData] = useState({
     labels: ["2-wheels", "4-wheels"],
-
     datasets: [
       {
         label: "Vehicle count",
-        data: sampleData.map((x) => x.count),
+        data: [0, 0], // Initialize with default values
         backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
         hoverOffset: 4,
       },
     ],
   });
+
+  useEffect(() => {
+    setChartData({
+      labels: ["2-wheels", "4-wheels"],
+      datasets: [
+        {
+          label: "Vehicle count",
+          data: [twoWheelCount, fourWheelCount], // Update data with prop values
+          backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
+          hoverOffset: 4,
+        },
+      ],
+    });
+  }, [twoWheelCount, fourWheelCount]); // Run effect when props change
+
   return (
     <Pie
       data={chartData}
@@ -41,7 +42,7 @@ function VehicleCountPieChart() {
             align: "middle",
           },
         },
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       }}
       style={{ margin: "0 auto", height: '80%', marginTop: '1.5em' }}
     />

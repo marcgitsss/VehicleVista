@@ -1,0 +1,51 @@
+.center {
+  text-align: center;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.indent {
+  margin-left: 1em;
+}
+
+.guidelines-header {
+  text-align: center;
+  font-weight: bold;
+}
+
+.guidelines-body {
+  margin-top: 2em;
+  background: #FEFFD6;
+  padding-top: .2em;
+}
+
+.guidelines-text-block {
+  margin-top: 1em;
+}
+
+.guidelines-text-block table {
+  text-align: center;
+  margin: .5em auto;
+  background: #FDFFA8;
+}
+.guidelines-text-block td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: .4em;
+}
+
+.guidelines-note {
+  text-align: center;
+}
+
+.guidelines-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.guidelines-footer button {
+  background: #8A252C;
+  color: white;
+}

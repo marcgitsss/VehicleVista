@@ -45,7 +45,6 @@ export default function VerifyPayment() {
     const handleRowClick = (email) => {
         // Update state or props to store the selected email
         setSelectedEmail(email);
-
         // Navigate to 'selectorcr' page
         navigate('/proofpay', { state: { email } });
     };

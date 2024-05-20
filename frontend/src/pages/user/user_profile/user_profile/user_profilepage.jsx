@@ -11,7 +11,7 @@ const UserProfilePage = () => {
   // const username = "ludivicombalaterojr@gmail.com";
   const token = localStorage.getItem("token");
   const [decodedToken, setDecodedToken] = useState();
- const [username,setUserName] = useState();
+  const [username,setUserName] = useState();
   const navigate = useNavigate();
   const [user, setUser] = useState([])
   const [expiration, setExpiration] = useState([])
@@ -32,6 +32,7 @@ const UserProfilePage = () => {
           const decoded = response.data.payload;
           setUserName(decoded.sub);
           setDecodedToken(decoded);
+          console.log("Username!!", decoded.sub);
         } catch (error) {
           console.error('Error decoding token:', error);
         }
@@ -56,7 +57,7 @@ const UserProfilePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/jwt/get-user',null, {
+        const response = await axios.get('http://localhost:8080/jwt/get-user', {
           params: {
             username: username
           }
@@ -88,9 +89,8 @@ const UserProfilePage = () => {
     fetchData();
 
     // Cleanup function to abort the fetch request if the component unmounts
-  }, []); // Empty dependency array to run the effect only once on mount
+  }, [username]); // Empty dependency array to run the effect only once on mount
 
-  console.log("username",username);
   return (
     <div >
       {/* Main Content */}
@@ -182,7 +182,6 @@ const UserProfilePage = () => {
 
         </Box>
       </div>
-
 
     </div>
   );

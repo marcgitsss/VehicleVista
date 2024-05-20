@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const EmployeeProfilePage = () => {
   const token = localStorage.getItem("token");
-  const username = 'sanjuanirishleigh09@gmail.com'
+  const [username, setUsername] = useState("");
   const [employee, setEmployee] = useState([]);
   const [expiration, setExpiration] = useState([]);
   const [vehicles, setVehicles] = useState([]);
@@ -34,19 +34,22 @@ const EmployeeProfilePage = () => {
     setIsLogoutModalOpen(false);
   };
 
+
+
+  // console.log("token", token);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/jwt/get-employee",
+        const response = await axios.post(
+          "http://localhost:8080/jwt/decode", null,
           {
             params: {
-              username: username,
+              token: token
             },
           }
         );
-        setEmployee(response.data);
-        console.log("response", response);
+        setUsername(response.data.payload.sub);
+        
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -61,25 +64,34 @@ const EmployeeProfilePage = () => {
         console.error("Error fetching expiration data:", error);
       }
 
+    };
+
+    fetchData();
+
+  }, []);
+
+  useEffect(() => {
+    console.log("username", username);
+    const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/vehicles/get-vehicle",
+          "http://localhost:8080/jwt/get-employee",
           {
             params: {
               username: username,
             },
           }
         );
-        setVehicles(response.data);
-        console.log(response.data);
+        setEmployee(response.data);
+        console.log("employee", response.data);
       } catch (error) {
-        console.error("Error fetching vehicle data:", error);
+        // console.error("Error fetching user data:", error);
       }
     };
 
     fetchData();
 
-  }, []);
+  }, [username]);
 
   return (
     <div>
@@ -97,7 +109,7 @@ const EmployeeProfilePage = () => {
                 <Avatar sx={{ bgcolor: "purple" }}>S</Avatar>
                 <div className="employee-profile-name">
                   <label>Name</label>
-                  <Typography>NAME HERE</Typography>
+                  <Typography>{employee.fname} {employee.mname} {employee.lname}</Typography>
                 </div>
               </div>
             </div>
@@ -108,7 +120,7 @@ const EmployeeProfilePage = () => {
             sx={{ boxShadow: 3 }}
           >
             <label>Email</label>
-            <span>{employee.email}</span>
+            <span>{employee.username}</span>
           </Box>
 
           {showChangePassword ? (
