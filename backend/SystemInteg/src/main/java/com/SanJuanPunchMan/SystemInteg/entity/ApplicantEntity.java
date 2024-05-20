@@ -22,6 +22,7 @@ public class ApplicantEntity {
 	private String plateNo;
 	private String color;
 	private Boolean isFourWheel;
+	private Boolean isParking;
 	
 	private String orcrimg;	//file path sa orcr img
 	private String licenseimg;
@@ -204,5 +205,13 @@ public class ApplicantEntity {
 
 	public void setIsStaff(Boolean isStaff) {
 		this.isStaff = isStaff;
+	}
+
+	public Boolean getIsParking() {
+		return isParking;
+	}
+
+	public void setIsParking(Boolean isParking) {
+		this.isParking = isParking;
 	}
 }

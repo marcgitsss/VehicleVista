@@ -28,12 +28,11 @@ public class UserEntity implements UserDetails {
 		private Date datePaid;
 		private Boolean isEnabled;
 		
-		//
+		private Date expirationDate;
+
 		private Boolean isPaid;
 		private Boolean isVerified;
 		private Boolean isApproved;
-		
-		private Date expirationDate;
 		
 		private Role role;
 		

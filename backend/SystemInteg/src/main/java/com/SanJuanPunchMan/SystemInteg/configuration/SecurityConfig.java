@@ -42,17 +42,23 @@ public class SecurityConfig {
 		SecurityFilterChain sc = http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/jwt/login**","/jwt/register**",
-                        		"/register/generateOtp/**","/register/verifyOtp/**",
-                        		"/jwt/admin-register**", "/jwt/admin-login**",
-                        		"/jwt/employee-register**", "/jwt/employee-login**", "/jwt/change-password**",
-//                        		TO Delete
-                        		"registration/create-registration**"
-//                        		"/photo/gdrive-upload**", "/photo/gdrive-view**" 
-                        		,"/otp**"
-                        		,"/change-password/**", "/applicants/**"
-                        		,"/user/**"
-                        		)
+                		 req->req.requestMatchers("/jwt/login**","/jwt/register**",
+                         		"/register/generateOtp/**","/register/verifyOtp/**",
+                         		"/jwt/admin-register**", "/jwt/admin-login**",
+                         		"/jwt/employee-register**", "/jwt/employee-login**", "/jwt/change-password**",
+                         		"/forgot-password/generate-otp**", "/forgot-password/verify-otp**"
+                         
+//                         		TO Delete
+                         		,"registration/create-registration**",
+                         		"vehicles/**"
+//                         		"/photo/gdrive-upload**", "/photo/gdrive-view**" 
+                         		,"/otp**"
+                         		,"/change-password/**", "/applicants/**"
+                         		,"/user/**"
+                         		,"/dashboard/data**", "/prices/**"
+                         		,"/jwt/**"
+                         		,"/expiration/**"
+                         		)
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
