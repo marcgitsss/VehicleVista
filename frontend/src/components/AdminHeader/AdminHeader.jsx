@@ -4,9 +4,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Avatar, Typography, IconButton, Tooltip, Menu, Box, MenuItem } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout';
 import CITLogo from '../../assets/cit-logo 1.png'
-
+import { useNavigate } from 'react-router-dom';
 const settings = ['Profile', 'Settings'];
 export default function AdminHeader() {
+  const navigate = useNavigate();
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -14,6 +15,12 @@ export default function AdminHeader() {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        // window.location.reload();
+        navigate('/admin-login');
+    }
   return (
     <>
     <div className="admin-header">
@@ -32,7 +39,7 @@ export default function AdminHeader() {
                 <KeyboardArrowDownIcon  sx ={{ color: "black" }}/>
               </IconButton>
             </Tooltip>
-              <IconButton sx={{ ml: '2rem' }} >
+              <IconButton sx={{ ml: '2rem' }} onClick={handleLogout} >
                 <LogoutIcon sx ={{ color: "black" }}/>
               </IconButton>
             <Menu
@@ -57,6 +64,7 @@ export default function AdminHeader() {
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+
             </Menu>
           </Box>
         </div>
