@@ -44,6 +44,8 @@ export default function Invoice({ open, handleClose }) {
     const [date, setDate] = useState();
     const decondedToken = jwtDecode(token);
     const email = decondedToken.sub;
+    const [prices, setPrices] = useState();
+    const [description, setDescription] = useState('');
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -76,6 +78,49 @@ const formattedOneWeekFromNow = formatDate(oneWeekFromNow);
         fetchData();
       }, []);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            
+            try {
+                const response = await axios.get('http://localhost:8080/prices/get-prices');
+                console.log('Prices',response.data);
+                if(applications.isStaff && applications.vehicleType && applications.isParking){
+                    setPrices(response.data.staffFourWheelParking)
+                    setDescription("4-Wheel Parking Sticker")
+                } else if(applications.isStaff && applications.vehicleType && applications.isParking === false){
+                    setPrices(response.data.staffFourWheelPickup)
+                    setDescription("4-Wheel Pickup Sticker")
+                } else if(applications.isStaff && applications.vehicleType === false && applications.isParking){
+                    setPrices(response.data.staffTwoWheelParking)
+                    setDescription("2-Wheel Parking Sticker")
+                } else if(applications.isStaff && applications.vehicleType === false && applications.isParking===false){
+                    setPrices(response.data.staffTwoWheelPickup)
+                    setDescription("2-Wheel Pickup Sticker")
+                }
+                
+                else if(applications.isStaff === false && applications.vehicleType && applications.isParking){
+                    setPrices(response.data.studentFourWheelParking)
+                    setDescription("4-Wheel Parking Sticker")
+                } else if(applications.isStaff === false && applications.vehicleType && applications.isParking === false){
+                    setPrices(response.data.studentFourWheelPickup)
+                    setDescription("4-Wheel Pickup Sticker")
+                } else if(applications.isStaff ===false && applications.vehicleType === false && applications.isParking){
+                    setPrices(response.data.studentTwoWheelParking)
+                    setDescription("2-Wheel Parking Sticker")
+                } else if(applications.isStaff === false && applications.vehicleType === false && applications.isParking===false){
+                    setPrices(response.data.studentTwoWheelPickup)
+                    setDescription("2-Wheel Pickup Sticker")
+                }
+                
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        };
+        
+        
+        fetchData();
+      }, [applications]); // Empty dependency array means this effect will only run once
+    
 
     return (
         <div>
@@ -126,9 +171,9 @@ const formattedOneWeekFromNow = formatDate(oneWeekFromNow);
                                     <TableBody >
                                         <TableRow   >
                                             <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{applications.isFourWheel ? "4-Wheel Sticker" : "2-Wheel Sticker"}</TableCell>
-                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{applications.isFourWheel ? applications.isParking ? "PHP2000.00" : "PHP400.00" : applications.isParking ? "PHP750.00" : "PHP200.00"}</TableCell>
+                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{prices}</TableCell>
                                             <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>1</TableCell>
-                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{applications.isFourWheel ? applications.isParking ? "PHP2000.00" : "PHP400.00" : applications.isParking ? "PHP750.00" : "PHP200.00"}</TableCell>
+                                            <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{prices}</TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -173,7 +218,7 @@ const formattedOneWeekFromNow = formatDate(oneWeekFromNow);
                                         <TableRow >
                                             <TableCell align="left" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontWeight: 'bold', fontSize: "1.125rem" }}>Total</TableCell>
                                             <TableCell align="center" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem' }}></TableCell>
-                                            <TableCell align="right" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{applications.isFourWheel ? applications.isParking ? "PHP2000.00" : "PHP400.00" : applications.isParking ? "PHP750.00" : "PHP200.00"}</TableCell>
+                                            <TableCell align="right" sx={{ borderBottom: 'none', padding: '0rem', paddingTop: '0rem', fontSize: "1rem" }}>{prices}</TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -184,7 +229,6 @@ const formattedOneWeekFromNow = formatDate(oneWeekFromNow);
                         
                         </div> */}
                         <div style={{ position: 'absolute', bottom: '5rem', left: '0', right: '0', display: "flex", justifyContent: "center", alignItems: "center",}}><ProofMod/></div>
-                        
 
                     </Box>
 

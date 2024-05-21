@@ -78,7 +78,9 @@ export default function OrCr() {
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {applications.map((row) => {
+                                            {applications
+                                                .filter(row => !row.rejected)
+                                                .map((row) => {
                                                     const submittedDate = new Date(row.datesubmitted);
                                                     const month = submittedDate.toLocaleString('default', { month: 'long' });
                                                     const day = submittedDate.getDate();
@@ -87,7 +89,7 @@ export default function OrCr() {
 
                                                     return (
                                                         <TableRow key={row.applicantid} sx={{ backgroundColor: '#EBEBEB', cursor: 'pointer' }} onClick={() => handleRowClick(row.email)}>
-                                                            <TableCell align="center">{row.email}</TableCell>
+                                                            <TableCell align="center">{row.firstName} {row.middleInitial} {row.lastName}</TableCell>
                                                             <TableCell align="center">{row.isStaff ? 'Staff' : 'Student'}</TableCell>
                                                             <TableCell align="center">{formattedDate}</TableCell>
                                                         </TableRow>
