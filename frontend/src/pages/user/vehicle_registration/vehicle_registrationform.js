@@ -156,7 +156,7 @@ export default function RegistrationForm1() {
       };
 
       const res2 = await axios.post(
-        "http://localhost:8080/applicants/uploadReq", null ,
+        "http://localhost:8080/applicants/sad", null ,
         formData,
         config2
       );

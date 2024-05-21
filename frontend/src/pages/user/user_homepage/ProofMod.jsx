@@ -32,11 +32,30 @@ export default function ProofMod() {
     const [name, setName] = React.useState(null);
     const [submitProofOfPayment, setSubmitProofOfPayment] = React.useState();
     const token = localStorage.getItem('token');
-    const email = localStorage.getItem('email');
-    const decodedToken = jwtDecode(token);
-    const username = decodedToken.sub;
+    const [username, setUsername] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
 
+    React.useEffect(() => {
+        const decodeJwt = async () => {
+          if (token) {
+            try {
+              const response = await axios.post('http://localhost:8080/jwt/decode', null, {
+                params: { token: token },
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              });
+              const decoded = response.data.payload;
+              setUsername(decoded.sub);
+            } catch (error) {
+              console.error('Error decoding token:', error);
+              localStorage.removeItem('token');
+            }
+          }
+        };
+    
+        decodeJwt();
+      }, [token]);
     const handleUploadClick = () => {
         document.getElementById('fileInput').click();
     };
@@ -54,11 +73,9 @@ export default function ProofMod() {
         console.log(submitProofOfPayment);
 
         
-        console.log('token: ', token);
-        console.log('email: ', username);
-        const decodedToken = jwtDecode(token,{header: true});
-        const user = decodedToken.sub;
-        setName(`${user}:proof_of_payment`);
+        // console.log('token: ', token);
+        // console.log('email: ', username);
+        setName(`${username}:proof_of_payment`);
 
         const config2 = {
             headers: {
@@ -70,10 +87,12 @@ export default function ProofMod() {
         console.log(name);
 
         const formData = new FormData();
-        formData.append('image', submitProofOfPayment);
-        formData.append('email', username);
+        formData.append('file', submitProofOfPayment);
+        formData.append('username', username);
+        formData.append('name', username+":proof_of_payment");
+        formData.append('type', 3);
         
-        const payres = await axios.post(`http://localhost:8080/applicants/uploadPay`, formData, config2);
+        const payres = await axios.post(`http://localhost:8080/photos/upload`, formData, config2);
         if (payres.data) {
             setSubmitted(true); // Set submitted state to true
         } else {
@@ -87,9 +106,7 @@ export default function ProofMod() {
         
         console.log('token: ', token);
         console.log('email: ', username);
-        const decodedToken = jwtDecode(token,{header: true});
-        const user = decodedToken.sub;
-        setName(`${user}:proof_of_payment`);
+        setName(`${username}:proof_of_payment`);
 
         const config2 = {
             headers: {
@@ -101,10 +118,12 @@ export default function ProofMod() {
         console.log(name);
 
         const formData = new FormData();
-        formData.append('image', submitProofOfPayment);
-        formData.append('email', username);
+        formData.append('file', submitProofOfPayment);
+        formData.append('username', username);
+        formData.append('name', username+":proof_of_payment");
+        formData.append('type', 3);
         
-        const payres = await axios.post(`http://localhost:8080/applicants/uploadPay`, formData, config2);
+        const payres = await axios.post(`http://localhost:8080/photos/upload`, formData, config2);
         
         if (payres.data) {
             setSubmitted(true); // Set submitted state to true

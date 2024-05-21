@@ -62,7 +62,7 @@ const formattedOneWeekFromNow = formatDate(oneWeekFromNow);
         const fetchData = async () => {
           try {
             const response = await axios.get(
-              "http://localhost:8080/applicants/" + email
+            "http://localhost:8080/applicants/get-by-email/" + email
             );
             if (response.data) {
               console.log('asdasdasd',response.data);

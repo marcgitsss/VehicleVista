@@ -50,14 +50,26 @@ const [decodedToken, setDecodedToken] = useState();
   }, []);
 
   useEffect(() => {
-    try {
-      const decoded = jwtDecode(token, { header: true });
-      setDecodedToken(decoded);
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      // Handle the error (e.g., redirect to login page)
-    }
-  }, [token, navigate]);
+    const decodeJwt = async () => {
+      if (token) {
+        try {
+          const response = await axios.post('http://localhost:8080/jwt/decode', null, {
+            params: { token: token },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          const decoded = response.data.payload;
+          setDecodedToken(decoded);
+        } catch (error) {
+          console.error('Error decoding token:', error);
+          localStorage.removeItem('token');
+        }
+      }
+    };
+
+    decodeJwt();
+  }, [token]);
 
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);

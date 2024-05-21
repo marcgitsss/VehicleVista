@@ -85,6 +85,7 @@ export default function Registration() {
       const plateNo = registrationData.plateno;
       const color = registrationData.color;
       const vehicleType = registrationData.vehicleType;
+      const stickerType = registrationData.stickerType;
       const email = localStorage.getItem("email");
       const res = axios.post(
         "http://localhost:8080/applicants/register",
@@ -99,17 +100,31 @@ export default function Registration() {
           gradeLevel: gradeLevel,
           contactNumber: contactNumber,
           vehicleMake: vehicleMake,
+          address: address,
+          isStaff: localStorage.getItem("isStaff"),
           plateNo: plateNo,
           color: color,
+
+          vehicleMake: vehicleMake,
+          plateNo: plateNo,
+          color: color,
+          isParking: stickerType,
           vehicleType: vehicleType,
         },
         config
       );
 
       const formData = new FormData();
-      formData.append("orcrimg", orcrFile);
-      formData.append("licenseimg", licenseFile);
-      formData.append("email", email);
+      formData.append("file", orcrFile);
+      formData.append("name", email+":orcr");
+      formData.append("username", email);
+      formData.append("type", 1);
+
+      const formData2 = new FormData();
+      formData.append("file", licenseFile);
+      formData.append("name", email+":license");
+      formData.append("username", email);
+      formData.append("type", 2);
       const config2 = {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -117,8 +132,13 @@ export default function Registration() {
         },
       };
       const res2 = axios.post(
-        "http://localhost:8080/applicants/uploadReq",
+        "http://localhost:8080/photos/upload",
         formData,
+        config2
+      );
+      const res3 = axios.post(
+        "http://localhost:8080/photos/upload",
+        formData2,
         config2
       );
       setSnackbarMessage("Registration successful");

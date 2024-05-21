@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './../PassCard.css';
 import axios from 'axios';
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
@@ -14,16 +14,42 @@ export default function PassCard() {
   const [oldPasswordVisibility, setOldPasswordVisibility] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(false);
+  const [email, setEmail] = useState('');
+  const token = localStorage.getItem('token');
 
-  const toggleConfirmOldPasswordVisibility = () => {
+  useEffect(() => {
+    const decodeJwt = async () => {
+      if (token) {
+        try {
+          const response = await axios.post('http://localhost:8080/jwt/decode', null, {
+            params: { token: token },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          const decoded = response.data.payload;
+          setEmail(decoded.sub);
+          console.log('Decoded JWT:', decoded);
+        } catch (error) {
+          console.error('Error decoding token:', error);
+          localStorage.removeItem('token');
+        }
+      }
+    };
+
+    decodeJwt();
+  }, [token]);
+
+  const toggleOldPasswordVisibility = () => {
     setOldPasswordVisibility(!oldPasswordVisibility);
-  };
-  const toggleConfirmPasswordVisibility = () => {
-    setConfirmPasswordVisibility(!confirmPasswordVisibility);
   };
 
   const togglePasswordVisibility = () => {
     setPasswordVisibility(!passwordVisibility);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisibility(!confirmPasswordVisibility);
   };
 
   const handleInputChange = (e) => {
@@ -36,52 +62,48 @@ export default function PassCard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Password data:", passwordData);
 
-    // Check if any field is empty
     if (!passwordData.oldPassword || !passwordData.newPassword || !passwordData.confirmNewPassword) {
       setSnackbarMessage('Please fill in all fields.');
       setSnackbarOpen(true);
       return;
     }
 
-    // Check if new passwords match
     if (passwordData.newPassword !== passwordData.confirmNewPassword) {
       setSnackbarMessage('New passwords do not match.');
       setSnackbarOpen(true);
       return;
     }
 
-    console.log(passwordData);
+    console.log("Submitting password change request...");
 
-    // Make API call to change password
-    axios.post('http://localhost:8080/change-password', {
-      oldPassword: passwordData.oldPassword,
-      newPassword: passwordData.newPassword
-    })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.success) {
-          // Show Snackbar for successful password change
-          setSnackbarMessage('Password changed successfully');
-          setSnackbarOpen(true);
-          // Clear input fields
-          setPasswordData({
-            oldPassword: '',
-            newPassword: '',
-            confirmNewPassword: ''
-          });
-        } else {
-          // Show Snackbar for unsuccessful password change
-          setSnackbarMessage(response.data.message);
-          setSnackbarOpen(true);
-        }
-      })
-      .catch((error) => {
-        console.error('Error during password change:', error);
-        // Show Snackbar for error during password change
-        setSnackbarMessage('An error occurred while changing password. Please try again later.');
-        setSnackbarOpen(true);
-      });
+    // try {
+    //   const response = await axios.post('http://localhost:8080/jwt/change-password', {
+    //     username: email,
+    //     oldPassword: passwordData.oldPassword,
+    //     newPassword: passwordData.newPassword,
+    //     confirmPassword: passwordData.confirmNewPassword
+    //   });
+    //   console.log("Response:", response.data);
+
+    //   if (response.data) {
+    //     setSnackbarMessage('Password changed successfully');
+    //     setSnackbarOpen(true);
+    //     setPasswordData({
+    //       oldPassword: '',
+    //       newPassword: '',
+    //       confirmNewPassword: ''
+    //     });
+    //   } else {
+    //     setSnackbarMessage(response.data.message);
+    //     setSnackbarOpen(true);
+    //   }
+    // } catch (error) {
+    //   console.error('Error during password change:', error);
+    //   setSnackbarMessage('An error occurred while changing password. Please try again later.');
+    //   setSnackbarOpen(true);
+    // }
   };
 
   return (
@@ -99,12 +121,12 @@ export default function PassCard() {
             />
             {oldPasswordVisibility ? (
               <MdVisibilityOff
-                onClick={toggleConfirmOldPasswordVisibility}
+                onClick={toggleOldPasswordVisibility}
                 style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', cursor: 'pointer' }}
               />
             ) : (
               <MdVisibility
-                onClick={toggleConfirmOldPasswordVisibility}
+                onClick={toggleOldPasswordVisibility}
                 style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', cursor: 'pointer' }}
               />
             )}
@@ -149,7 +171,6 @@ export default function PassCard() {
               />
             )}
           </div>
-          {/* Snackbar for successful or unsuccessful password change */}
           {snackbarOpen && (
             <div className="snackbar">{snackbarMessage}</div>
           )}
@@ -158,7 +179,6 @@ export default function PassCard() {
           </button>
         </form>
       </div>
-
     </div>
   );
 }

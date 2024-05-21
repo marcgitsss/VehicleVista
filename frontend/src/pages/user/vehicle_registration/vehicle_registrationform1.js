@@ -145,7 +145,7 @@ export default function RegistrationForm() {
       const isStaff = localStorage.getItem("isStaff");
       const stickerType = registrationData.stickerType;
       // Submit applicant registration data
-      const res1 = await axios.post(
+      const res = await axios.post(
         "http://localhost:8080/applicants/register",
         {
           email: email,
@@ -158,20 +158,32 @@ export default function RegistrationForm() {
           gradeLevel: gradeLevel,
           contactNumber: contactNumber,
           vehicleMake: vehicleMake,
+          address: address,
+          isStaff: isStaff,
           plateNo: plateNo,
           color: color,
-          isFourWheel: isFourWheel,
-          isStaff: isStaff,
+
+          vehicleMake: vehicleMake,
+          plateNo: plateNo,
+          color: color,
           isParking: stickerType,
+          vehicleType: isFourWheel,
         },
         config
       );
 
       // Upload OR/CR and License files
       const formData = new FormData();
-      formData.append("orcrimg", orcrFile);
-      formData.append("licenseimg", licenseFile);
-      formData.append("email", email);
+      formData.append("file", orcrFile);
+      formData.append("name", email+":orcr");
+      formData.append("username", email);
+      formData.append("type", 1);
+
+      const formData2 = new FormData();
+      formData2.append("file", licenseFile);
+      formData2.append("name", email+":license");
+      formData2.append("username", email);
+      formData2.append("type", 2);
 
       const config2 = {
         headers: {
@@ -181,13 +193,21 @@ export default function RegistrationForm() {
       };
 
       const res2 = await axios.post(
-        "http://localhost:8080/applicants/uploadReq",
+        "http://localhost:8080/photos/upload",
         formData,
         config2
       );
+      const res3 = await axios.post(
+        "http://localhost:8080/photos/upload",
+        formData2,
+        config2
+      );
 
+      console.log("Response 1:", res);
+      console.log("Response 2:", res2);
+      console.log("Response 3:", res3);
       // If both requests are successful, show success message
-      if (res1.status === 200 && res2.status === 200) {
+      if (res.status === 200 && res2.status === 200 && res3.status === 200) {
         setSnackbarMessage("Registration successful");
         setSnackbarOpen(true);
         setModalOpen(true); 
@@ -323,6 +343,7 @@ export default function RegistrationForm() {
       isFourWheel: "", // Reset any previous validation error
     }));
   };
+  
 
   const handleStickerChange = (e) => {
     const { value } = e.target;
