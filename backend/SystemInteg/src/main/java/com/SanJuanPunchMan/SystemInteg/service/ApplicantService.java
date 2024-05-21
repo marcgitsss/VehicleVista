@@ -73,7 +73,7 @@ public class ApplicantService {
     
     private static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 //    private static final String SERVICE_ACCOUNT_KEY_PATH = getPathToGoogleCredentials();
-    private static final String SERVICE_ACCOUNT_KEY_PATH = "C:\\Users\\jessr\\OneDrive\\Documents\\GitHub\\VehicleVista\\backend\\SystemInteg\\bin\\cred.json";
+    private static final String SERVICE_ACCOUNT_KEY_PATH = "C:\\Users\\jessr\\OneDrive\\Documents\\GitHub\\VehicleVista\\backend\\SystemInteg\\cred.json";
 
     private static String getPathToGoogleCredentials() {
         String currentDirectory = System.getProperty("user.dir");
