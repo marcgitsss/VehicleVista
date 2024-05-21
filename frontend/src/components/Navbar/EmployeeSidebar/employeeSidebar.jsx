@@ -31,86 +31,83 @@ function EmployeeSidebar({ activeMenuItem }) {
 
   return (
     <>
-        {isMobile ? (
-          <>
-
-            <Button sx={{ color: "black", marginLeft: "0.5rem", marginTop: "0rem", marginBottom: "0rem", zIndex: "1000" }} onClick={handleClick}><FaBars /></Button>
-            {Open ?
-              <div className={`employee-sidebar ${isMobile ? 'mobile' : ''}`}>
-                <ul className="employee-sidebar-menu">
-                  <li className={activeMenuItem === "Home" ? "active" : ""}>
-                    <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                    <div onClick={() => { if (location.pathname !== "/employee-dashboard") window.location.href = "/employee-dashboard"; }}>
-                      Homepage
-                    </div>
-                  </li>
-                  <li className={activeMenuItem === "Registration" ? "active" : ""}>
-                    <TaskIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                    <div onClick={() => { if (location.pathname !== "/orcr") window.location.href = "/orcr"; }}>
-                      Verify OR/CR <br /> and License
-                    </div>
-                  </li>
-                  <li className={activeMenuItem === "Profile" ? "active" : ""}>
-                    <PersonIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                    <div onClick={() => { if (location.pathname !== "/employee-profile") window.location.href = "/employee-profile"; }}>
-                      Verify Proof <br /> of Payment
-                    </div>
-                  </li>
-                  <li className={activeMenuItem === "Payment" ? "active" : ""}>
-                    <PaymentIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                    <div onClick={() => { if (location.pathname !== "/approve") window.location.href = "/approve"; }}>
-                      Approve <br /> Applications
-                    </div>
-                  </li>
-                  <li className={activeMenuItem === "Payment" ? "active" : ""}>
-                    <PaymentIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                    <div onClick={() => { if (location.pathname !== "/employee-profile") window.location.href = "/employee-profile"; }}>
-                      Profile
-                    </div>
-                  </li>
-                </ul>
-              
-                </div>: null}
-          </>
-        ) : (
-          <>
+      {isMobile ? (
+        <>
+          <Button sx={{ color: "black", marginLeft: "0.5rem", marginTop: "0rem", marginBottom: "0rem", zIndex: "1000" }} onClick={handleClick}><FaBars /></Button>
+          {Open ?
             <div className={`employee-sidebar ${isMobile ? 'mobile' : ''}`}>
               <ul className="employee-sidebar-menu">
                 <li className={activeMenuItem === "Home" ? "active" : ""}>
                   <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                  <div onClick={() => {
-                     if (location.pathname !== "/employee-dashboard") window.location.href = "/employee-dashboard"; }}>
-                      Dashboard
-                    </div>
+                  <Link to="/employee-dashboard">
+                    Homepage
+                  </Link>
                 </li>
                 <li className={activeMenuItem === "Registration" ? "active" : ""}>
                   <TaskIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                  <div onClick={() => { if (location.pathname !== "/orcr") window.location.href = "/orcr"; }}>
+                  <Link to="/orcr">
                     Verify OR/CR <br /> and License
-                  </div>
+                  </Link>
                 </li>
                 <li className={activeMenuItem === "Profile" ? "active" : ""}>
                   <PersonIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                  <div onClick={() => { if (location.pathname !== "/verifypay") window.location.href = "/verifypay"; }}>
+                  <Link to="/employee-profile">
                     Verify Proof <br /> of Payment
-                  </div>
+                  </Link>
                 </li>
                 <li className={activeMenuItem === "Payment" ? "active" : ""}>
                   <PaymentIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                  <div onClick={() => { if (location.pathname !== "/approve") window.location.href = "/approve"; }}>
+                  <Link to="/approve">
                     Approve <br /> Applications
-                  </div>
+                  </Link>
                 </li>
                 <li className={activeMenuItem === "Profile" ? "active" : ""}>
-                  <PersonIcon sx={{ color: "black", marginRight: "1.5rem" }} />
-                  <div onClick={() => { if (location.pathname !== "/employee-profile") window.location.href = "/employee-profile"; }}>
+                  <PaymentIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                  <Link to="/employee-profile">
                     Profile
-                  </div>
+                  </Link>
                 </li>
               </ul>
-            </div>
-          </>
-        )}
+            </div> : null}
+        </>
+      ) : (
+        <>
+          <div className={`employee-sidebar ${isMobile ? 'mobile' : ''}`}>
+            <ul className="employee-sidebar-menu">
+              <li className={activeMenuItem === "Home" ? "active" : ""}>
+                <HomeIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                <Link to="/employee-dashboard">
+                  Dashboard
+                </Link>
+              </li>
+              <li className={activeMenuItem === "Registration" ? "active" : ""}>
+                <TaskIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                <Link to="/orcr">
+                  Verify OR/CR <br /> and License
+                </Link>
+              </li>
+              <li className={activeMenuItem === "Profile" ? "active" : ""}>
+                <PersonIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                <Link to="/verifypay">
+                  Verify Proof <br /> of Payment
+                </Link>
+              </li>
+              <li className={activeMenuItem === "Payment" ? "active" : ""}>
+                <PaymentIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                <Link to="/approve">
+                  Approve <br /> Applications
+                </Link>
+              </li>
+              <li className={activeMenuItem === "Profile" ? "active" : ""}>
+                <PersonIcon sx={{ color: "black", marginRight: "1.5rem" }} />
+                <Link to="/employee-profile">
+                  Profile
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </>
+      )}
     </>
   );
 }
