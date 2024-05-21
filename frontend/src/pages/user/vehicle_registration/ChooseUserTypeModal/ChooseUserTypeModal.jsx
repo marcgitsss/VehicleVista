@@ -22,25 +22,23 @@ const style = {
 
 export default function ChooseUserTypeModal({ isOpen, toggleModal }) {
   const [guidelinesModal, setGuidelinesModal] = useState(false);
- 
 
   const handleStudent = () => {
-    localStorage.setItem("isStaff",false);
+    localStorage.setItem("isStaff", false); // Store as string
+    // console.log("isStaff", localStorage.getItem("isStaff"));
     toggleModal(false);
     setGuidelinesModal(true);
   };
+
   const handleStaff = () => {
-    localStorage.setItem("isStaff",true);
+    localStorage.setItem("isStaff", true); // Store as string
+    // console.log("isStaff", localStorage.getItem("isStaff"));
     toggleModal(false);
     setGuidelinesModal(true);
   };
 
   const handleClose = () => {
-    toggleModal(false); // Close the modal when the close button is clicked
-  };
-
-  const handleIsStaff = () => {
-    
+    toggleModal(false);
   };
 
   return (
@@ -74,3 +72,4 @@ export default function ChooseUserTypeModal({ isOpen, toggleModal }) {
     </>
   );
 }
+

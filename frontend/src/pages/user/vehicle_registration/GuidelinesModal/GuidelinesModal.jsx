@@ -33,14 +33,17 @@ export default function GuidelinesModal(props) {
   const [twoWheelPK, setTwoWheelPK] = useState()
   const [fourWheelPK, setFourWheelPK] = useState()
   const [schoolYear, setSchoolYear] = useState()
+  const [trigger, setTrigger] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:8080/prices/get-prices');
-
-        if (isStaff) {
+        console.log("isStaff", isStaff)
+  
+        const isStaffBool = isStaff === "true"; // Convert to boolean
+        if (isStaffBool) {
           setTwoWheelPU(response.data.staffTwoWheelPickup)
           setFourWheelPU(response.data.staffFourWheelPickup)
           setTwoWheelPK(response.data.staffTwoWheelPickup)
@@ -54,31 +57,22 @@ export default function GuidelinesModal(props) {
       } catch (error) {
         console.error('Error fetching data: ', error);
       }
-
+  
       try {
-        const response = await axios.get('http://localhost:8080/expiration/get-expiration');
-
-        setSchoolYear(response.data.currentSchoolYear);
-
+        const response = await axios.get('http://localhost:8080/config/get-expiration');
+        // console.log(response);
+        setSchoolYear(response.data.schoolYear);
+  
       } catch (error) {
         console.error('Error fetching data: ', error);
       }
-
-      // try {
-      //   const response = await axios.get('http://localhost:8080/expiration/get-expiration');
-      //   console.log(response.data);
-
-      //   setSchoolYear(response.data.currentSchoolYear);
-
-      // } catch (error) {
-      //     console.error('Error fetching data: ', error);
-      // }
     };
     fetchData();
-  }, []); // The empty array [] means this effect will only run once
-
+  }, [isStaff, trigger]); // The empty array [] means this effect will only run once
+  
 
   const handleCloseModal = () => {
+    setTrigger(!trigger)
     props.toggleModal(false);
   };
 
@@ -166,20 +160,21 @@ export default function GuidelinesModal(props) {
                     </tr>
                     <tr>
                       <td>4-Wheel Parking</td>
-                      <td><b>PHP{fourWheelPK}</b>/Semester</td>
+                      <td><b>PHP{fourWheelPK}</b>/{isStaff === 'true' ? 'Year' : 'Semester'}</td>
                     </tr>
                     <tr>
                       <td>2-Wheel Parking</td>
-                      <td><b>PHP{twoWheelPK}</b>/Semester</td>
+                      <td><b>PHP{twoWheelPK}</b>/{isStaff === 'true' ? 'Year' : 'Semester'}</td>
                     </tr>
                     <tr>
                       <td>4-Wheel DROP&PICK</td>
-                      <td><b>PHP{fourWheelPU}</b>/Semester</td>
+                      <td><b>PHP{fourWheelPU}</b>/{isStaff === 'true' ? 'Year' : 'Semester'}</td>
                     </tr>
                     <tr>
                       <td>2-Wheel DROP&PICK</td>
-                      <td><b>PHP{twoWheelPU}</b>/Semester</td>
+                      <td><b>PHP{twoWheelPU}</b>/{isStaff === 'true' ? 'Year' : 'Semester'}</td>
                     </tr>
+
                   </tbody>
                 </table>
                 <div className="guidelines-note bold">

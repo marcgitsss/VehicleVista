@@ -17,7 +17,7 @@ export default function UserStatus() {
   // const { token } = useUser();
   const token = localStorage.getItem("token");
   const isMobile = useMediaQuery("(max-width: 37.5rem)");
-  const [applications, setApplications] = useState({});
+  const [applications, setApplications] = useState([]);
   const [isApplicant, setIsApplicant] = useState(false);
   const [date, setDate] = useState();
   const decondedToken = jwtDecode(token);
@@ -28,12 +28,14 @@ export default function UserStatus() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/applicants/" + email
+          "http://localhost:8080/applicants/get-all-by-email/" + email
         );
         if (response.data) {
           setIsApplicant(true);
           setApplications(response.data);
           setDate(response.data.datesubmitted);
+        } else{
+
         }
       } catch (error) {
         console.error(error);
@@ -155,18 +157,43 @@ export default function UserStatus() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      {isApplicant ? (<>
-                        <TableCell align="center">{formattedDate}</TableCell>
-                      <TableCell align="center">{applications.isStaff ? 'Staff' : 'Student'}</TableCell>
-                      <TableCell align="center">{applications.verified ? 'Verified' : 'Pending'}</TableCell>
-                      <TableCell align="center">{applications.paid ? 'Paid' : 'Pending'}</TableCell>
-                      <TableCell align="center">{applications.approved ? 'Approved' : 'Pending'}</TableCell>
-                      <TableCell align="center">{applications.verified && applications.paid && applications.approved ? 'Success' : 'Pending'}</TableCell>
-                      </>) : <></>}
-                      
-                    </TableRow>
+                    {applications
+                      .filter((application) => !application.rejected)
+                      .map((application) => (
+                        <TableRow key={application.id}>
+                          <TableCell align="center">
+                            {new Date(application.datesubmitted).toLocaleDateString("en-US", {
+                              month: "long",
+                              day: "2-digit",
+                              year: "numeric",
+                            })}
+                          </TableCell>
+                          <TableCell align="center">{application.isStaff ? 'Staff' : 'Student'}</TableCell>
+                          <TableCell align="center">{application.verified ? 'Verified' : 'Pending'}</TableCell>
+                          <TableCell align="center">{application.paid ? 'Paid' : 'Pending'}</TableCell>
+                          <TableCell align="center">{application.approved ? 'Approved' : 'Pending'}</TableCell>
+                          <TableCell align="center">{application.verified && application.paid && application.approved ? 'Success' : 'Pending'}</TableCell>
+                          {application.verified === true && application.paid === false &&(
+                            <Button
+                              sx={{
+                                backgroundColor: "#F4C522",
+                                color: "black",
+                                textTransform: "none",
+                                fontWeight: "bold",
+                                "&:hover": { backgroundColor: "#F4C522" },
+                              }}
+                              onClick={() => setIsModalOpen(true)} // Open modal on click
+                            >
+                              Proceed to Payment
+                            </Button>
+                          )}
+                          {/* {isApplicant && (
+                            <TableCell align="center">You are an applicant</TableCell>
+                          )} */}
+                        </TableRow>
+                      ))}
                   </TableBody>
+
                 </Table>
                 {applications.verified === true && applications.paid === false &&(
                  <Button

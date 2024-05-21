@@ -109,7 +109,7 @@ export default function ForgetPasswordCard() {
     }
 
     setLoading(true);
-    axios.post('http://localhost:8080/user/forgot-password', null, {
+    axios.post('http://localhost:8080/jwt/forgot-password', null, {
       params: {
         username: email,
         newPassword: passwordData.newPassword,
