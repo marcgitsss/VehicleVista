@@ -35,17 +35,9 @@ export default function AppChoice() {
             const response = await axios.put(
                 `http://localhost:8080/applicants/approveApplicant/${email}`);
             setMessage("Approval status updated successfully");
-            if (response.data) {
-                const resApproved = await axios.post("http://localhost:8080/vehicles/register" 
-                , {
-                    username: email,
-                    vehicleMake: applications.vehicleMake,
-                    plateNo: applications.plateNo,
-                    color: applications.color,
-                    isFourWheel: applications.isFourWheel
-                }
-                 );
-            }
+            
+            console.log("DATA:",response.data);
+
             setTimeout(() => {
                 navigate('/approve');
             }, 2000);
@@ -65,7 +57,7 @@ export default function AppChoice() {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8080/applicants/" + email
+                    "http://localhost:8080/applicants/get-by-email/" + email
                 );
                 if (response.data) {
                     console.log(response.data);

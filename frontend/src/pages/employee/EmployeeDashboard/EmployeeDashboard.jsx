@@ -32,6 +32,7 @@ const EmployeeDashboard = () => {
       try {
         const response = await axios.get('http://localhost:8080/jwt/getallusers');
         setUsers(response.data);
+        console.log("users",response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }

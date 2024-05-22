@@ -21,7 +21,7 @@ const UserProfilePage = () => {
       if (token) {
         try {
           const response = await axios.post('http://localhost:8080/jwt/decode', null, {
-            params: { token },
+            params: { token: token },
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -31,14 +31,12 @@ const UserProfilePage = () => {
           setDecodedToken(decoded);
         } catch (error) {
           console.error('Error decoding token:', error);
-          localStorage.removeItem("token");
-          navigate("/");
         }
       }
     };
 
     decodeJwt();
-  }, [token, navigate]);
+  }, [token]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -48,7 +46,9 @@ const UserProfilePage = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    setTimeout(() => {
+      navigate("/");
+    }, 0);
   };
 
   useEffect(() => {

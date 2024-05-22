@@ -54,15 +54,15 @@ const EmployeeProfilePage = () => {
         console.error("Error fetching user data:", error);
       }
 
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/expiration/get-expiration"
-        );
-        setExpiration(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching expiration data:", error);
-      }
+      // try {
+      //   const response = await axios.get(
+      //     "http://localhost:8080/expiration/get-expiration"
+      //   );
+      //   setExpiration(response.data);
+      //   console.log(response.data);
+      // } catch (error) {
+      //   console.error("Error fetching expiration data:", error);
+      // }
 
     };
 

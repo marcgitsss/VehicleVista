@@ -69,17 +69,17 @@ export default function ApproveApplication() {
             const promises = selectMultiple.map(async (user) => {
                 const response = await axios.put(`http://localhost:8080/applicants/approveApplicant/${user.email}`);
                 setMessage("Approval status updated successfully");
-                if (response.data) {
-                    const resApproved = await axios.post("http://localhost:8080/vehicles/register"
-                        , {
-                            username: applications.email,
-                            vehicleMake: applications.vehicleMake,
-                            plateNo: applications.plateNo,
-                            color: applications.color,
-                            isFourWheel: applications.isFourWheel
-                        }
-                    );
-                }
+                // if (response.data) {
+                //     const resApproved = await axios.post("http://localhost:8080/vehicles/register"
+                //         , {
+                //             username: applications.email,
+                //             vehicleMake: applications.vehicleMake,
+                //             plateNo: applications.plateNo,
+                //             color: applications.color,
+                //             isFourWheel: applications.isFourWheel
+                //         }
+                //     );
+                // }
                 setTimeout(() => {
                     setMessage("");
                     setUpdateRender(!updateRender);

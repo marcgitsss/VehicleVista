@@ -21,8 +21,31 @@ export default function UserStatus() {
   const [isApplicant, setIsApplicant] = useState(false);
   const [date, setDate] = useState();
   const decondedToken = jwtDecode(token);
-  const email = decondedToken.sub;
+  const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Decoding token
+  useEffect(() => {
+    const decodeJwt = async () => {
+      if (token) {
+        try {
+          const response = await axios.post('http://localhost:8080/jwt/decode', null, {
+            params: { token: token },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          const decoded = response.data.payload;
+          setEmail(decoded.sub);
+        } catch (error) {
+          console.error('Error decoding token:', error);
+          localStorage.removeItem('token');
+        }
+      }
+    };
+
+    decodeJwt();
+  }, [token]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +65,9 @@ export default function UserStatus() {
       }
     };
     fetchData();
-  }, []);
+  }, [email]);
+
+  
 
   const dateObject = new Date(date);
   const formattedDate = `${dateObject.getMonth() + 1}/${dateObject.getDate()}/${dateObject.getFullYear().toString().slice(-2)}`;
