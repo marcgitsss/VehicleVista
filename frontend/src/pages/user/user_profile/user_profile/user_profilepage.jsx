@@ -46,9 +46,7 @@ const UserProfilePage = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setTimeout(() => {
-      navigate("/");
-    }, 0);
+    window.location.href = '/login';
   };
 
   useEffect(() => {
@@ -61,14 +59,10 @@ const UserProfilePage = () => {
         });
         setUser(userResponse.data);
 
-        const expirationResponse = await axios.get('http://localhost:8080/expiration/get-expiration');
+        const expirationResponse = await axios.get('http://localhost:8080/config/get-expiration');
         setExpiration(expirationResponse.data);
 
-        const vehiclesResponse = await axios.get('http://localhost:8080/vehicles/get-vehicle', {
-          params: {
-            username: username
-          }
-        });
+        const vehiclesResponse = await axios.get('http://localhost:8080/vehicles/find-by-username/'+username);
         setVehicles(vehiclesResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);

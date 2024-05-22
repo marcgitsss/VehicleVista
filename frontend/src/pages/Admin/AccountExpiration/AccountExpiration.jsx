@@ -26,10 +26,19 @@ function AccountExpiration() {
 
   const [inputDisabled, setInputDisabled] = useState(false);
 
-  const schoolYearsOption = Array.from({ length: 16 }, (v, i) => i + 2010);
+  // Generate school years with the desired format
+  const schoolYearsOption = Array.from({ length: 16 }, (v, i) => {
+    const startYear = i + 2020;
+    const endYear = startYear + 1;
+    return `${startYear}-${endYear}`;
+  });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  useEffect(() => {
+    getExpirations();
+  }, [snackbarOpen]);
 
   const onCancel = () => {
     setType("");
@@ -44,13 +53,13 @@ function AccountExpiration() {
 
     console.log(type);
     if (type === "faculty") {
-      // updateStaffExpiration();
-      console.log('type', type)
-      console.log('date', date)
-      const res = await axios.post(
-        "http://localhost:8080/expiration/update-staff-expiration",
+      await axios.post(
+        "http://localhost:8080/config/setStaffGlobalExpiry", null,
         {
-          expirationDate: date,
+          params:{
+            expirationDate: date,
+          }
+          
         },
         {
           headers: {
@@ -58,12 +67,14 @@ function AccountExpiration() {
           },
         }
       );
-    } else if (type === "student") {
-      // updateStudentExpiration();
+    } else if (type === "faculty") {
       await axios.post(
-        "http://localhost:8080/expiration/update-student-expiration",
+        "http://localhost:8080/config/setStudentGlobalExpiry", null,
         {
-          expirationDate: date,
+          params:{
+            expirationDate: date,
+          }
+          
         },
         {
           headers: {
@@ -72,10 +83,14 @@ function AccountExpiration() {
         }
       );
     }
+    
     await axios.post(
-      "http://localhost:8080/expiration/update-semester",
+      "http://localhost:8080/config/set-semester",null,
       {
-        semester: sem,
+        params:{
+          semester: sem,
+        }
+        
       },
       {
         headers: {
@@ -84,9 +99,9 @@ function AccountExpiration() {
       }
     );
     await axios.post(
-      "http://localhost:8080/expiration/update-school-year",
+      "http://localhost:8080/config/set-schoolyear",
       {
-        schoolYear: schoolYear,
+        schoolyear: schoolYear,
       },
       {
         headers: {
@@ -94,102 +109,29 @@ function AccountExpiration() {
         },
       }
     );
-
-    // updateSem();
-    // updateSY();
     getExpirations();
     setSnackbarMessage("Successfully Updated Account Expiration");
     setSnackbarOpen(true);
+
+    setDate(new Date())
+    setSchoolYear('')
+    setSem('')
+    setType(0)
+
   };
+
+  
 
   const getExpirations = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:8080/expiration/get-expiration"
-      );
+      const res = await axios.get("http://localhost:8080/config/get-expiration");
       setStaffExpiry(res.data.staffExpirationDate);
       setStudentExpiry(res.data.studentExpirationDate);
-      setCurrentSem(res.data.currentSemester);
-      setCurrentSY(res.data.currentSchoolYear);
+      setCurrentSem(res.data.semester);
+      setCurrentSY(res.data.schoolYear);
       console.log("res", res);
     } catch (error) {
       console.log("error", error);
-    }
-  };
-
-  const updateStudentExpiration = async () => {
-    try {
-      const res = await axios.post(
-        "http://localhost:8080/expiration/update-student-expiration",
-        {
-          expirationDate: date,
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("res", res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updateStaffExpiration = async () => {
-    try {
-      const res = await axios.post(
-        "http://localhost:8080/expiration/update-staff-expiration",
-        {
-          expirationDate: date,
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("res", res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updateSem = async () => {
-    try {
-      const res = await axios.post(
-        "http://localhost:8080/expiration/update-semester",
-        {
-          semester: sem,
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("res", res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updateSY = async () => {
-    try {
-      const res = await axios.post(
-        "http://localhost:8080/expiration/update-school-year",
-        {
-          schoolYear: schoolYear,
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("res", res);
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -222,12 +164,7 @@ function AccountExpiration() {
 
         {/* Some Text */}
         <div className="accexp-info">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at massa
-          non libero suscipit placerat a non ipsum. Aenean tempor nec enim vel
-          feugiat. Pellentesque a malesuada dolor. Nullam malesuada scelerisque
-          elit in sagittis. Etiam bibendum lobortis sapien sit amet consequat.
-          Pellentesque vitae congue neque, vitae finibus nisl. Vivamus turpis
-          diam, sodales quis venenatis
+
         </div>
 
         <div className="accexp-input-container">
@@ -365,7 +302,6 @@ function AccountExpiration() {
                   year: "numeric",
                 })}
               </div>
-
               <div>
                 <span>Student: </span>
                 {new Date(studentExpiry).toLocaleDateString("en-PH", {
@@ -377,15 +313,15 @@ function AccountExpiration() {
             </div>
           </Box>
         </div>
-      </main>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      />
+        {/* Snackbar for notifications */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => setSnackbarOpen(false)}
+          message={snackbarMessage}
+        />
+      </main>
     </>
   );
 }

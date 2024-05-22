@@ -63,7 +63,7 @@ function RolesTab() {
             >
               <Tab label="All" value="1" />
               <Tab label="Student" value="2" />
-              <Tab label="Faculty" value="3" />
+              {/* <Tab label="Faculty" value="3" /> */}
               <Tab label="Employee" value="4" />
             </TabList>
           </Box>

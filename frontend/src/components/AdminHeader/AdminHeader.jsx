@@ -17,9 +17,8 @@ export default function AdminHeader() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        // window.location.reload();
-        navigate('/admin-login');
+      localStorage.removeItem("token");
+      window.location.href = '/login';
     }
   return (
     <>

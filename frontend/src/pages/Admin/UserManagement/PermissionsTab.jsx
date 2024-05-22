@@ -19,9 +19,16 @@ function PermissionsTab() {
 
   const [approver, setApprover] = useState(false);
   const [verifier, setVerifier] = useState(false);
+  const [logger, setLogger] = useState(false);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  useEffect(()=>{
+    setApprover(selectedUser.isApprover);
+    setVerifier(selectedUser.isVerifier);
+    setLogger(selectedUser.isViewLogger);
+  },[selectedUser])
 
   const updateEmployee = async () => {
     try {
@@ -39,6 +46,19 @@ function PermissionsTab() {
       );
       await axios.post(
         "http://localhost:8080/jwt/updateverifier",
+        {
+          username: selectedUser.username,
+          action: verifier,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      // 
+      await axios.post(
+        "http://localhost:8080/jwt/updatelogger",
         {
           username: selectedUser.username,
           action: verifier,
@@ -123,7 +143,7 @@ function PermissionsTab() {
                   onChange={(e) => setVerifier(!verifier)}
                 />
               }
-              label="verifier"
+              label="Verifier"
             />
             <FormControlLabel
               control={
@@ -132,7 +152,16 @@ function PermissionsTab() {
                   onChange={(e) => setApprover(!approver)}
                 />
               }
-              label="approver"
+              label="Approver"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={logger}
+                  onChange={(e) => setLogger(!logger)}
+                />
+              }
+              label="Logger"
             />
           </FormGroup>
         </div>
