@@ -90,7 +90,7 @@ const UserProfilePage = () => {
   return (
     <div>
       {/* Main Content */}
-      <div className="user-profile-container">
+      <div className="user-profile-container" style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
         <div className="logout-btn" style={{ textAlign: 'right', marginBottom: '1.5%', marginTop: '2%' }}>
           <button onClick={handleLogout}>
             LOGOUT

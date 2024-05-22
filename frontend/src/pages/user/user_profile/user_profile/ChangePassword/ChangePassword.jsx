@@ -84,6 +84,9 @@ const ChangePassword = ({ setShowChangePassword }) => {
       console.log(res.data);
       setSnackbarOpen(true);
       setSnackbarMessage("Password changed successfully!");
+      setTimeout(() => {
+        setShowChangePassword(false);
+      }, 2000);
     } catch (error) {
       console.error('There was an error making the POST request!', error);
       setSnackbarOpen(true);
