@@ -13,8 +13,8 @@ import jessreyImage from '../../assets/Jessrey.png'; // Ensure this path is corr
 import marcImage from '../../assets/Marc.jpg'; // Ensure this path is correct
 
 const people = [
-  { name: 'Irish Leight San Juan', role: 'Project Manager', image: irishImage },
-  { name: 'Christzia Marie Atay', role: 'Front End Developer', image: ziaImage },
+  { name: 'Irish Leigh San Juan', role: 'Project Manager', image: irishImage },
+  { name: 'Christzia Marie Atay', role: 'User Interface (UI) Designer', image: ziaImage },
   { name: 'Robert Amaba', role: 'Front End Developer', image: robertImage },
   { name: 'Ludivico Balatero', role: 'Back End Developer', image: ludiImage},
   { name: 'Jessrey Garrido', role: 'Back End Developer', image: jessreyImage },

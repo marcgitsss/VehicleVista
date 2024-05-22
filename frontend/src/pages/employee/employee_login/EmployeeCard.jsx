@@ -47,7 +47,11 @@ export default function EmployeeCard({onLoginSuccess }) {
       setSnackbarMessage('Please fill in all fields.');
       setSnackbarOpen(true);
       return;
+    }else
+    {
+      setSnackbarOpen(false);
     }
+    
   
     // Validate email format
     if (!isValidEmail(loginData.username)) {
@@ -76,15 +80,18 @@ export default function EmployeeCard({onLoginSuccess }) {
         }, 2000); 
       } else {
         // Show Snackbar for unsuccessful login
-        setSnackbarMessage('Wrong username or password');
+        setSnackbarMessage('Invalid Credentials. Please check your email and password.');
         setSnackbarOpen(true);
       }
     })
     .catch((error) => {
       console.error('Error during login:', error);
       // Show Snackbar for error during login
-      setSnackbarMessage('An error occurred during login. Please try again later.');
+      setSnackbarMessage('Invalid Credentials. Please check your email and password.');
       setSnackbarOpen(true);
+      setTimeout(() => {
+        setSnackbarOpen(false);
+      }, 3000);
     })  
     .finally(() => {
       // Set loading to false after the request is complete

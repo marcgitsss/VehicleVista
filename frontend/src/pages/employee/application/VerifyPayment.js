@@ -55,15 +55,16 @@ export default function VerifyPayment() {
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <EmployeeSideBar style={{ position: 'fixed', top: '4rem', left: 0, bottom: 0, zIndex: 500 }} />
             <div className='verifyPay' style={{
+                flex: 1,
                 paddingTop: '5rem', // Padding to create space for the fixed header
-                paddingLeft: '10rem', // Padding to create space for the fixed sidebar
+                paddingLeft: '15rem', // Padding to create space for the fixed sidebar
                 paddingBottom: '10rem', // Add padding to the bottom to create space for the footer
                 backgroundImage: `url(${HP_background})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundAttachment: 'fixed',
-                minHeight: '100vh',
+                // minHeight: '100vh',
             }}>
                 <div>
                     <Container maxWidth="lg">
