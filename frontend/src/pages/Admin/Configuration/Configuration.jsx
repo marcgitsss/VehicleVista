@@ -6,8 +6,12 @@ import PersonIcon from "@mui/icons-material/Person";
 import WarningIcon from "@mui/icons-material/Warning";
 import { Link } from "react-router-dom";
 import { Breadcrumbs } from "@mui/material";
+import { useEffect } from "react";
 
 function Configuration() {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   return (
     <>
       <AdminHeader />

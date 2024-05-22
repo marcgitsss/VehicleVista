@@ -100,6 +100,10 @@ function AccountExpiration() {
     getExpirations();
     setSnackbarMessage("Successfully Updated Account Expiration");
     setSnackbarOpen(true);
+    setType("");
+    setDate("");
+    setSchoolYear("");
+    setSem("");
   };
 
   const getExpirations = async () => {
@@ -222,12 +226,7 @@ function AccountExpiration() {
 
         {/* Some Text */}
         <div className="accexp-info">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at massa
-          non libero suscipit placerat a non ipsum. Aenean tempor nec enim vel
-          feugiat. Pellentesque a malesuada dolor. Nullam malesuada scelerisque
-          elit in sagittis. Etiam bibendum lobortis sapien sit amet consequat.
-          Pellentesque vitae congue neque, vitae finibus nisl. Vivamus turpis
-          diam, sodales quis venenatis
+          In the Account Expiration section, administrators can set policies and parameters regarding the expiration of user accounts. This includes defining criteria for account inactivity, setting grace periods, and establishing automated notifications to inform users of impending account expiration. By managing account expiration settings, administrators can ensure the security and efficiency of user access to the application while maintaining compliance with organizational policies and regulations.
         </div>
 
         <div className="accexp-input-container">

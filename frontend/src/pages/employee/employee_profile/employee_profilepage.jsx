@@ -27,7 +27,7 @@ const EmployeeProfilePage = () => {
 
   const handleConfirmLogout = () => {
     localStorage.removeItem("token");
-    navigate("/employee-login");
+    window.location.href = '/employee-login';
   };
 
   const handleCloseLogoutModal = () => {
