@@ -272,19 +272,39 @@ public class UserService implements UserDetailsService {
     
     public String getRoleUser(String email) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        DocumentReference userRef = dbFirestore.collection("tbluser").document(email);
-
+        
         try {
+            // Check in 'tbluser' collection
+            DocumentReference userRef = dbFirestore.collection("tbluser").document(email);
             ApiFuture<DocumentSnapshot> future = userRef.get();
             DocumentSnapshot document = future.get();
-
+            
             if (document.exists()) {
-                // Assuming 'role' is a field in your Firestore document
                 String role = document.getString("role");
                 return role;
             } else {
-                System.out.println("No such document!");
-                return null;
+                // Check in 'tlbemployee' collection
+                DocumentReference employeeRef = dbFirestore.collection("tblemployee").document(email);
+                future = employeeRef.get();
+                document = future.get();
+                
+                if (document.exists()) {
+                    String role = document.getString("role");
+                    return role;
+                } else {
+                    // Check in 'tbladmin' collection
+                    DocumentReference adminRef = dbFirestore.collection("tbladmin").document(email);
+                    future = adminRef.get();
+                    document = future.get();
+                    
+                    if (document.exists()) {
+                        String role = document.getString("role");
+                        return role;
+                    } else {
+                        // Document does not exist in any collection
+                        return null;
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
