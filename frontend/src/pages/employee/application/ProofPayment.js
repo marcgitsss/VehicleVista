@@ -1,4 +1,4 @@
-import { Button, Container, Grid, Paper, Typography } from '@mui/material';
+import { Button, Container, Grid, Paper, Typography, CircularProgress } from '@mui/material';
 import backButton from '../../../assets/backButton.jpg';
 import Header from '../../../components/Navbar/EmployeeHeader';
 import Footer from '../../../components/Navbar/UserFooter';
@@ -15,7 +15,9 @@ export default function ProofPayment() {
     const [applications, setApplications] = useState({});
     const navigate = useNavigate();
     const [message, setMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isRejected, setIsRejected] = useState(false);
 
     const handleOpenModal = () => {
       setIsModalOpen(true);
@@ -27,12 +29,14 @@ export default function ProofPayment() {
 
 
     const handleVerifyClick = async () => {
+        setIsLoading(true);
         console.log('handleVerifyClick called');
         try {
             const response = await axios.put(
                 `http://localhost:8080/applicants/updatePaidStatus/${email}`);
             setMessage("Payment status updated successfully");
             setTimeout(() => {
+                setIsLoading(false); 
                 navigate('/verifypay');
             }, 2000);
         } catch (error) {
@@ -73,7 +77,7 @@ export default function ProofPayment() {
             <div style={{
                 paddingTop: '5rem', // Padding to create space for the fixed header
                 paddingLeft: '10rem', // Padding to create space for the fixed sidebar
-                paddingBottom: '10rem', // Add padding to the bottom to create space for the footer
+                // paddingBottom: '10rem', // Add padding to the bottom to create space for the footer
                 backgroundImage: `url(${HP_background})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
@@ -133,6 +137,9 @@ export default function ProofPayment() {
                                             </div>
                                             <div style={{ color: 'red', textAlign: 'center', position: 'relative', top: '1rem' }}>
                                                 {(message)}
+                                                {isRejected === true && (
+                                                    <div className="reject-message">Application is successfully rejected.</div>
+                                                )}
                                             </div>
                                         </Paper>
                                     </div>
@@ -147,9 +154,11 @@ export default function ProofPayment() {
                                                 height: 'clamp(2rem, 10vh, 3.44rem)',
                                                 fontSize: 'clamp(1rem, 3vw, 1.5rem)'
                                             }}
-                                            onClick={handleOpenModal} >Reject</Button>
+                                            onClick={handleOpenModal} 
+                                            disabled={isLoading}
+                                            >Reject</Button>
                                         </div>
-                                        <RejectModal open={isModalOpen} handleClose={handleCloseModal} email={email} relocate="/verifypay"/>
+                                        <RejectModal open={isModalOpen} handleClose={handleCloseModal} email={email} relocate="/verifypay" setIsRejected={setIsRejected}/>
                                         &nbsp;
                                         <div>
                                             <Button sx={{
@@ -161,7 +170,9 @@ export default function ProofPayment() {
                                                 height: 'clamp(2rem, 10vh, 3.44rem)',
                                                 fontSize: 'clamp(1rem, 3vw, 1.5rem)'
                                             }}
-                                                onClick={handleVerifyClick}>Verify</Button>
+                                                onClick={handleVerifyClick}
+                                                disabled={isLoading}
+                                                > {isLoading ? <CircularProgress size={24} /> : 'Verify'}</Button>
                                         </div>
                                     </div>
                                 </div>

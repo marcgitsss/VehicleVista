@@ -1,7 +1,7 @@
-import { Button, Container, Grid, Paper, Typography } from '@mui/material';
+import { Button, Container, Grid, Paper, Typography, CircularProgress } from '@mui/material';
 import * as React from 'react';
 import backButton from '../../../assets/backButton.jpg';
-import Header from '../../../components/Navbar/UserHeader';
+import Header from '../../../components/Navbar/EmployeeHeader';
 import Footer from '../../../components/Navbar/UserFooter';
 import HP_background from '../../../assets/HP_Background.jpg';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -19,6 +19,12 @@ export default function AppChoice() {
     const [applications, setApplications] = useState({});
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isRejected, setIsRejected] = useState(false);
+
+    const handleRejectSuccess = () => {
+      setIsRejected(true);
+    };
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -28,8 +34,8 @@ export default function AppChoice() {
     setIsModalOpen(false);
   };
 
-
     const handleVerifyClick = async () => {
+        setIsLoading(true); 
         console.log('handleVerifyClick called');
         try {
             const response = await axios.put(
@@ -47,6 +53,7 @@ export default function AppChoice() {
                  );
             }
             setTimeout(() => {
+                setIsLoading(false); 
                 navigate('/approve');
             }, 2000);
         } catch (error) {
@@ -80,14 +87,23 @@ export default function AppChoice() {
     }, []);
 
     return (
-        <div className='verifyPay' style={{
-            backgroundImage: `url(${HP_background})`,
-            backgroundSize: '100% 100%',
-            minHeight: '100vh',
-            fontSize: '16px', // Set base font size
-        }}>
-            <Header />
-            <EmployeeSideBar />
+        <>
+        <Header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000 }} />
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            <EmployeeSideBar style={{ position: 'fixed', top: '4rem', left: 0, bottom: 0 }} />
+            <div style={{
+                paddingTop: '5rem', // Padding to create space for the fixed header
+                paddingLeft: '10rem', // Padding to create space for the fixed sidebar
+                // paddingBottom: '10rem', // Add padding to the bottom to create space for the footer
+                backgroundImage: `url(${HP_background})`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
+                minHeight: '100vh',
+            }}>
+
+            <div>
             <Container maxWidth="lg">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -140,6 +156,9 @@ export default function AppChoice() {
                                     </div>
                                     <div style={{ color: 'red', textAlign: 'center', position: 'relative', top: '1rem' }}>
                                         {(message)}
+                                        {isRejected === true && (
+                                                    <div className="reject-message">Application is successfully rejected.</div>
+                                                )}
                                     </div>
                                 </Paper>
                             </div>
@@ -153,9 +172,13 @@ export default function AppChoice() {
                                         height: 'clamp(2rem, 10vh, 3.44rem)',
                                          fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}
                                          
-                                         onClick={handleOpenModal}>Reject</Button>
+                                         onClick={handleOpenModal}
+                                         disabled={isLoading}
+                                         >Reject</Button>
                                 </div>
-                                <RejectModal open={isModalOpen} handleClose={handleCloseModal} email={email}/>
+                                <RejectModal open={isModalOpen} handleClose={handleCloseModal} email={email} relocate="/orcr" setIsRejected={setIsRejected} />
+
+
                                 &nbsp;
                                 <div>
                                     <Button sx={{ textTransform: "none",
@@ -165,7 +188,9 @@ export default function AppChoice() {
                                        width: 'clamp(10rem, 30vw, 13.25rem)',
                                         height: 'clamp(2rem, 10vh, 3.44rem)',
                                          fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}
-                                         onClick={handleVerifyClick}>Approve</Button>
+                                         onClick={handleVerifyClick}
+                                         disabled={isLoading}
+                                         >{isLoading ? <CircularProgress size={24} /> : 'Approve'}</Button>
                                 </div>
                             </div>
                         </div>
@@ -175,9 +200,10 @@ export default function AppChoice() {
                     </Grid>
                 </Grid>
             </Container>
-            <div style={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
-                <Footer />
             </div>
+            
         </div>
-    )
+        <Footer style={{ zIndex: 1001 }} />
+        </div>
+        </> )
 }

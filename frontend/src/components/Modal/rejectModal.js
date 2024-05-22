@@ -6,6 +6,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const style = {
   position: 'absolute',
@@ -19,24 +21,12 @@ const style = {
   borderRadius: '1rem'
 };
 
-const notificationStyle = {
-  position: 'absolute',
-  top: '10px',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  width: 'fit-content',
-  padding: '1rem',
-  borderRadius: '5px',
-  backgroundColor: '#f44336',
-  color: '#fff',
-  zIndex: 9999
-};
-
-export default function RejectModal({ open, handleClose, email, relocate }) {
+export default function RejectModal({ open, handleClose, email, relocate, setIsRejected  }) {
   const [message, setMessage] = useState('');
   const token = localStorage.getItem('token');
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -44,6 +34,7 @@ export default function RejectModal({ open, handleClose, email, relocate }) {
   };
 
   const handleSubmit = async () => {
+    setLoading(true); // Start loading
     try {
       const res = await axios.post('http://localhost:8080/applicants/rejectApplicant', null, {
         params: {
@@ -55,17 +46,22 @@ export default function RejectModal({ open, handleClose, email, relocate }) {
         }
       });
       console.log('Response:', res.data);
-      setNotificationMessage('Denied Application');
-      setShowNotification(true);
-      setTimeout(() => setShowNotification(false), 3000); // Hide notification after 3 seconds
-      navigate(relocate); // Navigate to the specified destination
+      setSnackbarMessage('Denied Application');
+      setIsRejected(true);
+      setSnackbarOpen(true);
+      setTimeout(() => {
+        
+        
+        navigate(relocate); 
+      }, 3000); // Hide notification after 3 seconds and then navigate
     } catch (error) {
       console.error('Error sending email:', error);
-      setNotificationMessage('Failed to send email.');
-      setShowNotification(true);
-      setTimeout(() => setShowNotification(false), 3000); // Hide notification after 3 seconds
+      setSnackbarMessage('Failed to send email.');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false); // End loading
+      handleClose();
     }
-    handleClose();
   };
 
   return (
@@ -93,21 +89,19 @@ export default function RejectModal({ open, handleClose, email, relocate }) {
             fullWidth
             mt={2}
           />
+          {snackbarOpen && (
+            <div className="employee-snackbar">{snackbarMessage}</div>
+          )}
           <Button
             variant="contained"
             color="primary"
             onClick={handleSubmit}
             sx={{ mt: '0.5rem', borderRadius: '5rem', backgroundColor: '#F4C522', color: 'black' }}
+            disabled={loading} // Disable button while loading
           >
-            Submit
+            {loading ? <CircularProgress size={24} /> : 'Submit'}
           </Button>
-          {showNotification && (
-          <div style={notificationStyle}>
-            {notificationMessage}
-          </div>
-        )}
         </Box>
-       
       </>
     </Modal>
   );
