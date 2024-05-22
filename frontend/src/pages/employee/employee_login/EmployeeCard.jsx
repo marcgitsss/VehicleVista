@@ -161,9 +161,9 @@ export default function EmployeeCard({onLoginSuccess }) {
           <button type="submit" className="employee-submit" style={{ cursor: 'pointer' }}>
           {loading ? <CircularProgress size={24} /> : 'Sign in'}
           </button>
-          <p className="employee-signup-link">
+          {/* <p className="employee-signup-link">
             No account? <a href="#">Sign up</a>
-          </p>
+          </p> */}
         </form>
       </div>
      

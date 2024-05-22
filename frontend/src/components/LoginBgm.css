@@ -1,0 +1,54 @@
+.main-content {
+  padding: 5px;
+}
+
+body {
+  overflow: hidden;
+  /* background-image: url('../../public/background2.jpeg');
+  background-size: cover;
+  background-attachment: fixed;
+  overflow-y: scroll;
+  overflow-x: hidden; */
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    /* background-image: url('../../public/background2.jpeg'); */
+  }
+
+  .image-container img {
+    width: auto;
+    height: 20;
+  }
+  
+  .bkg2 {
+    position: absolute;
+    width: 60vw;
+    height: 100vh;
+    
+    top: 0;
+    left: 0;
+    object-fit: cover; /* This ensures the image covers the entire container */
+    z-index: -1;  
+  }
+
+
+/* Media Queries */
+@media only screen and (max-width: 600px) {
+  .bkg2 {
+    display: none; 
+  }
+}
+
+/* Media Query for Larger Screens (Windows Desktop) */
+@media only screen and (min-width: 1200px) {
+  .bkg2 {
+    width: 60vw;
+    height: 100vh; /*Adjust the height as needed*/
+    top: 0; /*Adjust the top position as needed*/
+    left: 0; /*Adjust the left position as needed*/
+  }
+}
+  
+

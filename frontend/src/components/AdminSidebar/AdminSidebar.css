@@ -1,0 +1,36 @@
+/* Sidebar.css */
+.admin-sidebar {
+  position: fixed;
+  top: 4.3rem;
+  left: 0;
+  height: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.admin-sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 3rem 0;
+}
+
+.admin-sidebar-menu>li {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  padding-left: 1.7rem;
+  padding-right: 1.8rem;
+  color: #000000;
+  margin: 0;
+  cursor: pointer;
+}
+
+.admin-sidebar-menu>li:hover:not(.active) {
+  transition: .2s;
+  background-color: #f4c72241;
+}
+
+.active {
+  background-color: #f4c722a2;
+}

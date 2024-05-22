@@ -164,7 +164,6 @@ export default function ForgetPasswordCard() {
               onChange={handleInputChange}
               style={{ paddingRight: "2.5rem" }} // Add padding for the icon
             />
-
             {showNewPassword ? (
               <MdVisibilityOff
                 onClick={toggleNewPasswordVisibility}

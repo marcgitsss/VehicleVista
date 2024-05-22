@@ -11,12 +11,28 @@ import UserStatus from './UserStatus';
 import { jwtDecode } from "jwt-decode";
 import { useUser } from '../../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const UserHomepage = () => {
-  const { token } = useUser();
+  // const { token } = useUser();
   const navigate = useNavigate();
   const [activeMenuItem, setActiveMenuItem] = useState("Home");
-  const [decodedToken, setDecodedToken] = useState(null);
+  // const [decodedToken, setDecodedToken] = useState(null);
+
+
+const token = localStorage.getItem('token');
+const [decodedToken, setDecodedToken] = useState();
+
+
+
+// // const email = decodedToken.payload.sub;
+// console.log("decodedToken:",decodedToken.exp);
+// // console.log("decodedToken:",decodedToken.payload);
+// // console.log("decodedToken:",decodedToken.payload.sub);
+// console.log("token:",token);
+
+
+
 
   useEffect(() => {
     // Prevent back button functionality

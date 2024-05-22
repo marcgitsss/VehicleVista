@@ -8,7 +8,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from "axios";
-import EmployeeSideBar from '../../../components/EmployeeSidebar/employeeSidebar';
+import EmployeeSideBar from '../../../components/Navbar/EmployeeSidebar/employeeSidebar';
+import RejectModal from '../../../components/Modal/rejectModal';
 
 
 export default function AppChoice() {
@@ -17,6 +18,15 @@ export default function AppChoice() {
     const email = location.state?.email;
     const [applications, setApplications] = useState({});
     const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
 
     const handleVerifyClick = async () => {
@@ -141,8 +151,11 @@ export default function AppChoice() {
                                       borderRadius: "5rem",
                                        width: 'clamp(10rem, 30vw, 13.25rem)',
                                         height: 'clamp(2rem, 10vh, 3.44rem)',
-                                         fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>Reject</Button>
+                                         fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}
+                                         
+                                         onClick={handleOpenModal}>Reject</Button>
                                 </div>
+                                <RejectModal open={isModalOpen} handleClose={handleCloseModal} email={email}/>
                                 &nbsp;
                                 <div>
                                     <Button sx={{ textTransform: "none",
