@@ -5,6 +5,7 @@ import DropdownMenu from './menu';
 
 const Header = () => {
   const [isMobile, setIsMobile] = useState(false);
+  
 
   useEffect(() => {
     const handleResize = () => {
@@ -49,7 +50,7 @@ const Header = () => {
         ) : (
           <>
             <a href="/homepage">Home</a>
-            <a href="/user_aboutus">About Us</a>
+            <a href="/about-us">About Us</a>
           </>
         )}
       </nav>

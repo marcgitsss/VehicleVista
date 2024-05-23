@@ -5,12 +5,14 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import TwoWheelerIcon from "@mui/icons-material/TwoWheeler";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
   const [allApplicants, setAllApplicants] = useState([]);
   const [totalVehicles, setTotalVehicles] = useState(0);
   const [total4Wheelers, setTotal4Wheelers] = useState(0);
   const [total2Wheelers, setTotal2Wheelers] = useState(0);
+  const navigate = useNavigate();
 
   const getAllApplicant = async () => {
     try {
@@ -20,11 +22,27 @@ function AdminDashboard() {
       console.log("error", error);
     }
   };
-
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   useEffect(() => {
     getAllApplicant();
   }, []);
 
+  useEffect(() => {
+    // Prevent back button functionality
+    const handleBackButton = (event) => {
+      event.preventDefault();
+      navigate("/admin-dashboard"); // Navigate to homepage again
+    };
+
+    window.history.pushState(null, document.title, window.location.href);
+    window.addEventListener("popstate", handleBackButton);
+    
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+}, []); // Pass an empty dependency array
   useEffect(() => {
     let total4W = 0;
     let total2W = 0;

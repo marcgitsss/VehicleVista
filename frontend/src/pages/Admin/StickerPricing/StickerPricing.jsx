@@ -120,12 +120,7 @@ function StickerPricing() {
 
         {/* Some Text */}
         <div className="sticker-info">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at massa
-          non libero suscipit placerat a non ipsum. Aenean tempor nec enim vel
-          feugiat. Pellentesque a malesuada dolor. Nullam malesuada scelerisque
-          elit in sagittis. Etiam bibendum lobortis sapien sit amet consequat.
-          Pellentesque vitae congue neque, vitae finibus nisl. Vivamus turpis
-          diam, sodales quis venenatis
+          In this section, users can view and manage the pricing structure for vehicle stickers or permits. It includes options to set pricing tiers based on vehicle type, duration, or other factors. Administrators can easily update sticker pricing to reflect changes in regulations or operational costs, ensuring accurate and transparent pricing for users.
         </div>
 
         <div className="sticker-input-container">

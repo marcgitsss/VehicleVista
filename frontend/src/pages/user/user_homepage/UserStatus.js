@@ -56,7 +56,7 @@ export default function UserStatus() {
     >
       <Container maxWidth="lg" >
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{  marginTop: "5rem" }}>
             <br />
             <Typography
               align="center"
@@ -168,7 +168,7 @@ export default function UserStatus() {
                     </TableRow>
                   </TableBody>
                 </Table>
-                {applications.verified === true && applications.paid === false &&(
+                {applications.verified === true && applications.paid === false && applications.proofofpayment === null &&(
                  <Button
                  sx={{
                    position: "absolute",

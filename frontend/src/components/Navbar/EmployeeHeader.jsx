@@ -49,7 +49,8 @@ const Header = () => {
         ) : (
           <>
             {/* <a href="/employee-homepage">Home</a> */}
-            <a href="/user_aboutus">About Us</a>
+            <a href="/employee-homepage">Home</a>
+            <a href="/employee/about-us">About Us</a>
           </>
         )}
       </nav>

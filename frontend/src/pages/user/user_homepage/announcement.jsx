@@ -55,7 +55,7 @@ const UserAnnouncement = () => {
           <button className="registerButton" 
           onClick={handleRegisterButtonClick} 
           disabled={Object.keys(applications).length !== 0}  
-          title={Object.keys(applications).length !== 0 ? "Cannot register while applications is still pending" : ""}>Register</button>
+          title={Object.keys(applications).length !== 0 ? "Cannot register while applications is still pending/approved" : ""}>Register</button>
           <button className="disclaimerButton">
             Disclaimer<br/>
             <div className="disclaimer">

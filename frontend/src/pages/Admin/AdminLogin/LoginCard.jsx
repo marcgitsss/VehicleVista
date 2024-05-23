@@ -69,9 +69,12 @@ export default function LoginCard({ onLoginSuccess }) {
       .catch((error) => {
         console.error("Error during login:", error);
         setSnackbarMessage(
-          "An error occurred during login. Please try again later."
+          "Invalid username or password. Please try again."
         );
         setSnackbarOpen(true);
+        setTimeout(() => {
+          setSnackbarOpen(false);
+        }, 3000 );
       })
       .finally(() => {
         setLoading(false);

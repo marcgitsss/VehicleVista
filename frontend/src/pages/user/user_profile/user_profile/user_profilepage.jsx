@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, Button, Typography } from "@mui/material";
+import { Avatar, Box, Button, Typography, Modal } from "@mui/material";
 import "./user_profilepage.css";
 import ChangePassword from "./ChangePassword/ChangePassword";
 import axios from "axios";
@@ -14,6 +14,7 @@ const UserProfilePage = () => {
   const [expiration, setExpiration] = useState({});
   const [vehicles, setVehicles] = useState({});
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   // Decoding Token
   useEffect(() => {
@@ -45,8 +46,16 @@ const UserProfilePage = () => {
   };
 
   const handleLogout = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const handleConfirmLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    window.location.href = '/login';
+  };
+
+  const handleCloseLogoutModal = () => {
+    setIsLogoutModalOpen(false);
   };
 
   useEffect(() => {
@@ -81,7 +90,7 @@ const UserProfilePage = () => {
   return (
     <div>
       {/* Main Content */}
-      <div className="user-profile-container">
+      <div className="user-profile-container" style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
         <div className="logout-btn" style={{ textAlign: 'right', marginBottom: '1.5%', marginTop: '2%' }}>
           <button onClick={handleLogout}>
             LOGOUT
@@ -153,6 +162,22 @@ const UserProfilePage = () => {
           )}
         </Box>
       </div>
+      <Modal
+        open={isLogoutModalOpen}
+        onClose={handleCloseLogoutModal}
+        aria-labelledby="logout-modal-title"
+        aria-describedby="logout-modal-description"
+      >
+        <Box className="logout-modal" sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper',boxShadow: 24, p: 4 }}>
+          <Typography id="logout-modal-title" variant="h6" component="h2">
+            Are you sure you want to log out?
+          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 2 }}>
+            <Button onClick={handleConfirmLogout}>Yes</Button>
+            <Button onClick={handleCloseLogoutModal}>Cancel</Button>
+          </Box>
+        </Box>
+      </Modal>
     </div>
   );
 };

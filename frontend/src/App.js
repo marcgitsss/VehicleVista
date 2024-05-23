@@ -37,6 +37,10 @@ import EmployeeProfilePage from "./pages/employee/employee_profile/employee_prof
 import EmployeeProfileFinal from "./pages/employee/employee_profile/employee_profilefinal";
 import EmployeeDashboard from "./pages/employee/EmployeeDashboard/EmployeeDashboard";
 import AdminPage from "./pages/Admin/AdminLogin/AdminLogin";
+import AdminRoutes from "./Utils/AdminRoutes";
+import AboutUs from "./components/AboutUs/AboutUs";
+import EmployeeAboutUs from "./components/AboutUs/EmployeeAbout";
+
 function App() {
   const [isToken, setIsToken] = useState(false);
   const token = localStorage.getItem('token');
@@ -49,8 +53,34 @@ function App() {
   // Function to remove expired token from local storage
   const removeExpiredToken = () => {
     if (expired) {
-      localStorage.removeItem('token');
+      localStorage.removeItem('token'); 
     }
+  };
+
+  // Function to check token validity and redirect accordingly
+  const checkToken = () => {
+    console.log("Token:", isToken);
+    console.log("Expired:", expired);
+    console.log("Role:", role);
+  
+    if (isToken && expired) {
+      localStorage.removeItem('token');
+      console.log("Redirecting to LandingPage - Token expired");
+      return <Navigate to="/" />;
+    } else if (isToken && !expired) {
+      if (role === "USER") {
+        console.log("Redirecting to User Homepage");
+        return <Navigate to="/homepage" />;
+      } else if (role === "EMPLOYEE") {
+        console.log("Redirecting to Employee Homepage");
+        return <Navigate to="/employee-homepage" />;
+      } else if (role === "ADMIN") {
+        console.log("Redirecting to Admin Dashboard");
+        return <Navigate to="/admin-dashboard" />;
+      }
+    }
+    console.log("Redirecting to LandingPage - Default");
+    return <LandingPage />; // Change this to your landing page component
   };
 
   // Decoding token
@@ -88,6 +118,7 @@ function App() {
             params: { email: email }
           });
           setRole(response.data);
+          
         }
       } catch (error) {
         console.error('Error fetching role data:', error);
@@ -105,39 +136,31 @@ function App() {
   useEffect(() => {
     removeExpiredToken();
   }, [expired]);
-
-  // Default route function
-  const getDefaultRoute = () => {
-    if (isToken && !expired) {
-      if (role === "USER") {
-        return <Navigate to="/homepage" />;
-      } else if (role === "EMPLOYEE") {
-        return <Navigate to="/employee-homepage" />;
-      } else if (role === "ADMIN") {
-        return <Navigate to="/admin-dashboard" />;
-      }
-    }
-    return <LandingPage />; // Change this to your landing page component
-  };
-
+console.log("checktoken", checkToken());
   return (
-
+  
       <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={!isToken ? <LoginPage /> : getDefaultRoute()} />
-        <Route path="/forgotpass" element={!isToken ? <ChangePass /> : getDefaultRoute()} />
-        <Route path="/changepass" element={!isToken ? <ChangePassword /> : getDefaultRoute()} />
-        <Route path="*" element={getDefaultRoute()} />
-        <Route path="/employee-login" element={!isToken ? <EmployeePage /> : getDefaultRoute()} />
+       {/* Public Routes */}
+        <Route path="/login" element={!isToken ? <LoginPage /> : checkToken()} />
+        <Route path="/forgotpass" element={!isToken ? <ChangePass /> : checkToken()} />
+        <Route path="/changepass" element={!isToken ? <ChangePassword /> : checkToken()} />
+        <Route path="/about-us" element={<AboutUs />} /> 
+        <Route path="/employee/about-us" element={<EmployeeAboutUs />} /> 
         <Route path="/logout" element={<Profile redirectPath="/login" />} /> {/* Add logout route */}
-        {/* <Route path="/employee-logout" element={<Profile redirectPath="/employee-login" />} /> Add employee logout route */}
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-login"  element={!isToken ? <AdminPage /> : checkToken()} />
+        <Route path="/employee-login" element={!isToken ? <EmployeePage /> : checkToken()} />
+        
+
+        <Route element={<AdminRoutes />}>
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/configuration" element={<Configuration />} />
           <Route path="/account-expiration" element={<AccountExpiration />} />
           <Route path="/application-list" element={<ApplicationList />} />
           <Route path="/sticker-pricing" element={<StickerPricing />} />
           <Route path="/user-management" element={<UserManagement />} />
-          <Route path="/admin-login" element={<AdminPage />} />
+          
+          
+        </Route>
 
         {/* Employee Routes */}
         <Route element={<EmployeeRoutes />}>
@@ -151,7 +174,7 @@ function App() {
           <Route path="/proofpay" element={<ProofPayment />} />
           <Route path="/selectorcr" element={<SelectOrCr />} />
           <Route path="/verifypay" element={<VerifyPayment />} />
-        </Route>
+        </Route>                      
 
         {/* Private User Routes */}
         <Route element={<PrivateRoutes />}>
@@ -162,8 +185,13 @@ function App() {
           <Route path="/invoice" element={<Invoice />} />
           <Route path="/profile" element={<UserProfilePage />} />
         </Route>
+
+        {/* Catch-all route - should be at the end */}
+        <Route path="*" element={checkToken()} />
+
       </Routes>
 
+        
   );
 }
 
