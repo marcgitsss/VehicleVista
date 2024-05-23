@@ -53,12 +53,12 @@ function RolesTable({ users }) {
               <TableCell align="center" sx={{ fontWeight: 600 }}>
                 Role
               </TableCell>
-              <TableCell align="center" sx={{ fontWeight: 600 }}>
+              {/* <TableCell align="center" sx={{ fontWeight: 600 }}>
                 Assigned Office
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: 600 }}>
                 Last Active
-              </TableCell>
+              </TableCell> */}
               <TableCell align="center" sx={{ fontWeight: 600 }}></TableCell>
             </TableRow>
           </TableHead>
@@ -73,10 +73,13 @@ function RolesTable({ users }) {
                       : "Student"
                     : row.role}
                 </TableCell>
-                <TableCell align="center">{row.address}</TableCell>
-                <TableCell align="center"></TableCell>
+                {/* <TableCell align="center">{row.address}</TableCell>
+                <TableCell align="center"></TableCell> */}
                 <TableCell align="center">
-                  <MoreHorizIcon />
+                  <div 
+                    className="more-horizontal-button"
+                    
+                    onClick={()=>console.log("yeah")}><MoreHorizIcon/></div>
                 </TableCell>
               </TableRow>
             ))}

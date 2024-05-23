@@ -87,12 +87,12 @@ function Roles_Tab() {
                 <TableCell align="center" sx={{ fontWeight: 600 }}>
                   Role
                 </TableCell>
-                {/* <TableCell align="center" sx={{ fontWeight: 600 }}>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>
                   Assigned Office
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: 600 }}>
                   Last Active
-                </TableCell> */}
+                </TableCell>
                 <TableCell align="center" sx={{ fontWeight: 600 }}></TableCell>
               </TableRow>
             </TableHead>
@@ -101,8 +101,8 @@ function Roles_Tab() {
                 <TableRow key={row.id}>
                   <TableCell align="center">{row.name}</TableCell>
                   <TableCell align="center">{row.role}</TableCell>
-                  {/* <TableCell align="center">{row.assignedOffice}</TableCell>
-                  <TableCell align="center">{row.lastActive}</TableCell> */}
+                  <TableCell align="center">{row.assignedOffice}</TableCell>
+                  <TableCell align="center">{row.lastActive}</TableCell>
                   <TableCell align="center">
                     <MoreHorizIcon />
                   </TableCell>

@@ -9,6 +9,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import "./landingModal.css";
 import PostAddIcon from "@mui/icons-material/PostAdd";
+import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress
 import axios from "axios";
 import ChooseUserTypeModal from "../vehicle_registration/ChooseUserTypeModal/ChooseUserTypeModal";
 import { Link } from "react-router-dom";
@@ -35,6 +36,8 @@ export default function TransitionsModal() {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const [verificationSuccess, setVerificationSuccess] = React.useState(false);
+  const [emailSending, setEmailSending] = React.useState(false); // Loading state for sending email
+  const [otpVerifying, setOtpVerifying] = React.useState(false); // Loading state for verifying OTP
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -48,6 +51,7 @@ export default function TransitionsModal() {
     setEmailError("");
 
     try {
+      setEmailSending(true); // Set loading state to true
       const res = await axios.post("http://localhost:8080/register/generateOtp/", {
         email,
       });
@@ -65,6 +69,8 @@ export default function TransitionsModal() {
     } catch (error) {
       setSnackbarMessage("Failed to send email");
       setSnackbarOpen(true);
+    } finally {
+      setEmailSending(false); // Reset loading state to false
     }
   };
 
@@ -76,6 +82,7 @@ export default function TransitionsModal() {
     setCodeError("");
 
     try {
+      setOtpVerifying(true); // Set loading state to true
       const res = await axios.post(
         "http://localhost:8080/register/verifyOtp/",
         { email, otp: code }
@@ -89,6 +96,8 @@ export default function TransitionsModal() {
     } catch (error) {
       setSnackbarMessage("An error occurred. Please try again later.");
       setSnackbarOpen(true);
+    } finally {
+      setOtpVerifying(false); // Reset loading state to false
     }
   };
 
@@ -138,7 +147,7 @@ export default function TransitionsModal() {
                 {emailError}
               </span>
               <button className="button-maroon" onClick={handleSend}>
-                Send
+                {emailSending ? <CircularProgress size={24} /> : "Send"}
               </button>
             </Typography>
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
@@ -160,7 +169,7 @@ export default function TransitionsModal() {
                 {codeError}
               </span>
               <button className="button-maroon" onClick={handleSubmit}>
-                Submit
+                {otpVerifying ? <CircularProgress size={24} /> : "Submit"}
               </button>
             </Typography>
           </Box>
@@ -185,39 +194,39 @@ export default function TransitionsModal() {
       {/* Modal after successful verification */}
       {verificationSuccess && (
         <Modal
-          aria-labelledby="verification-modal-title"
-          aria-describedby="verification-modal-description"
-          open={verificationSuccess}
-          onClose={() => setVerificationSuccess(false)}
-          closeAfterTransition
-          slots={{ backdrop: Backdrop }}
-          slotProps={{ backdrop: { timeout: 500 } }}
-        >
-          <Fade in={verificationSuccess}>
-            <Box sx={style}>
+            aria-labelledby="verification-modal-title"
+            aria-describedby="verification-modal-description"
+            open={verificationSuccess}
+            onClose={() => setVerificationSuccess(false)}
+            closeAfterTransition
+            slots={{backdrop: Backdrop }}
+            slotProps={{ backdrop: { timeout: 500 } }}
+          >
+            <Fade in={verificationSuccess}>
+              <Box sx={style}>
               <Typography
-                id="verification-modal-title"
-                variant="h4"
-                component="h2"
-              >
-                Verification Successful
+                  id="verification-modal-title"
+                  variant="h4"
+                  component="h2"
+                  >
+              Verification Successful
               </Typography>
               <Typography id="verification-modal-description" sx={{ mt: 2 }}>
                 Your verification was successful. Proceed to choose your user
                 type.
               </Typography>
               {/* <Button >
-                Close
+              Close
               </Button> */}
-              <Link to="/login">
-                <Button >
-                  Proceed to log in
-                </Button>
-              </Link>
-            </Box>
-          </Fade>
-        </Modal>
-      )}
-    </div>
-  );
-}
+                <Link to="/login">
+                  <Button >
+                    Proceed to log in
+                  </Button>
+                </Link>
+              </Box>
+            </Fade>
+          </Modal>
+          )}
+          </div>
+          );
+          }
